@@ -25,7 +25,7 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
                 className="flex items-center justify-between w-full p-3 bg-white rounded-lg"
             >
                 <p className="text-sm truncate">{title}</p>
-                <div className="flex justify-center items-center w-6 h-6">
+                <div className="flex items-center justify-center w-6 h-6">
                     {isCollapsed ? (
                         <FaPlusCircle className="text-gray-500" size={16} />
                     ) : (

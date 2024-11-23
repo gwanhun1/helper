@@ -1,11 +1,11 @@
 // router.tsx
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App'; // App 컴포넌트를 임포트
-import Home from '../pages/Home';
-import Logs from '../pages/Logs';
-import User from '../pages/User';
-import Worry from '../pages/Worry';
-import Credit from '../pages/Credit';
+import Home from '../components/pages/Home';
+import Logs from '../components/pages/Logs';
+import User from '../components/pages/User';
+import Worry from '../components/pages/Worry';
+import Credit from '../components/pages/Credit';
 
 const router = createBrowserRouter([
     {

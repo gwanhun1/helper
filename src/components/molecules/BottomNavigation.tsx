@@ -1,22 +1,80 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
-    FaHome,
-    FaComment,
-    FaDatabase,
-    FaPiggyBank,
-    FaUser,
-} from 'react-icons/fa';
+    AiOutlinePlusCircle,
+    AiOutlineSearch,
+    AiOutlineHome,
+    AiOutlineCreditCard,
+    AiOutlineUser,
+} from 'react-icons/ai';
+import { AiFillHome, AiFillCreditCard, AiFillPlusCircle } from 'react-icons/ai';
 
 const BottomNavigation: React.FC = () => {
+    const location = useLocation(); // 현재 경로 가져오기
+
     return (
-        <div className="flex justify-between items-center bg-white p-4 border-t-2 bottom-0 left-0 w-full shadow-lg">
+        <div className="bottom-0 left-0 flex items-center justify-between w-full p-4 bg-white border-t-2 shadow-lg">
             {/* 각 탭 버튼들 */}
-            <TabButton to="/" icon={<FaHome />} label="Home" />
-            <TabButton to="/worry" icon={<FaComment />} label="조언" />
-            <TabButton to="/logs" icon={<FaDatabase />} label="로그" />
-            <TabButton to="/credit" icon={<FaPiggyBank />} label="결제" />
-            <TabButton to="/user" icon={<FaUser />} label="내정보" />
+            <TabButton
+                to="/"
+                icon={
+                    location.pathname === '/' ? (
+                        <AiFillHome />
+                    ) : (
+                        <AiOutlineHome />
+                    )
+                }
+                label="Home"
+                active={location.pathname === '/'}
+            />
+            <TabButton
+                to="/logs"
+                icon={
+                    location.pathname === '/logs' ? (
+                        <AiOutlineSearch />
+                    ) : (
+                        <AiOutlineSearch />
+                    )
+                }
+                label="로그"
+                active={location.pathname === '/logs'}
+            />
+            <TabButton
+                to="/worry"
+                icon={
+                    location.pathname === '/worry' ? (
+                        <AiFillPlusCircle />
+                    ) : (
+                        <AiOutlinePlusCircle />
+                    )
+                }
+                label="조언"
+                active={location.pathname === '/worry'}
+            />
+            <TabButton
+                to="/credit"
+                icon={
+                    location.pathname === '/credit' ? (
+                        <AiFillCreditCard />
+                    ) : (
+                        <AiOutlineCreditCard />
+                    )
+                }
+                label="결제"
+                active={location.pathname === '/credit'}
+            />
+            <TabButton
+                to="/user"
+                icon={
+                    location.pathname === '/user' ? (
+                        <AiOutlineUser />
+                    ) : (
+                        <AiOutlineUser />
+                    )
+                }
+                label="내정보"
+                active={location.pathname === '/user'}
+            />
         </div>
     );
 };
@@ -26,16 +84,23 @@ interface TabButtonProps {
     to: string;
     icon: React.ReactNode;
     label: string;
+    active: boolean; // 활성화 여부
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ to, icon, label }) => {
+const TabButton: React.FC<TabButtonProps> = ({ to, icon, label, active }) => {
     return (
         <Link
             to={to}
-            className="flex flex-col items-center text-gray-600 hover:text-blue-600 flex-1 justify-center"
+            className={`flex flex-col items-center flex-1 justify-center ${
+                active
+                    ? 'text-green' // 활성화된 탭에서 글자 색만 변함
+                    : 'text-gray-600 hover:text-green' // 비활성화된 탭에서 hover 시 글자 색 변함
+            } py-2 px-4 transition-all duration-200`}
         >
             <div className="text-xl">{icon}</div>
-            <div className="text-[13px] mt-2">{label}</div>
+            <p className="text-[13px] mt-2 text-xs whitespace-nowrap">
+                {label}
+            </p>
         </Link>
     );
 };

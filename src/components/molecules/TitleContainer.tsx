@@ -12,7 +12,7 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
     titleColor,
 }) => {
     return (
-        <div className="pb-2 mb-4 border-b border-gray-300">
+        <div className="px-2 pb-2 mb-4 border-b border-gray-300">
             <h1
                 className={`text-xl font-semibold tracking-tightest ${
                     titleColor || 'text-green-500'
@@ -24,7 +24,9 @@ const TitleContainer: React.FC<TitleContainerProps> = ({
                 {title}
             </h1>
             {subtitle && (
-                <p className="mt-2 ml-2 text-xs text-gray-600">{subtitle}</p>
+                <p className="px-2 mt-2 ml-2 text-xs text-gray-600">
+                    {subtitle}
+                </p>
             )}
         </div>
     );

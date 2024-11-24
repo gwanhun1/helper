@@ -1,5 +1,11 @@
+import UserInfo from '../organisms/userInfo';
+
 const User = () => {
-    return <>User</>;
+    return (
+        <>
+            <UserInfo />
+        </>
+    );
 };
 
 export default User;

@@ -6,7 +6,7 @@ type InfoRowProps = {
     subText?: string; // 보조 텍스트 (옵션)
 };
 
-const InfoRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
+const IconRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
     return (
         <div className="flex items-center gap-4">
             {icon && (
@@ -24,4 +24,4 @@ const InfoRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
     );
 };
 
-export default InfoRow;
+export default IconRow;

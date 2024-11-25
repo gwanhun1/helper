@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import './index.css';
 import BottomNavigation from './components/molecules/BottomNavigation';
-import Nav from './components/molecules/Nav';
+import Nav from './components/pages/Nav';
 
 const App = () => {
     return (

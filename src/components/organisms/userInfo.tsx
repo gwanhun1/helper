@@ -2,7 +2,7 @@ import { AiOutlineCreditCard, AiOutlineMail } from 'react-icons/ai';
 import Badge from '../atoms/Badge';
 import Button from '../atoms/Button';
 import ProfileImage from '../atoms/ProfileImage';
-import InfoRow from '../molecules/InfoRow';
+import IconRow from '../molecules/IconRow';
 
 const UserInfo = () => {
     return (
@@ -25,13 +25,13 @@ const UserInfo = () => {
                 <h2 className="my-4 text-lg font-bold text-gray-900">
                     Account details
                 </h2>
-                <InfoRow
+                <IconRow
                     icon={<AiOutlineMail className="w-6 h-6 text-gray-500" />}
                     mainText="catherinemeyer@gmail.com"
                     subText="Personal email"
                 />
                 <div className="my-4 border-t border-gray-200"></div>
-                <InfoRow
+                <IconRow
                     icon={
                         <AiOutlineCreditCard className="w-6 h-6 text-gray-500" />
                     }
@@ -40,7 +40,7 @@ const UserInfo = () => {
                 />
 
                 <h2 className="my-4 text-lg font-bold text-gray-900">Notice</h2>
-                <InfoRow mainText="공지1" subText="공지1" />
+                <IconRow mainText="공지1" subText="공지1" />
             </div>
         </div>
     );

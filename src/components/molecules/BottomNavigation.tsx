@@ -8,7 +8,7 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { AiFillHome, AiFillCreditCard, AiFillPlusCircle } from "react-icons/ai";
-import { Text } from "../atoms/Test";
+import { Text } from "../atoms/Text";
 
 const BottomNavigation: React.FC = () => {
   const location = useLocation(); // 현재 경로 가져오기

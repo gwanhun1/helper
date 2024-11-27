@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "composite": true, // 프로젝트 참조를 위해 필수
+    "declaration": true, // .d.ts 파일을 생성
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,

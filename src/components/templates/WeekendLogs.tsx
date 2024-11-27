@@ -1,7 +1,7 @@
 import { AiOutlineUser } from "react-icons/ai";
 import IconRow from "../molecules/IconRow";
-import TitleContainer from "../molecules/TitleContainer";
-import Accordion from "../atoms/Accordion";
+import TitleContainer from "../atoms/TitleContainer";
+import Accordion from "../molecules/Accordion";
 
 const WeekendLogs = () => {
   return (

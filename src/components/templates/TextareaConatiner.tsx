@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Textarea from "../atoms/Textarea";
+import Textarea from "../molecules/Textarea";
 import { AiFillHeart } from "react-icons/ai";
 import Button from "../atoms/Button";
 

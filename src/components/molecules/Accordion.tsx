@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaPlusCircle, FaMinusCircle } from "react-icons/fa";
+import { AiOutlineRobot } from "react-icons/ai";
 
 type AccordionProps = {
   title: string;
@@ -22,10 +23,18 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
     >
       <button
         onClick={toggleAccordion}
-        className="flex items-center justify-between w-full p-3 bg-white rounded-lg"
+        className="flex items-center justify-between w-full p-3 bg-white rounded-lg border border-b-2"
       >
-        <p className="text-sm truncate">{title}</p>
-        <div className="flex items-center justify-center w-6 h-6">
+        <p
+          className={`text-sm max-w-52 ${
+            isCollapsed
+              ? "truncate whitespace-nowrap overflow-hidden"
+              : "break-words text-left"
+          }`}
+        >
+          {title}
+        </p>
+        <div className="flex items-center justify-center w-6 h-6 ml-2">
           {isCollapsed ? (
             <FaPlusCircle className="text-gray-500" size={16} />
           ) : (
@@ -33,9 +42,16 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
           )}
         </div>
       </button>
-      <div className={isCollapsed ? "hidden" : "block"}>
-        <div className="p-4">
-          <p className="text-xs text-gray-700">{content}</p>
+      <div
+        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+          isCollapsed ? "h-0 opacity-0" : "h-auto opacity-100"
+        }`}
+      >
+        <div className="px-4 pb-4 pt-2 flex justify-center items-center">
+          <div className="flex-shrink-0 p-2 rounded-lg bg-slate-100 mr-2">
+            <AiOutlineRobot className="w-4 h-4 text-gray-500" />
+          </div>
+          <p className="text-xs text-gray-700 ">{content}</p>
         </div>
       </div>
     </div>

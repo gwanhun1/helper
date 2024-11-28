@@ -9,6 +9,7 @@ import Credit from "../components/pages/Credit";
 import KakaoAuth from "../components/molecules/KakaoAuth";
 import Auth from "../components/pages/Auth";
 import AuthGuard from "../components/pages/AuthGuard";
+import Error from "../components/pages/Error";
 
 const router = createBrowserRouter([
   {
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Home />, // 모든 잘못된 경로는 Home 리디렉션
+    element: <Error />, // 모든 잘못된 경로는 Home 리디렉션
   },
 ]);
 

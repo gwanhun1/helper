@@ -8,15 +8,19 @@ type InfoRowProps = {
 
 const IconRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
   return (
-    <div className="flex items-center gap-4">
-      {icon && (
-        <div className="flex-shrink-0 p-3 rounded-lg bg-slate-100">{icon}</div>
-      )}
-      <div>
-        <div className="text-sm font-semibold text-gray-700">{mainText}</div>
+    <>
+      <div className="flex items-start gap-3">
+        {icon && (
+          <div className="flex-shrink-0 p-3 rounded-lg bg-slate-100 mt-4">
+            {icon}
+          </div>
+        )}
+        <div>
+          <div className="text-sm font-semibold text-gray-700">{mainText}</div>
+        </div>
         {subText && <p className="text-xs text-gray-500">{subText}</p>}
       </div>
-    </div>
+    </>
   );
 };
 

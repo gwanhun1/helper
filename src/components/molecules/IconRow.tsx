@@ -19,7 +19,7 @@ const IconRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
                 {icon && (
                     <div
                         className={`flex-shrink-0 p-3 ${
-                            isReactNode ? 'mt-4' : ''
+                            isReactNode ? 'mt-2' : ''
                         } rounded-lg bg-slate-100`}
                     >
                         {icon}

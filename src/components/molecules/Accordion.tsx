@@ -17,8 +17,6 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
     const toggleAccordion = () => {
         setIsCollapsed(!isCollapsed);
     };
-    console.log(selectContent);
-    console.log(title === selectContent);
 
     return (
         <div

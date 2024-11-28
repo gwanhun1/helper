@@ -7,8 +7,8 @@ const Loading = ({ textStep }: { textStep: number }) => {
     ];
 
     return (
-        <div className="flex items-center justify-center bg-white">
-            <p className="text-[#4abd9d] text-2xl font-bold whitespace-pre-line">
+        <div className="flex items-center justify-center h-full bg-white ">
+            <p className="text-[#4abd9d] text-2xl font-bold whitespace-pre-line mt-10">
                 {TextArea[textStep]}
             </p>
         </div>

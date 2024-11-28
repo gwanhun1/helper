@@ -1,33 +1,13 @@
-import { AiOutlineUser } from "react-icons/ai";
-import IconRow from "../molecules/IconRow";
 import TitleContainer from "../atoms/TitleContainer";
-import Accordion from "../molecules/Accordion";
+import LogForm from "../organisms/LogForm";
 
 const WeekendLogs = () => {
   return (
     <>
       <TitleContainer title="주간" />
-      <div className="my-2 cursor-pointer" onClick={() => setSelect(1)}>
-        <IconRow
-          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-          mainText={<Accordion title="제목" content="내용" />}
-          subText="내용"
-        />
-      </div>
-      <div className="my-2 cursor-pointer" onClick={() => setSelect(1)}>
-        <IconRow
-          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-          mainText={<Accordion title="제목" content="내용" />}
-          subText="내용"
-        />
-      </div>
-      <div className="my-2 cursor-pointer" onClick={() => setSelect(1)}>
-        <IconRow
-          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-          mainText={<Accordion title="제목" content="내용" />}
-          subText="내용"
-        />
-      </div>
+      <LogForm />
+      <LogForm />
+      <LogForm />
     </>
   );
 };

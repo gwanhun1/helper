@@ -18,9 +18,9 @@ const KakaoAuth = () => {
   const updateUserDatabase = async (user: User) => {
     const db = getDatabase(app);
     const dataRef = ref(db, `users/${user.uid}`);
-    console.log(user);
 
     await update(dataRef, {
+      count: 3,
       loginDate: new Date().toLocaleDateString(),
       password: "kakao",
       id: user.displayName || "kakao_" + user.uid,
@@ -73,6 +73,9 @@ const KakaoAuth = () => {
 
               // Update user store
               setUser({
+                ...user,
+                grade: "",
+                count: 3,
                 uid: user.uid,
                 displayName: user.displayName || "이름 없음",
                 email: user.email || "이메일 없음",
@@ -101,6 +104,9 @@ const KakaoAuth = () => {
 
                     // Update user store
                     setUser({
+                      ...user,
+                      grade: "",
+                      count: 3,
                       uid: user.uid,
                       displayName: user.displayName || "이름 없음",
                       email: user.email || "이메일 없음",

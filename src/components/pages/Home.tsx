@@ -3,7 +3,7 @@ import ForestLog from "../organisms/ForestLog";
 
 const Home = () => {
   return (
-    <div className="flex flex-col h-full p-2">
+    <div className="flex flex-col h-full">
       <Forest />
       <ForestLog />
     </div>

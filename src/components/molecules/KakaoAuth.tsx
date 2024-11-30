@@ -10,6 +10,7 @@ import { getDatabase, ref, update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import { app } from "../../firebaseConfig";
+import Loading from "../atoms/Loading";
 
 const KakaoAuth = () => {
   const navigate = useNavigate();
@@ -142,7 +143,7 @@ const KakaoAuth = () => {
       });
   }, [navigate, setUser]);
 
-  return <div>카카오 로그인 처리 중...</div>;
+  return <Loading />;
 };
 
 export default KakaoAuth;

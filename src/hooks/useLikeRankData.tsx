@@ -4,7 +4,7 @@ import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 
 // 로그 데이터 타입 정의
-export interface LogItem {
+export interface Item {
   content: string; // 내용
   date: string; // 날짜
   id: string; // 고유 ID
@@ -13,17 +13,17 @@ export interface LogItem {
 }
 
 // 훅의 반환 타입 정의
-interface UseLogData {
-  data: LogItem[];
+interface UseLikeRankData {
+  data: Item[];
   loading: boolean;
   error: string | null;
 }
 
 // useLogData 훅 정의
-const useLogData = (): UseLogData => {
+const useLikeRankData = (): UseLikeRankData => {
   const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
 
-  const [data, setData] = useState<LogItem[]>([]);
+  const [data, setData] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,13 +40,13 @@ const useLogData = (): UseLogData => {
 
       const db = getDatabase(app); // Firebase Realtime Database 인스턴스 가져오기
       //   const dataRef = ref(db, `logs/${user.uid}`); // 사용자의 uid 기반 데이터 경로 설정
-      const dataRef = ref(db, `contents`); // 사용자의 uid 기반 데이터 경로 설정
+      const dataRef = ref(db, `logs/xAqSeXq4HKd39cBdErCuJwXunaq2`); // 사용자의 uid 기반 데이터 경로 설정
 
       try {
         const snapshot = await get(dataRef);
 
         if (snapshot.exists()) {
-          const userData = Object.values(snapshot.val()) as LogItem[];
+          const userData = Object.values(snapshot.val()) as Item[];
           setData(userData.reverse()); // 데이터를 역순으로 정렬
         } else {
           setData([]);
@@ -64,4 +64,4 @@ const useLogData = (): UseLogData => {
   return { data, loading, error };
 };
 
-export default useLogData;
+export default useLikeRankData;

@@ -5,9 +5,15 @@ const ForestLog = () => {
   const { data: forestData } = useLogData();
 
   return (
-    <div className="h-1/5 px-2">
+    <div
+      className="h-1/5 max-h-[600px] overflow-y-auto"
+      style={{
+        height: "500px",
+        minHeight: "500px",
+      }}
+    >
       {forestData.map((e) => (
-        <LogForm data={e} />
+        <LogForm key={e.id} data={e} />
       ))}
     </div>
   );

@@ -19,7 +19,7 @@ const useCounselingPrompt = () => {
 
 2. Emotional Expression (${how}):
 - Express feelings in a Korean cultural context
-- Use Korean-style emoticons (e.g., ㅠㅠ, ㅎㅎ, ^_^)
+- Sometime use Korean-style emoticons (e.g., ㅠㅠ, ㅎㅎ, ^_^)
 - Keep the tone authentic to Korean communication style
 
 Korean Speech Examples:

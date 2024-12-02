@@ -5,7 +5,12 @@ import TitleContainer from "../../atoms/TitleContainer";
 
 const StepFive = () => {
   const { reset, decrease } = useStepStore();
-  const { worry } = useWorryStore();
+  const { worry, reset: resetWorry } = useWorryStore();
+
+  const handleReset = () => {
+    resetWorry();
+    reset();
+  };
 
   return (
     <div className="p-2">
@@ -24,7 +29,7 @@ const StepFive = () => {
             bgColor="bg-green-400"
             onPress={() => decrease()}
           />
-          <Button text="retry" bgColor="bg-gray-400" onPress={() => reset()} />
+          <Button text="retry" bgColor="bg-gray-400" onPress={handleReset} />
         </div>
       </div>
     </div>

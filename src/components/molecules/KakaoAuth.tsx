@@ -38,8 +38,6 @@ const KakaoAuth = () => {
       return;
     }
 
-    console.log("Received Kakao Code:", code);
-
     // 카카오 API로 access_token을 요청
     fetch("https://kauth.kakao.com/oauth/token", {
       method: "POST",
@@ -70,7 +68,7 @@ const KakaoAuth = () => {
           signInWithCredential(auth, credential)
             .then(async (result) => {
               const user = result.user;
-              alert("환영합니다!🎉");
+              alert("환영합니다! 🎉");
 
               // Update user store
               setUser({
@@ -80,8 +78,6 @@ const KakaoAuth = () => {
                 uid: user.uid,
                 displayName: user.displayName || "이름 없음",
                 email: user.email || "이메일 없음",
-                photoURL:
-                  user.photoURL || "https://example.com/default-avatar.jpg",
               });
 
               // Update database

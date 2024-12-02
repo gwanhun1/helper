@@ -1,9 +1,11 @@
 import useStepStore from "../../../store/stepStore";
+import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
 import TitleContainer from "../../atoms/TitleContainer";
 
 const StepThree = () => {
   const { increase, decrease } = useStepStore();
+  const { setHow } = useWorryStore();
 
   return (
     <div className="p-2">
@@ -21,7 +23,7 @@ const StepThree = () => {
           outline
         />
         <Button
-          onPress={() => increase()}
+          onPress={() => setHow("2")}
           text="Short"
           bgColor="bg-green-400"
         />

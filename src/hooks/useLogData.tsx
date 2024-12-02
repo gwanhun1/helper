@@ -4,7 +4,7 @@ import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 
 // 로그 데이터 타입 정의
-export interface LogItem {
+export interface Item {
   content: string; // 내용
   date: string; // 날짜
   id: string; // 고유 ID
@@ -14,7 +14,7 @@ export interface LogItem {
 
 // 훅의 반환 타입 정의
 interface UseLogData {
-  data: LogItem[];
+  data: Item[];
   loading: boolean;
   error: string | null;
 }
@@ -23,7 +23,7 @@ interface UseLogData {
 const useLogData = (): UseLogData => {
   const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
 
-  const [data, setData] = useState<LogItem[]>([]);
+  const [data, setData] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +46,7 @@ const useLogData = (): UseLogData => {
         const snapshot = await get(dataRef);
 
         if (snapshot.exists()) {
-          const userData = Object.values(snapshot.val()) as LogItem[];
+          const userData = Object.values(snapshot.val()) as Item[];
           setData(userData.reverse()); // 데이터를 역순으로 정렬
         } else {
           setData([]);

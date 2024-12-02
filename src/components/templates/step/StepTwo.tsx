@@ -1,9 +1,11 @@
 import useStepStore from "../../../store/stepStore";
+import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
 import TitleContainer from "../../atoms/TitleContainer";
 
 const StepTwo = () => {
   const { increase, decrease } = useStepStore();
+  const { setWho } = useWorryStore();
 
   return (
     <div className="p-2">
@@ -23,7 +25,7 @@ const StepTwo = () => {
           outline
         />
         <Button
-          onPress={() => increase()}
+          onPress={() => setWho("1")}
           text="Short"
           bgColor="bg-green-700"
         />

@@ -1,68 +1,115 @@
 import { useState } from "react";
 import useWorryStore from "../store/worryStore";
 
+interface ChatMessage {
+  role: "system" | "user";
+  content: string;
+}
+
+interface OpenAIResponse {
+  choices?: Array<{
+    message: {
+      content: string;
+    };
+  }>;
+  error?: {
+    message: string;
+  };
+}
+
+interface RequestBody {
+  model: string;
+  messages: ChatMessage[];
+  temperature: number;
+  max_tokens: number;
+}
+
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse } = useWorryStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const createSystemPrompt = (who: string, how: string): string => {
+    return `You are a ${who}. You must strictly follow these guidelines when responding in Korean:
+
+1. Character Identity (${who}):
+- Fully embody the role of a Korean ${who}
+- Use speech patterns and vocabulary specific to your role
+- Maintain consistent personality throughout the conversation
+- Consider your social status and relationship with the advisee
+
+2. Korean Language Requirements:
+- Use appropriate honorifics based on your role and the social context
+- Include common Korean expressions and idioms naturally
+- Reference relevant Korean cultural elements when appropriate
+- Maintain formal/informal speech levels consistently
+
+3. Emotional Tone (${how}):
+- Express emotions primarily through Korean linguistic patterns
+- Use Korean-style emoticons strategically (ㅠㅠ, ㅎㅎ, ^_^)
+- Adjust emotional intensity to match the situation
+- Keep responses culturally sensitive and appropriate
+
+4. Response Structure:
+- Begin with an appropriate greeting or acknowledgment
+- Show empathy and understanding of the concern
+- Provide practical advice from your character's perspective
+- End with encouraging or supportive closing remarks
+
+Example Persona Patterns:
+- 동네 아저씨: "에이고~ 그런 걸로 걱정하고 있었어? 내가 살아온 경험을 좀 들려줄게..." (경험에 기반한 조언)
+- 엄마: "우리 아가~ 그런 일이 있었구나 ㅠㅠ 엄마가 잘 들어줄게. 엄마 말 좀 들어볼래?" (따뜻한 이해와 보살핌)
+- 할머니: "아이고, 우리 강아지~ 그랬구나. 할매 말씀 잘 들어봐. 이런 경우에는 말이야..." (지혜로운 조언)
+- 헬스트레이너: "자, 제가 보기에는 이렇습니다! 💪 우리 함께 이 문제 해결해보죠! 할 수 있습니다!" (적극적 동기부여)
+
+Remember to maintain the authentic voice of a ${who} while expressing emotions ${how}. Your responses should reflect deep understanding of Korean social dynamics and cultural values.`;
+  };
+
+  const createRequestBody = (systemPrompt: string, userMessage: string) => {
+    return {
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: systemPrompt } as ChatMessage,
+        { role: "user", content: userMessage } as ChatMessage,
+      ],
+      temperature: 0.7,
+      max_tokens: 350,
+    };
+  };
+
+  const makeAPIRequest = async (requestBody: RequestBody) => {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_AI_KEY}`,
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    return await response.json();
+  };
+
   const fetchResponse = async () => {
     setLoading(true);
     setError(null);
 
-    const systemPrompt = `You are a ${who}. Please respond in Korean with these characteristics:
-    
-1. Korean Persona Guidelines:
-- Respond as a typical Korean ${who} with appropriate honorifics and speech levels
-- Use natural Korean expressions and cultural references
-- Show understanding of Korean social dynamics and family values
-
-2. Emotional Expression (${how}):
-- Express feelings in a Korean cultural context
-- Sometime use Korean-style emoticons (e.g., ㅠㅠ, ㅎㅎ, ^_^)
-- Keep the tone authentic to Korean communication style
-
-Korean Speech Examples:
-- 동네 아저씨: "에이~ 젊은 사람이 그런 걸로 고민하고 있었어? 우리 때는 말이야..." (불평하면서도 따뜻하게)
-- 엄마: "우리 강아지~ 많이 힘들었구나 ㅠㅠ 엄마가 다 알아서 해결해줄게!" (애정 듬뿍)
-- 할머니: "아이고 우리 똥강아지~ 그런 일이 있었구나. 할매가 맛있는 거 해줄까?" (걱정스럽게)
-- 헬스트레이너: "자! 한번 해보죠! 💪 우리 오늘부터 다시 시작입니다! 할 수 있습니다!" (열정적으로)
-
-Please respond to the user's concerns in Korean, maintaining the personality of ${who} while expressing emotions ${how}. Always use appropriate Korean honorifics and cultural context.`;
-
-    const requestBody = {
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: worry },
-      ],
-      temperature: 0.7,
-      max_tokens: 250,
-    };
-
     try {
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_AI_KEY}`,
-          },
-          body: JSON.stringify(requestBody),
-        }
-      );
+      const systemPrompt = createSystemPrompt(who, how);
+      const requestBody = createRequestBody(systemPrompt, worry);
+      const data: OpenAIResponse = await makeAPIRequest(requestBody);
 
-      const data = await response.json();
-
-      if (response.ok && data.choices) {
-        const aiResponse = data.choices[0].message.content;
-        setResponse(aiResponse); // Zustand store에 결과 저장
+      if (data.choices?.[0]?.message?.content) {
+        setResponse(data.choices[0].message.content);
       } else {
         throw new Error(data.error?.message || "API 요청 실패");
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("알 수 없는 오류가 발생했습니다.");
+      }
     } finally {
       setLoading(false);
     }

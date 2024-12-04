@@ -52,7 +52,11 @@ const useLogData = (): UseLogData => {
           setData([]);
         }
       } catch (e) {
-        setError("데이터를 가져오는 중 오류가 발생했습니다.");
+        setError(
+          `데이터를 가져오는 중 오류가 발생했습니다: ${
+            e instanceof Error ? e.message : "알 수 없는 오류"
+          }`
+        );
       } finally {
         setLoading(false);
       }

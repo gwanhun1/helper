@@ -1,9 +1,10 @@
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineDelete } from "react-icons/ai";
 import IconRow from "../molecules/IconRow";
 import Accordion from "../molecules/Accordion";
 import { Item } from "../../hooks/useDateRankData";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import { useRef, useEffect } from "react";
+import useDeleteData from "../../hooks/useDeleteData";
 
 type LogFormProps = { data: Item };
 
@@ -11,9 +12,17 @@ const LogForm = ({ data }: LogFormProps) => {
   const { content: selectContent, response: selectResponse } =
     useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);
+  const { deleteData, loading } = useDeleteData();
 
   const handleSelectTree = (data: Item) => {
     useSelectTreeStore.getState().select(data);
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm("정말 삭제하시겠습니까?")) {
+      await deleteData(data.id);
+    }
   };
 
   const isSelected =
@@ -47,11 +56,20 @@ const LogForm = ({ data }: LogFormProps) => {
         zIndex: isSelected ? 10 : 1,
       }}
     >
-      <IconRow
-        icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-        mainText={<Accordion title={data.content} content={data.response} />}
-        subText={data.date}
-      />
+      <div className="flex justify-between items-center">
+        <IconRow
+          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
+          mainText={<Accordion title={data.content} content={data.response} />}
+          subText={data.date}
+        />
+        <button
+          onClick={handleDelete}
+          disabled={loading}
+          className="p-2 hover:text-red-500 transition-colors"
+        >
+          <AiOutlineDelete className="w-5 h-5" />
+        </button>
+      </div>
     </div>
   );
 };

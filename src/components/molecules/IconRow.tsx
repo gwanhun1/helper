@@ -10,7 +10,7 @@ const IconRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
   const isReactNode = React.isValidElement(mainText); // React 노드인지 확인
 
   return (
-    <>
+    <div>
       <div
         className={`flex ${isReactNode ? "items-start" : "items-center"} gap-3`}
       >
@@ -34,7 +34,7 @@ const IconRow: React.FC<InfoRowProps> = ({ icon, mainText, subText }) => {
           <p className="my-1 text-xs text-gray-500">{subText}</p>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

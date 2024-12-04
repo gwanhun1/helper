@@ -10,6 +10,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     if (!user) {
       // 사용자가 로그인되지 않았다면 '/auth' 페이지로 리다이렉트
+
       navigate("/auth");
     }
   }, [user, navigate]); // user가 바뀔 때마다 실행

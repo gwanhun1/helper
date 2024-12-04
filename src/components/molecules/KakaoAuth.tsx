@@ -5,6 +5,7 @@ import {
   signInWithCredential,
   createUserWithEmailAndPassword,
   User,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { getDatabase, ref, update } from "firebase/database";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,25 @@ import Loading from "../atoms/Loading";
 const KakaoAuth = () => {
   const navigate = useNavigate();
   const setUser = useUserStore((state) => state.setUser);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, update user store
+        setUser({
+          ...user,
+          grade: "",
+          count: 3,
+          uid: user.uid,
+          displayName: user.displayName || "이름 없음",
+          email: user.email || "이메일 없음",
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [setUser]);
 
   const updateUserDatabase = async (user: User) => {
     const db = getDatabase(app);
@@ -107,9 +127,6 @@ const KakaoAuth = () => {
                       uid: user.uid,
                       displayName: user.displayName || "이름 없음",
                       email: user.email || "이메일 없음",
-                      photoURL:
-                        user.photoURL ||
-                        "https://example.com/default-avatar.jpg",
                     });
 
                     // Update database
@@ -117,25 +134,17 @@ const KakaoAuth = () => {
 
                     navigate("/");
                   })
-                  .catch((signupError) => {
-                    console.error("회원가입 실패:", signupError);
-                    alert("회원가입에 실패했습니다.");
+                  .catch((error) => {
+                    console.error("회원가입 실패:", error.code, error.message);
+                    alert("회원가입 중 오류가 발생했습니다. 다시 시도해 주세요.");
                   });
-              } else {
-                alert("로그인에 실패했습니다.");
               }
             });
-        } else {
-          console.error(
-            "Access token이 없거나 잘못된 응답이 반환되었습니다:",
-            data
-          );
-          alert("로그인에 실패했습니다. 다시 시도해주세요.");
         }
       })
       .catch((error) => {
-        console.error("카카오 로그인 실패:", error);
-        alert("카카오 로그인 요청 중 오류가 발생했습니다.");
+        console.error("카카오 인증 실패:", error);
+        alert("카카오 인증 중 오류가 발생했습니다. 다시 시도해 주세요.");
       });
   }, [navigate, setUser]);
 

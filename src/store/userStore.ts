@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import {
   getAuth,
   onAuthStateChanged,
@@ -18,10 +19,17 @@ interface UserStore {
 }
 
 // Zustand store 생성
-const useUserStore = create<UserStore>((set) => ({
-  user: null, // 초기 상태는 null
-  setUser: (user) => set(() => ({ user })), // 사용자 정보 설정
-}));
+const useUserStore = create<UserStore>()(
+  persist(
+    (set) => ({
+      user: null, // 초기 상태는 null
+      setUser: (user) => set(() => ({ user })), // 사용자 정보 설정
+    }),
+    {
+      name: "user-storage", // 로컬 스토리지에 저장될 키 이름
+    }
+  )
+);
 
 // Firebase 인증 상태 변화 감지
 const auth = getAuth(app);

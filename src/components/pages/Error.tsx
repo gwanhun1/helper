@@ -8,8 +8,8 @@ const Error = () => {
   };
 
   return (
-    <div className="h-full flex justify-center items-center">
-      <div className="">잘못된 요청입니다.</div>
+    <div className="h-full flex flex-col justify-center items-center">
+      <div className="my-3">잘못된 요청입니다.</div>
       <Button size="lg" onPress={handleClick} text="Home으로 돌아가기." />
     </div>
   );

@@ -15,6 +15,9 @@ const useDeleteData = (): UseDeleteData => {
   const user = useUserStore((state) => state.user);
 
   const deleteData = async (id: string) => {
+
+    console.log(id);
+    
     if (!user?.uid) {
       setError("로그인이 필요합니다.");
       return;
@@ -27,6 +30,7 @@ const useDeleteData = (): UseDeleteData => {
 
     setLoading(true);
     setError(null);
+
 
     try {
       const db = getDatabase(app);

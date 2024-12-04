@@ -10,6 +10,7 @@ import KakaoAuth from "../components/molecules/KakaoAuth";
 import Auth from "../components/pages/Auth";
 import AuthGuard from "../components/pages/AuthGuard";
 import Error from "../components/pages/Error";
+import Meditation from "../components/pages/Meditation"; // Added import statement
 
 const router = createBrowserRouter([
   {
@@ -52,7 +53,10 @@ const router = createBrowserRouter([
           </AuthGuard>
         ), // Credit 페이지는 인증 필요
       },
-
+      {
+        path: "/Meditation",
+        element: <Meditation />, // Meditation 페이지는 인증 필요 없음
+      },
       {
         path: "/auth",
         element: <Auth />, // 인증 페이지는 인증 필요 없음

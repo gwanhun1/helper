@@ -47,6 +47,18 @@ const BottomNavigation: React.FC = () => {
         active={location.pathname === "/worry"}
       />
       <TabButton
+        to="/meditation"
+        icon={
+          location.pathname === "/meditation" ? (
+            <AiOutlineUser className="text-green" />
+          ) : (
+            <AiOutlineUser className="text-gray-600 hover:text-green" />
+          )
+        }
+        label="명상"
+        active={location.pathname === "/meditation"}
+      />
+      <TabButton
         to="/credit"
         icon={
           location.pathname === "/credit" ? (

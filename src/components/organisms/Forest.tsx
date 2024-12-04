@@ -62,13 +62,7 @@ const Forest = () => {
   }, [forestData]);
 
   return (
-    <div className="relative w-full h-[400px] bg-gradient-to-b from-sky-200 via-sky-100 to-green-100 overflow-hidden">
-      {/* 배경 구름 효과 */}
-      <div className="absolute w-full h-full">
-        <div className="cloud-1"></div>
-        <div className="cloud-2"></div>
-        <div className="cloud-3"></div>
-      </div>
+    <div className="relative w-full h-[400px] overflow-hidden">
 
       {trees.map((tree, index) => {
         const position = treePositions[index];
@@ -114,55 +108,6 @@ const Forest = () => {
         );
       })}
 
-      <style>
-        {`
-          @keyframes treeWave {
-            0%, 100% { transform: translateY(0) rotate(var(--rotate-angle)); }
-            50% { transform: translateY(-5px) rotate(calc(var(--rotate-angle) + var(--sway-amount))); }
-          }
-
-          @keyframes treeSway {
-            0%, 100% { transform: rotate(calc(var(--rotate-angle) - var(--sway-amount))); }
-            50% { transform: rotate(calc(var(--rotate-angle) + var(--sway-amount))); }
-          }
-
-          .cloud-1, .cloud-2, .cloud-3 {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50px;
-            filter: blur(10px);
-          }
-
-          .cloud-1 {
-            width: 100px;
-            height: 40px;
-            left: 10%;
-            top: 20%;
-            animation: cloudFloat 20s infinite linear;
-          }
-
-          .cloud-2 {
-            width: 150px;
-            height: 50px;
-            left: 40%;
-            top: 10%;
-            animation: cloudFloat 25s infinite linear;
-          }
-
-          .cloud-3 {
-            width: 120px;
-            height: 45px;
-            left: 70%;
-            top: 15%;
-            animation: cloudFloat 22s infinite linear;
-          }
-
-          @keyframes cloudFloat {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(1000px); }
-          }
-        `}
-      </style>
     </div>
   );
 };

@@ -1,27 +1,19 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import useSelectTreeStore from "../../store/selectTreeStore";
-import treeImage from "../../assets/tree.png";
-import selectTreeImage from "../../assets/selectTree.png";
+import treeImage from "/tree.png";
+import selectTreeImage from "/selectTree.png";
 import useLogData from "../../hooks/useLogData";
 import { Item } from "../../hooks/useDateRankData";
 
 const Forest = () => {
   const { data: forestData } = useLogData();
-  const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(
-    null
-  );
-  const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(
-    null
-  );
-  const [trees, setTrees] = useState<Item[]>([]);
-
-  useEffect(() => {
-    setTrees(forestData);
-  }, [forestData]);
+  const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(null);
+  const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(null);
+  const prevTreesRef = useRef<Item[]>([]);
 
   // 나무 위치와 애니메이션 속성을 컴포넌트 마운트 시 한 번만 계산
   const treePositions = useMemo(() => {
-    return trees.map(() => ({
+    return forestData.map(() => ({
       xPos: Math.random() * 80 + 10,
       yPos: Math.random() * 70 + 10,
       scale: Math.random() * 0.4 + 0.8,
@@ -30,7 +22,7 @@ const Forest = () => {
       waveDuration: 3 + Math.random() * 3,
       swayAmount: Math.random() * 3 + 1,
     }));
-  }, [trees.length]);
+  }, [forestData.length]);
 
   const handleTreeClick = (index: number, treeData: Item) => {
     setSelectedTreeIndex(selectedTreeIndex === index ? null : index);
@@ -41,30 +33,30 @@ const Forest = () => {
 
   // 트리 삭제 애니메이션 및 처리
   useEffect(() => {
-    const prevLength = trees.length;
-    if (forestData.length < prevLength) {
-      // 삭제된 트리 찾기
-      const removedTreeIndex = trees.findIndex(
-        (tree) => !forestData.some((newTree) => newTree.id === tree.id)
+    const prevTrees = prevTreesRef.current;
+    if (prevTrees.length > forestData.length) {
+      // 이전 데이터에는 있지만 현재 데이터에는 없는 트리의 인덱스 찾기
+      const removedIndex = prevTrees.findIndex(
+        (prevTree) => !forestData.some((newTree) => newTree.id === prevTree.id)
       );
-      if (removedTreeIndex !== -1) {
-        setRemovingTreeIndex(removedTreeIndex);
-        // 애니메이션 후 실제 데이터 업데이트
+      
+      if (removedIndex !== -1) {
+        setRemovingTreeIndex(removedIndex);
         setTimeout(() => {
-          setTrees(forestData);
           setRemovingTreeIndex(null);
           setSelectedTreeIndex(null);
         }, 500);
       }
-    } else {
-      setTrees(forestData);
     }
+    
+    // 현재 데이터를 이전 데이터로 저장
+    prevTreesRef.current = forestData;
   }, [forestData]);
+console.log(forestData.length);
 
   return (
     <div className="relative w-full h-[400px] overflow-hidden">
-
-      {trees.map((tree, index) => {
+      {forestData.map((tree, index) => {
         const position = treePositions[index];
         const isRemoving = removingTreeIndex === index;
 
@@ -82,12 +74,8 @@ const Forest = () => {
                 width: "40px",
                 height: "40px",
                 transform: `scale(${position.scale}) rotate(${position.rotateAngle}deg)`,
-                animation: `treeWave ${
-                  position.waveDuration
-                }s infinite ease-in-out, 
-                         treeSway ${
-                           position.waveDuration * 1.5
-                         }s infinite ease-in-out`,
+                animation: `treeWave ${position.waveDuration}s infinite ease-in-out, 
+                         treeSway ${position.waveDuration * 1.5}s infinite ease-in-out`,
                 animationDelay: `${position.waveDelay}s`,
                 "--sway-amount": `${position.swayAmount}deg`,
               } as React.CSSProperties
@@ -107,7 +95,6 @@ const Forest = () => {
           </div>
         );
       })}
-
     </div>
   );
 };

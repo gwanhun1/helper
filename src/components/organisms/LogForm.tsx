@@ -7,9 +7,13 @@ import { useRef, useEffect, useState } from "react";
 import useDeleteData from "../../hooks/useDeleteData";
 import { useSwipeable } from "react-swipeable";
 
-type LogFormProps = { data: Item };
+type LogFormProps = {
+  data: Item;
+  onDelete: () => Promise<void>;
+};
 
-const LogForm = ({ data }: LogFormProps) => {
+const LogForm = ({ data, onDelete }: LogFormProps) => {
+
   const { content: selectContent, response: selectResponse } =
     useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -20,11 +24,14 @@ const LogForm = ({ data }: LogFormProps) => {
     useSelectTreeStore.getState().select(data);
   };
 
+  
+
   const handleDelete = async (e: React.MouseEvent) => {
     try {
       e.stopPropagation();
       if (window.confirm("정말 삭제하시겠습니까?")) {
         await deleteData(data.id);
+        await onDelete(); // 삭제 후 데이터 새로고침
       }
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -90,7 +97,7 @@ const LogForm = ({ data }: LogFormProps) => {
       onMouseDown={handleMouseDown}
       ref={elementRef}
       className={`
-        px-2
+        px-4
         my-1 cursor-pointer
         transition-all duration-500 ease-in-out
         ${

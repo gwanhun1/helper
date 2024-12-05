@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { get, getDatabase, ref } from "firebase/database";
+import { get, getDatabase, ref, onValue, off } from "firebase/database";
 import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 
@@ -17,55 +17,81 @@ interface UseLogData {
   data: Item[];
   loading: boolean;
   error: string | null;
+  refreshData: () => Promise<void>;
 }
 
 // useLogData 훅 정의
 const useLogData = (): UseLogData => {
-  const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
-
+  const user = useUserStore((state) => state.user);
   const [data, setData] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const db = getDatabase(app);
+      const dataRef = ref(db, 'contents');
+      const snapshot = await get(dataRef);
+
+      if (snapshot.exists()) {
+        const rawData = snapshot.val();
+        const userData = Object.entries(rawData).map(([key, value]) => ({
+          ...(value as Omit<Item, 'id'>),
+          id: key
+        }));
+        setData(userData.reverse());
+      } else {
+        setData([]);
+      }
+    } catch (e) {
+      setError(
+        `데이터를 가져오는 중 오류가 발생했습니다: ${
+          e instanceof Error ? e.message : "알 수 없는 오류"
+        }`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // 사용자가 로그인하지 않았거나 uid가 없는 경우 데이터 초기화
     if (!user?.uid) {
       setData([]);
       return;
     }
 
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    const db = getDatabase(app);
+    const dataRef = ref(db, 'contents');
 
-      const db = getDatabase(app); // Firebase Realtime Database 인스턴스 가져오기
-      //   const dataRef = ref(db, `logs/${user.uid}`); // 사용자의 uid 기반 데이터 경로 설정
-      const dataRef = ref(db, `contents`); // 사용자의 uid 기반 데이터 경로 설정
-
-      try {
-        const snapshot = await get(dataRef);
-
-        if (snapshot.exists()) {
-          const userData = Object.values(snapshot.val()) as Item[];
-          setData(userData.reverse()); // 데이터를 역순으로 정렬
-        } else {
-          setData([]);
-        }
-      } catch (e) {
-        setError(
-          `데이터를 가져오는 중 오류가 발생했습니다: ${
-            e instanceof Error ? e.message : "알 수 없는 오류"
-          }`
-        );
-      } finally {
-        setLoading(false);
+    // 실시간 리스너 설정
+    const unsubscribe = onValue(dataRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const rawData = snapshot.val();
+        const userData = Object.entries(rawData).map(([key, value]) => ({
+          ...(value as Omit<Item, 'id'>),
+          id: key
+        }));
+        setData(userData.reverse());
+      } else {
+        setData([]);
       }
-    };
+      setLoading(false);
+    }, (error) => {
+      setError(`데이터를 가져오는 중 오류가 발생했습니다: ${error.message}`);
+      setLoading(false);
+    });
 
-    fetchData();
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      off(dataRef);
+    };
   }, [user]);
 
-  return { data, loading, error };
+  return { data, loading, error, refreshData: fetchData };
 };
 
 export default useLogData;

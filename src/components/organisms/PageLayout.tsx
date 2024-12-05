@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../atoms/Container';
-import AuthGuard from '../molecules/AuthGuard';
+import AuthGuard from '../pages/AuthGuard';
 
 interface PageLayoutProps {
     children: React.ReactNode;

@@ -7,7 +7,7 @@ import Worry from "../components/pages/Worry";
 import Credit from "../components/pages/Credit";
 import KakaoAuthSection from "../components/organisms/KakaoAuthSection";
 import Auth from "../components/pages/Auth";
-import AuthGuard from "../components/molecules/AuthGuard";
+import AuthGuard from "../components/pages/AuthGuard";
 import Error from "../components/pages/Error";
 import Meditation from "../components/pages/Meditation";
 
@@ -41,10 +41,6 @@ const router = createBrowserRouter([
         element: <Credit />,
       },
       {
-        path: "/oauth/callback/kakao",
-        element: <KakaoAuthSection />,
-      },
-      {
         path: "/auth",
         element: <Auth />,
       },
@@ -55,6 +51,10 @@ const router = createBrowserRouter([
             <Meditation />
           </AuthGuard>
         ),
+      },
+      {
+        path: "/auth/kakao/callback",
+        element: <KakaoAuthSection />,
       },
       {
         path: "*",

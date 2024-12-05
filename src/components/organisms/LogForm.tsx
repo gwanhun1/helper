@@ -13,25 +13,31 @@ type LogFormProps = {
 };
 
 const LogForm = ({ data, onDelete }: LogFormProps) => {
-
-  const { content: selectContent, response: selectResponse } =
-    useSelectTreeStore();
+  const { content: selectContent, response: selectResponse } = useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);
   const { deleteData, loading } = useDeleteData();
   const [swipedItemId, setSwipedItemId] = useState<string | null>(null);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const handleSelectTree = (data: Item) => {
     useSelectTreeStore.getState().select(data);
   };
 
-  
+  const handlers = useSwipeable({
+    onSwipedLeft: () => handleSwipeLeft(data.id),
+    onSwipedRight: () => handleSwipeRight(),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+    delta: 10,
+    swipeDuration: 250,
+  });
 
   const handleDelete = async (e: React.MouseEvent) => {
     try {
       e.stopPropagation();
       if (window.confirm("정말 삭제하시겠습니까?")) {
         await deleteData(data.id);
-        await onDelete(); // 삭제 후 데이터 새로고침
+        await onDelete();
       }
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -47,92 +53,66 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
     setSwipedItemId(null);
   };
 
-  const isSelected =
-    selectContent == data.content && selectResponse === data.response;
-
-  useEffect(() => {
-    if (isSelected && elementRef.current) {
-      elementRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }, [isSelected]);
-
-  const swipeHandlers = useSwipeable({
-    onSwipedLeft: () => handleSwipeLeft(data.id),
-    onSwipedRight: handleSwipeRight,
-  });
-
-  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.persist();
-    const startX = e.clientX;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const currentX = moveEvent.clientX;
-      const diffX = startX - currentX;
-
-      if (diffX > 50) {
-        handleSwipeLeft(data.id);
-        document.removeEventListener("mousemove", handleMouseMove);
-      } else if (diffX < -50) {
-        handleSwipeRight();
-        document.removeEventListener("mousemove", handleMouseMove);
-      }
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-
-    const handleMouseUp = () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-
-    document.addEventListener("mouseup", handleMouseUp);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
   };
 
+  const handleTouchEnd = () => {
+    setTouchStartX(null);
+  };
+
+  const isSelected = selectContent == data.content && selectResponse === data.response;
+
   return (
-    <div
-      {...swipeHandlers}
-      onMouseDown={handleMouseDown}
+    <div 
       ref={elementRef}
+      {...handlers}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
       className={`
-        px-4
-        my-1 cursor-pointer
-        transition-all duration-500 ease-in-out
-        ${
-          swipedItemId === data.id  ? "bg-red-400":
-          isSelected
-            ? "bg-green-200 -translate-y-1 shadow-md order-first"
-            : "bg-white"
-        }
+        relative w-full transition-transform duration-200 ease-out
+        touch-pan-y select-none
+        ${swipedItemId === data.id ? 'translate-x-[-80px]' : 'translate-x-0'}
       `}
-      onClick={() => handleSelectTree(data)}
-      style={{
-        position: "relative",
-        zIndex: isSelected ? 10 : 1,
-      }}
     >
-      <div className="flex justify-between items-center">
-        <IconRow
-          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-          mainText={<Accordion title={data.content} content={data.response} />}
+      <div 
+        onClick={() => handleSelectTree(data)}
+        className={`
+          w-full rounded-lg bg-white shadow-sm
+          transition-colors duration-200
+          active:bg-gray-50
+          ${isSelected ? "border-2 border-green" : "border border-gray-100"}
+        `}
+      >
+        <Accordion
+          title={
+            <IconRow
+              icon={<AiOutlineUser className="w-5 h-5" />}
+              content={data.content}
+              date={data.created_at}
+            />
+          }
+          content={data.response}
         />
-        {swipedItemId === data.id && (
-          <button
-            onClick={handleDelete}
-            disabled={loading}
-            className="p-2 hover:text-red-500 transition-colors"
-          >
-            <AiOutlineDelete className="w-5 h-5" />
-          </button>
-        )}
       </div>
-       <div
-       className={"flex justify-end"}
-     >
-       <p className="my-1 text-xs text-gray-500">{data.date}</p>
-     </div>
+      
+      {/* Delete Button */}
+      <button
+        onClick={handleDelete}
+        disabled={loading}
+        className={`
+          absolute top-0 right-[-70px] h-full w-[70px]
+          flex items-center justify-center
+          bg-red-500 text-white rounded-r-lg
+          transition-opacity duration-200
+          active:bg-red-600
+          disabled:opacity-50
+          ${swipedItemId === data.id ? 'opacity-100' : 'opacity-0'}
+        `}
+        aria-label="삭제"
+      >
+        <AiOutlineDelete className="w-6 h-6" />
+      </button>
     </div>
   );
 };

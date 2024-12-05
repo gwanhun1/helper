@@ -12,61 +12,57 @@ import { FaYinYang } from "react-icons/fa";
 import TabButton from "../atoms/TabButton";
 
 const BottomNavigation: React.FC = () => {
-  const location = useLocation(); // 현재 경로 가져오기
+  const location = useLocation();
 
   return (
-    <div className="bottom-0 left-0 flex items-center justify-between w-full p-4 bg-white border-t-2 shadow-lg">
-      {/* 각 탭 버튼들 */}
-      <TabButton
-        to="/"
-        icon={location.pathname === "/" ? <AiFillHome /> : <AiOutlineHome />}
-        label="Home"
-        active={location.pathname === "/"}
-      />
-     
-     <TabButton
-        to="/meditation"
-        icon={
-          <FaYinYang className={location.pathname === "/meditation" ? "text-green" : "text-gray-600 hover:text-green"} />
-        }
-        label="명상"
-        active={location.pathname === "/meditation"}
-      />
-      
-      <TabButton
-        to="/worry"
-        icon={
-          location.pathname === "/worry" ? (
-            <AiFillPlusCircle />
-          ) : (
-            <AiOutlinePlusCircle />
-          )
-        }
-        label="조언"
-        active={location.pathname === "/worry"}
-      />
-      
-      <TabButton
-        to="/credit"
-        icon={
-          location.pathname === "/credit" ? (
-            <AiFillCreditCard />
-          ) : (
-            <AiOutlineCreditCard />
-          )
-        }
-        label="결제"
-        active={location.pathname === "/credit"}
-      />
-      <TabButton
-        to="/user"
-        icon={
-          location.pathname === "/user" ? <AiOutlineUser /> : <AiOutlineUser />
-        }
-        label="내정보"
-        active={location.pathname === "/user"}
-      />
-    </div>
+    <nav className="sticky bottom-0 left-0 w-full bg-white border-t border-gray-200">
+      <div className="flex items-center justify-between px-6 h-[56px]">
+        <TabButton
+          to="/"
+          icon={location.pathname === "/" ? <AiFillHome className="w-6 h-6" /> : <AiOutlineHome className="w-6 h-6" />}
+          label="Home"
+          active={location.pathname === "/"}
+        />
+       
+        <TabButton
+          to="/meditation"
+          icon={
+            <FaYinYang 
+              className={`w-6 h-6 ${location.pathname === "/meditation" ? "text-green" : "text-gray-600 hover:text-green"}`}
+            />
+          }
+          label="명상"
+          active={location.pathname === "/meditation"}
+        />
+        
+        <TabButton
+          to="/worry"
+          icon={
+            location.pathname === "/worry" ? (
+              <AiFillPlusCircle className="w-6 h-6" />
+            ) : (
+              <AiOutlinePlusCircle className="w-6 h-6" />
+            )
+          }
+          label="조언"
+          active={location.pathname === "/worry"}
+        />
+        
+        <TabButton
+          to="/credit"
+          icon={
+            location.pathname === "/credit" ? (
+              <AiFillCreditCard className="w-6 h-6" />
+            ) : (
+              <AiOutlineCreditCard className="w-6 h-6" />
+            )
+          }
+          label="크레딧"
+          active={location.pathname === "/credit"}
+        />
+      </div>
+    </nav>
   );
 };
+
 export default BottomNavigation;

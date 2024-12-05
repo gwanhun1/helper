@@ -13,14 +13,17 @@ const TabButton: React.FC<TabButtonProps> = ({ to, icon, label, active }) => {
   return (
     <Link
       to={to}
-      className={`flex flex-col items-center flex-1 justify-center ${
-        active
-          ? "text-green" // 활성화된 탭에서 글자 색만 변함
-          : "text-gray-600 hover:text-green" // 비활성화된 탭에서 hover 시 글자 색 변함
-      } py-2 px-4 transition-all duration-200`}
+      className={`
+        flex flex-col items-center justify-center
+        min-w-[56px] min-h-[56px]
+        ${active ? "text-green" : "text-gray-600 hover:text-green"}
+        transition-colors duration-200
+        active:opacity-70
+        select-none
+      `}
     >
-      <div className="text-xl">{icon}</div>
-      <Text size="xs" className="mt-2 whitespace-nowrap">
+      {icon}
+      <Text size="xs" className="mt-1 text-[10px]">
         {label}
       </Text>
     </Link>

@@ -55,6 +55,15 @@ module.exports = {
           900: "#1a1a1a",
         },
       },
+      spacing: {
+        'safe-top': 'var(--sat)',
+        'safe-bottom': 'var(--sab)',
+        'safe-left': 'var(--sal)',
+        'safe-right': 'var(--sar)',
+      },
+      height: {
+        'screen-safe': 'calc(100vh - var(--sat) - var(--sab))'
+      }
     },
   },
   plugins: [],

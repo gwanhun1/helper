@@ -10,19 +10,23 @@ const Forest = () => {
   const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(null);
   const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(null);
   const prevTreesRef = useRef<Item[]>([]);
+  const treePositionsMap = useRef(new Map()).current;
 
-  // 나무 위치와 애니메이션 속성을 컴포넌트 마운트 시 한 번만 계산
-  const treePositions = useMemo(() => {
-    return forestData.map(() => ({
-      xPos: Math.random() * 80 + 10,
-      yPos: Math.random() * 70 + 10,
-      scale: Math.random() * 0.4 + 0.8,
-      rotateAngle: Math.random() * 6 - 3,
-      waveDelay: Math.random() * 4,
-      waveDuration: 3 + Math.random() * 3,
-      swayAmount: Math.random() * 3 + 1,
-    }));
-  }, [forestData.length]);
+  // 나무 위치와 애니메이션 속성을 각 나무의 ID와 연결
+  const getTreePosition = (treeId: string) => {
+    if (!treePositionsMap.has(treeId)) {
+      treePositionsMap.set(treeId, {
+        xPos: Math.random() * 80 + 10,
+        yPos: Math.random() * 70 + 10,
+        scale: Math.random() * 0.4 + 0.8,
+        rotateAngle: Math.random() * 6 - 3,
+        waveDelay: Math.random() * 4,
+        waveDuration: 3 + Math.random() * 3,
+        swayAmount: Math.random() * 3 + 1,
+      });
+    }
+    return treePositionsMap.get(treeId);
+  };
 
   const handleTreeClick = (index: number, treeData: Item) => {
     setSelectedTreeIndex(selectedTreeIndex === index ? null : index);
@@ -52,12 +56,12 @@ const Forest = () => {
     // 현재 데이터를 이전 데이터로 저장
     prevTreesRef.current = forestData;
   }, [forestData]);
-console.log(forestData.length);
+
 
   return (
     <div className="relative w-full h-[400px] overflow-hidden">
       {forestData.map((tree, index) => {
-        const position = treePositions[index];
+        const position = getTreePosition(tree.id);
         const isRemoving = removingTreeIndex === index;
 
         return (

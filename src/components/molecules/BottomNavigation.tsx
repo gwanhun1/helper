@@ -8,6 +8,7 @@ import {
   AiOutlineUser,
 } from "react-icons/ai";
 import { AiFillHome, AiFillCreditCard, AiFillPlusCircle } from "react-icons/ai";
+import { FaYinYang } from "react-icons/fa";
 import TabButton from "../atoms/TabButton";
 
 const BottomNavigation: React.FC = () => {
@@ -22,18 +23,16 @@ const BottomNavigation: React.FC = () => {
         label="Home"
         active={location.pathname === "/"}
       />
-      <TabButton
-        to="/logs"
+     
+     <TabButton
+        to="/meditation"
         icon={
-          location.pathname === "/logs" ? (
-            <AiOutlineSearch />
-          ) : (
-            <AiOutlineSearch />
-          )
+          <FaYinYang className={location.pathname === "/meditation" ? "text-green" : "text-gray-600 hover:text-green"} />
         }
-        label="로그"
-        active={location.pathname === "/logs"}
+        label="명상"
+        active={location.pathname === "/meditation"}
       />
+      
       <TabButton
         to="/worry"
         icon={
@@ -46,18 +45,7 @@ const BottomNavigation: React.FC = () => {
         label="조언"
         active={location.pathname === "/worry"}
       />
-      <TabButton
-        to="/meditation"
-        icon={
-          location.pathname === "/meditation" ? (
-            <AiOutlineUser className="text-green" />
-          ) : (
-            <AiOutlineUser className="text-gray-600 hover:text-green" />
-          )
-        }
-        label="명상"
-        active={location.pathname === "/meditation"}
-      />
+      
       <TabButton
         to="/credit"
         icon={

@@ -2,7 +2,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../components/pages/Home";
-import Logs from "../components/pages/Logs";
 import User from "../components/pages/User";
 import Worry from "../components/pages/Worry";
 import Credit from "../components/pages/Credit";
@@ -20,14 +19,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />, // Home 페이지는 인증 필요 없음
-      },
-      {
-        path: "/Logs",
-        element: (
-          <AuthGuard>
-            <Logs />
-          </AuthGuard>
-        ),
       },
       {
         path: "/User",

@@ -14,7 +14,8 @@ const Nav = () => {
                 >
                     <div className="flex items-center justify-between">
                         <p className="text-xl font-bold text-green">HELPER</p>
-                        <AiTwotoneSmile />
+                        <div className="p-4">
+                        <AiTwotoneSmile /></div>    
                     </div>
                 </div>
             ) : null}

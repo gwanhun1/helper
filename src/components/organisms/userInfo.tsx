@@ -14,6 +14,7 @@ const UserInfo = () => {
     const file = event.target.files?.[0];
     if (file) {
       console.log("Selected file:", file);
+      alert("개발 중입니다.")
       // 이미지 업로드 처리 로직 추가
     }
   };

@@ -1,6 +1,7 @@
 import useStepStore from "../../../store/stepStore";
 import Button from "../../atoms/Button";
-import TitleContainer from "../../atoms/TitleContainer";
+import Title from "../../atoms/Title";
+import Text from "../../atoms/Text";
 import Textarea from "../../molecules/Textarea";
 import { useState } from "react";
 import Loading from "./Loading";
@@ -51,7 +52,7 @@ const StepFour = () => {
       increase();
     } catch {
       resetLoadingState();
-      alert("gpt가 아파요 🥲\n 잠시후에 다시 해주세요!!");
+      alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
     } finally {
       clearInterval(interval);
     }
@@ -64,7 +65,13 @@ const StepFour = () => {
 
     return (
       <div className="p-2">
-        <TitleContainer title="당신의 고민을 적어주세요." />
+        <div className="px-2 pb-2 mb-4 border-b border-gray-300">
+          <Title>당신의 고민을 적어주세요.</Title>
+          <Text className="px-2 mt-2 ml-2 text-xs text-gray-600">
+            고민을 자유롭게 적어주세요.
+          </Text>
+        </div>
+
         <div className="max-w-sm px-2 mx-auto">
           <Textarea
             id="input"

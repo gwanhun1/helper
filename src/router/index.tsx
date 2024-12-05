@@ -5,20 +5,20 @@ import Home from "../components/pages/Home";
 import User from "../components/pages/User";
 import Worry from "../components/pages/Worry";
 import Credit from "../components/pages/Credit";
-import KakaoAuth from "../components/molecules/KakaoAuth";
+import KakaoAuthSection from "../components/organisms/KakaoAuthSection";
 import Auth from "../components/pages/Auth";
-import AuthGuard from "../components/pages/AuthGuard";
+import AuthGuard from "../components/molecules/AuthGuard";
 import Error from "../components/pages/Error";
-import Meditation from "../components/pages/Meditation"; // Added import statement
+import Meditation from "../components/pages/Meditation";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // App을 루트 컴포넌트로 설정
+    element: <App />,
     children: [
       {
         path: "/",
-        element: <Home />, // Home 페이지는 인증 필요 없음
+        element: <Home />,
       },
       {
         path: "/User",
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
           <AuthGuard>
             <User />
           </AuthGuard>
-        ), // User 페이지는 인증 필요
+        ),
       },
       {
         path: "/Worry",
@@ -34,33 +34,33 @@ const router = createBrowserRouter([
           <AuthGuard>
             <Worry />
           </AuthGuard>
-        ), // Worry 페이지는 인증 필요
+        ),
       },
       {
         path: "/Credit",
-        element: (
-          <AuthGuard>
-            <Credit />
-          </AuthGuard>
-        ), // Credit 페이지는 인증 필요
+        element: <Credit />,
       },
       {
-        path: "/Meditation",
-        element: <Meditation />, // Meditation 페이지는 인증 필요 없음
+        path: "/oauth/callback/kakao",
+        element: <KakaoAuthSection />,
       },
       {
         path: "/auth",
-        element: <Auth />, // 인증 페이지는 인증 필요 없음
+        element: <Auth />,
       },
       {
-        path: "/auth/kakao/callback",
-        element: <KakaoAuth />, // 카카오 인증 콜백 페이지는 인증 필요 없음
+        path: "/meditation",
+        element: (
+          <AuthGuard>
+            <Meditation />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "*",
+        element: <Error />,
       },
     ],
-  },
-  {
-    path: "*",
-    element: <Error />, // 모든 잘못된 경로는 Home 리디렉션
   },
 ]);
 

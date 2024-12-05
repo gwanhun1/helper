@@ -1,7 +1,8 @@
 import useStepStore from "../../../store/stepStore";
 import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
-import TitleContainer from "../../atoms/TitleContainer";
+import Title from "../../atoms/Title";
+import Text from "../../atoms/Text";
 
 const StepTwo = () => {
   const { increase, decrease } = useStepStore();
@@ -44,13 +45,13 @@ const StepTwo = () => {
 
   return (
     <div className="p-2">
-      <TitleContainer
-        title="누구에게 듣고싶나요?"
-        subtitle="당신의 고민을 들어줄 대상을 골라주세요."
-        titleColor="text-green-700"
-      />
+      <div className="px-2 pb-2 mb-4 border-b border-gray-300">
+        <Title>누구에게 듣고싶나요?</Title>
+        <Text className="px-2 mt-2 ml-2 text-xs text-gray-600">
+          당신의 고민을 들어줄 대상을 골라주세요.
+        </Text>
+      </div>
 
-      {/* 버튼 컨테이너 */}
       <div className="flex flex-wrap gap-2 mt-3">
         <Button
           onPress={() => decrease()}

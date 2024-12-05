@@ -1,18 +1,17 @@
-import useUserStore from "../../store/userStore";
+import PageLayout from "../organisms/PageLayout";
 import Forest from "../organisms/Forest";
 import ForestLog from "../organisms/ForestLog";
 
 const Home = () => {
-
-  const user = useUserStore((state) => state.user); // 상태에서 사용자 정보 가져오기
-
-
-
-  return (<>
-    {user? <div className="flex flex-col h-full">
-      <Forest />
-      <ForestLog />
-    </div>:<>로그인하여 사용해주세요</>}</>
+  return (
+    <PageLayout requireAuth>
+      <div className="flex flex-col h-full overflow-hidden">
+        <Forest />
+        <div className="flex-1 overflow-hidden">
+          <ForestLog />
+        </div>
+      </div>
+    </PageLayout>
   );
 };
 

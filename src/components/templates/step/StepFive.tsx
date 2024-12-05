@@ -1,7 +1,7 @@
 import useStepStore from "../../../store/stepStore";
 import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
-import TitleContainer from "../../atoms/TitleContainer";
+import Title from "../../atoms/Title";
 
 const StepFive = () => {
   const { reset, decrease } = useStepStore();
@@ -14,7 +14,9 @@ const StepFive = () => {
 
   return (
     <div className="p-2">
-      <TitleContainer title="조언이 도착했습니다." />
+      <div className="px-2 pb-2 mb-4 border-b border-gray-300">
+        <Title>조언이 도착했습니다.</Title>
+      </div>
 
       <div className="flex flex-col">
         {/* 1:7 비율 적용 */}

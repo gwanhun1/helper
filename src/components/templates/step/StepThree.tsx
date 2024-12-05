@@ -1,7 +1,8 @@
 import useStepStore from "../../../store/stepStore";
 import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
-import TitleContainer from "../../atoms/TitleContainer";
+import Title from "../../atoms/Title";
+import Text from "../../atoms/Text";
 
 const StepThree = () => {
   const { increase, decrease } = useStepStore();
@@ -26,10 +27,13 @@ const StepThree = () => {
 
   return (
     <div className="p-2">
-      <TitleContainer
-        title="어떻게 듣고싶나요?"
-        subtitle="때로는 색다른 느낌의 조언이 힘이 됩니다."
-      />
+      <div className="px-2 pb-2 mb-4 border-b border-gray-300">
+        <Title>어떻게 듣고싶나요?</Title>
+        <Text className="px-2 mt-2 ml-2 text-xs text-gray-600">
+          때로는 색다른 느낌의 조언이 힘이 됩니다.
+        </Text>
+      </div>
+
       <div className="flex flex-wrap gap-2 mt-3">
         <Button
           onPress={decrease}

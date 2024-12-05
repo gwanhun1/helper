@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Text } from "./Text";
+import Text from "./Text";
 
 // 재사용 가능한 Tab 버튼 컴포넌트
 interface TabButtonProps {

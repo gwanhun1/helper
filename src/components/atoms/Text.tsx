@@ -1,15 +1,19 @@
+import React from 'react';
+
 interface TextProps {
     children: React.ReactNode;
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
     fontWeight?: 'light' | 'normal' | 'medium' | 'bold' | 'extrabold';
     className?: string;
+    onClick?: () => void;
 }
 
-export const Text: React.FC<TextProps> = ({
+const Text: React.FC<TextProps> = ({
     children,
     size = 'md',
     fontWeight = 'normal',
     className = '',
+    onClick,
 }) => {
     const sizeClasses = {
         xs: 'text-xs',
@@ -30,10 +34,13 @@ export const Text: React.FC<TextProps> = ({
     };
 
     return (
-        <p
+        <span
             className={`${sizeClasses[size]} ${fontWeightClasses[fontWeight]} ${className}`}
+            onClick={onClick}
         >
             {children}
-        </p>
+        </span>
     );
 };
+
+export default Text;

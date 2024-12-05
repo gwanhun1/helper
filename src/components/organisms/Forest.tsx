@@ -1,9 +1,11 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import treeImage from "/tree.png";
 import selectTreeImage from "/selectTree.png";
 import useLogData from "../../hooks/useLogData";
 import { Item } from "../../hooks/useDateRankData";
+import Button from "../atoms/Button";
+import { useNavigate } from "react-router-dom";
 
 const Forest = () => {
   const { data: forestData } = useLogData();
@@ -11,14 +13,20 @@ const Forest = () => {
   const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(null);
   const prevTreesRef = useRef<Item[]>([]);
   const treePositionsMap = useRef(new Map()).current;
+  const navigate = useNavigate();
+
+  // 글자 수를 기반으로 한 더 큰 크기 조정
+  const calculateTreeScale = (response: string) => {
+    return 1 + (response.length * 0.004); // 기본 크기 1.2에 글자당 0.3% 추가
+  };
 
   // 나무 위치와 애니메이션 속성을 각 나무의 ID와 연결
-  const getTreePosition = (treeId: string) => {
+  const getTreePosition = (treeId: string, response: string) => {
     if (!treePositionsMap.has(treeId)) {
       treePositionsMap.set(treeId, {
         xPos: Math.random() * 80 + 10,
         yPos: Math.random() * 70 + 10,
-        scale: Math.random() * 0.4 + 0.8,
+        scale: calculateTreeScale(response),
         rotateAngle: Math.random() * 6 - 3,
         waveDelay: Math.random() * 4,
         waveDuration: 3 + Math.random() * 3,
@@ -35,11 +43,9 @@ const Forest = () => {
     }
   };
 
-  // 트리 삭제 애니메이션 및 처리
   useEffect(() => {
     const prevTrees = prevTreesRef.current;
     if (prevTrees.length > forestData.length) {
-      // 이전 데이터에는 있지만 현재 데이터에는 없는 트리의 인덱스 찾기
       const removedIndex = prevTrees.findIndex(
         (prevTree) => !forestData.some((newTree) => newTree.id === prevTree.id)
       );
@@ -52,16 +58,29 @@ const Forest = () => {
         }, 500);
       }
     }
-    
-    // 현재 데이터를 이전 데이터로 저장
     prevTreesRef.current = forestData;
   }, [forestData]);
 
+  const handleNavigate = () => {
+    navigate('/Worry')
+  }
+
+  if (!forestData || !Array.isArray(forestData)) {
+    return <div className="flex flex-col items-center justify-center h-full">
+      <div className="text-md mb-3 text-gray-500 mt-5">고민이 없으십니다. 👍</div>
+      <div className="text-sm mb-3 text-gray-400">상담을 받으러 이동하실까요?</div>
+      <Button
+          text="이동하기"
+          bgColor="bg-green-400"
+          onPress={handleNavigate}
+        />
+      </div>;
+  }
 
   return (
     <div className="relative w-full h-[400px] overflow-hidden">
-      {forestData.map((tree, index) => {
-        const position = getTreePosition(tree.id);
+      {forestData.length > 0 && forestData.map((tree, index) => {
+        const position = getTreePosition(tree.id, tree.response);
         const isRemoving = removingTreeIndex === index;
 
         return (

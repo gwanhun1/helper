@@ -2,13 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import treeImage from "/tree.png";
 import selectTreeImage from "/selectTree.png";
-import useLogData from "../../hooks/useLogData";
-import { Item } from "../../hooks/useLogData";
 import Button from "../atoms/Button";
 import { useNavigate } from "react-router-dom";
+import useWorryData, { Item } from "../../hooks/useWorryData";
 
 const Forest = () => {
-  const { data: forestData } = useLogData();
+  const { data: forestData } = useWorryData();
   const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(null);
   const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(null);
   const prevTreesRef = useRef<Item[]>([]);
@@ -16,17 +15,17 @@ const Forest = () => {
   const navigate = useNavigate();
 
   // 글자 수를 기반으로 한 더 큰 크기 조정
-  const calculateTreeScale = (response: string) => {
-    return 1 + (response.length * 0.004); // 기본 크기 1.2에 글자당 0.3% 추가
+  const calculateTreeScale = (level: number = 3) => {
+    return 1 + ((level - 1) * 0.2); // 기본 크기 1에 레벨당 20% 추가
   };
 
   // 나무 위치와 애니메이션 속성을 각 나무의 ID와 연결
-  const getTreePosition = (treeId: string, response: string) => {
+  const getTreePosition = (treeId: string, level: number = 3) => {
     if (!treePositionsMap.has(treeId)) {
       treePositionsMap.set(treeId, {
         xPos: Math.random() * 80 + 10,
         yPos: Math.random() * 70 + 10,
-        scale: calculateTreeScale(response),
+        scale: calculateTreeScale(level),
         rotateAngle: Math.random() * 6 - 3,
         waveDelay: Math.random() * 4,
         waveDuration: 3 + Math.random() * 3,
@@ -80,7 +79,7 @@ const Forest = () => {
   return (
     <div className="relative w-full h-[400px] overflow-hidden">
       {forestData.length > 0 && forestData.map((tree, index) => {
-        const position = getTreePosition(tree.id, tree.response);
+        const position = getTreePosition(tree.id, tree.level);
         const isRemoving = removingTreeIndex === index;
 
         return (

@@ -6,6 +6,7 @@ interface SelectTreeStore {
     date: string; // 날짜
     response: string; // 응답
     username: string; // 사용자 이름
+    level?: number;
     select: (data: Partial<SelectTreeStore>) => void; // 선택한 데이터를 설정하는 메서드
     reset: () => void; // 상태를 초기화하는 메서드
 }
@@ -15,6 +16,7 @@ const initialState = {
     date: '',
     response: '',
     username: '',
+    level:0,
 };
 
 const useSelectTreeStore = create<SelectTreeStore>((set) => ({

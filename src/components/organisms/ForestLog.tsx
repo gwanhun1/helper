@@ -1,8 +1,8 @@
-import useLogData from "../../hooks/useLogData";
+import useWorryData from "../../hooks/useWorryData";
 import LogForm from "./LogForm";
 
 const ForestLog = () => {
-  const { data: forestData, refreshData } = useLogData();
+  const { data: forestData, refreshData } = useWorryData();
 
   if (!forestData || !Array.isArray(forestData)) {
     return null;

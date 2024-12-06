@@ -7,6 +7,9 @@ import { useState } from "react";
 import Loading from "./Loading";
 import useWorryStore from "../../../store/worryStore";
 import useCounselingPrompt from "../../../hooks/useCounselingPrompt";
+import useUpdateUserCount from "../../../hooks/useUpdateUserCount";
+import useUserStore from "../../../store/userStore";
+import { useNavigate } from "react-router-dom";
 
 interface LoadingState {
   isLoading: boolean;
@@ -24,7 +27,9 @@ const StepFour = () => {
     isLoading: false,
     step: 0,
   });
-
+  const { updateUserCount } = useUpdateUserCount();
+  const user = useUserStore((state) => state.user);
+  const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setWorry(e.target.value);
   };
@@ -46,16 +51,23 @@ const StepFour = () => {
   const handleAsk = async () => {
     const interval = startLoading();
 
+    if(user && user.uid && user.count){
     try {
       await fetchResponse();
       resetLoadingState();
       increase();
+      updateUserCount({uId:user.uid,count:user.count});
     } catch {
       resetLoadingState();
       alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
     } finally {
       clearInterval(interval);
     }
+  }else{
+    alert(
+      '오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!',
+    );
+    navigate('/Credit')  }
   };
 
   const renderContent = () => {

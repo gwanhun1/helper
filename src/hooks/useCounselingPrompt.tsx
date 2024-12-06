@@ -1,5 +1,7 @@
 import { useState } from "react";
 import useWorryStore from "../store/worryStore";
+import useSaveWorryData from "../hooks/useSaveWorryData";
+import useUserStore from "../store/userStore";
 
 interface ChatMessage {
   role: "system" | "user";
@@ -26,6 +28,8 @@ interface RequestBody {
 
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse, setLevel } = useWorryStore();
+  const { saveData } = useSaveWorryData();
+  const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -108,6 +112,16 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
         const [responseMessage, riskLevel] = responseContent.split('level:');
         setResponse(responseMessage.trim());
         setLevel(parseInt(riskLevel.trim()));
+        
+        const item = { 
+          content: worry,
+          date: new Date().toISOString(),
+          id: "unique-id", // Generate or use a unique ID
+          response: responseMessage.trim(),
+          level: parseInt(riskLevel.trim()),
+          username: user?.displayName ?? "Unknown User",
+        };
+        await saveData(item);
       } else {
         throw new Error(data.error?.message || "API 요청 실패");
       }

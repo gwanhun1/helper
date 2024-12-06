@@ -3,7 +3,7 @@ import useSelectTreeStore from "../../store/selectTreeStore";
 import treeImage from "/tree.png";
 import selectTreeImage from "/selectTree.png";
 import useLogData from "../../hooks/useLogData";
-import { Item } from "../../hooks/useDateRankData";
+import { Item } from "../../hooks/useLogData";
 import Button from "../atoms/Button";
 import { useNavigate } from "react-router-dom";
 

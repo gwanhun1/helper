@@ -11,13 +11,27 @@ import useUpdateUserCount from "../../../hooks/useUpdateUserCount";
 import useUserStore from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
+const LOADING_INTERVAL = 1000;
+const MAX_LOADING_STEPS = 5;
+
 interface LoadingState {
   isLoading: boolean;
   step: number;
 }
 
-const LOADING_INTERVAL = 1000;
-const MAX_LOADING_STEPS = 5;
+const resetLoadingState = (setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>) => {
+  setLoadingState({ isLoading: false, step: 0 });
+};
+
+const startLoading = (setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>) => {
+  setLoadingState({ isLoading: true, step: 0 });
+  return setInterval(() => {
+    setLoadingState((prev) => ({
+      ...prev,
+      step: (prev.step + 1) % MAX_LOADING_STEPS,
+    }));
+  }, LOADING_INTERVAL);
+};
 
 const StepFour = () => {
   const { increase, decrease } = useStepStore();
@@ -30,44 +44,29 @@ const StepFour = () => {
   const { updateUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setWorry(e.target.value);
   };
 
-  const resetLoadingState = () => {
-    setLoadingState({ isLoading: false, step: 0 });
-  };
-
-  const startLoading = () => {
-    setLoadingState({ isLoading: true, step: 0 });
-    return setInterval(() => {
-      setLoadingState((prev) => ({
-        ...prev,
-        step: (prev.step + 1) % MAX_LOADING_STEPS,
-      }));
-    }, LOADING_INTERVAL);
-  };
-
   const handleAsk = async () => {
-    const interval = startLoading();
+    const interval = startLoading(setLoadingState);
 
-    if(user && user.uid && user.count){
-    try {
-      await fetchResponse();
-      resetLoadingState();
-      increase();
-      updateUserCount({uId:user.uid,count:user.count});
-    } catch {
-      resetLoadingState();
-      alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
-    } finally {
-      clearInterval(interval);
+    if (user?.uid && user?.count) {
+      try {
+        await fetchResponse();
+        increase();
+        updateUserCount({ uId: user.uid, count: user.count });
+      } catch {
+        alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
+      } finally {
+        resetLoadingState(setLoadingState);
+        clearInterval(interval);
+      }
+    } else {
+      alert('오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!');
+      navigate('/Credit');
     }
-  }else{
-    alert(
-      '오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!',
-    );
-    navigate('/Credit')  }
   };
 
   const renderContent = () => {

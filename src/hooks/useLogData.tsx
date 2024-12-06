@@ -87,7 +87,7 @@ const useLogData = (): UseLogData => {
 
     // 컴포넌트 언마운트 시 리스너 제거
     return () => {
-      off(dataRef);
+      unsubscribe();
     };
   }, [user]);
 

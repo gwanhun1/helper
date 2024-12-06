@@ -5,7 +5,7 @@ import ForestLog from "../organisms/ForestLog";
 const Home = () => {
   return (
     <PageLayout requireAuth>
-      <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex flex-col ">
         <Forest />
         <div className="flex-1 overflow-hidden">
           <ForestLog />

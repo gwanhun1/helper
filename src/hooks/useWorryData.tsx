@@ -9,6 +9,7 @@ export interface Item {
   date: string; // 날짜
   id: string; // 고유 ID
   response: string; // 답변
+  level?:number;
   username: string; // 사용자명
 }
 

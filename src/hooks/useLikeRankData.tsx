@@ -19,7 +19,6 @@ interface UseLikeRankData {
   error: string | null;
 }
 
-// useLogData 훅 정의
 const useLikeRankData = (): UseLikeRankData => {
   const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
 

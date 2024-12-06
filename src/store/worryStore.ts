@@ -19,7 +19,7 @@ const useWorryStore = create<WorryStore>((set) => ({
   how: "",
   worry: "",
   response: "",
-  level:3,
+  level:0,
   setWho: (who) => set({ who }),
   setHow: (how) => set({ how }),
   setWorry: (worry) => set({ worry }),

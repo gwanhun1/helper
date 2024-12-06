@@ -25,7 +25,7 @@ interface RequestBody {
 }
 
 const useCounselingPrompt = () => {
-  const { who, how, worry, setResponse } = useWorryStore();
+  const { who, how, worry, setResponse, setLevel } = useWorryStore();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +46,7 @@ const useCounselingPrompt = () => {
 
 3. Emotional Tone (${how}):
 - Express emotions primarily through Korean linguistic patterns
-- Use Korean-style emoticons strategically (ㅠㅠ, ㅎㅎ, ^_^)
+- Sometimes, use Korean-style emoticons strategically (ㅠㅠ, ㅎㅎ, ^_^)
 - Adjust emotional intensity to match the situation
 - Keep responses culturally sensitive and appropriate
 
@@ -55,6 +55,10 @@ const useCounselingPrompt = () => {
 - Show empathy and understanding of the concern
 - Provide practical advice from your character's perspective
 - End with encouraging or supportive closing remarks
+
+5. Depression Index Evaluation:
+- Evaluate the depression index or risk level based on the user's message
+- Provide a risk level from 1 to 5, with 5 being the highest risk
 
 Example Persona Patterns:
 - 동네 아저씨: "에이고~ 그런 걸로 걱정하고 있었어? 내가 살아온 경험을 좀 들려줄게..." (경험에 기반한 조언)
@@ -100,7 +104,10 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
       const data: OpenAIResponse = await makeAPIRequest(requestBody);
 
       if (data.choices?.[0]?.message?.content) {
-        setResponse(data.choices[0].message.content);
+        const responseContent = data.choices[0].message.content;
+        const [responseMessage, riskLevel] = responseContent.split('level:');
+        setResponse(responseMessage.trim());
+        setLevel(parseInt(riskLevel.trim()));
       } else {
         throw new Error(data.error?.message || "API 요청 실패");
       }

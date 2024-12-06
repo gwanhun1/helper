@@ -10,7 +10,7 @@ const Container: React.FC<ContainerProps> = ({
     className = '',
 }) => {
     return (
-        <div className={`min-h-screen pb-16 ${className}`}>
+        <div className={`${className}`}>
             {children}
         </div>
     );

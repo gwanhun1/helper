@@ -58,9 +58,10 @@ export const useKakaoAuth = () => {
             "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
           },
           body: new URLSearchParams({
-            grant_type: "authorization_code",
-            client_id: import.meta.env.VITE_KAKAO_API_KEY,
+            grant_type: "authorization_code", 
+            client_id: import.meta.env.VITE_KAKAO_REST_API_KEY,
             redirect_uri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+            client_secret: import.meta.env.VITE_KAKAO_SECRET_KEY,
             code,
           }),
         }

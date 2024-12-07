@@ -3,9 +3,7 @@ import MeditationSession from '../organisms/MeditationSession';
 
 const Meditation: React.FC = () => {
   return (
-    <div className="flex flex-col h-full">
       <MeditationSession />
-    </div>
   );
 };
 

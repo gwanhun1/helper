@@ -11,7 +11,7 @@ const App = () => {
                 <Nav />
 
                 {/* Outlet을 감싸는 div에 스크롤 추가 */}
-                <div className="flex-grow overflow-y-auto">
+                <div className="flex-grow overflow-hidden">
                     <Outlet />
                 </div>
 

@@ -138,24 +138,24 @@ const MeditationSession: React.FC = () => {
   };
 
   return (
-    <div className={`flex items-center justify-center min-h-screen overflow-hidden ${selectedMode.bgColor}`}>
-      <div className="w-[340px] p-6 text-white">
+    <div className={`flex flex-col items-center justify-center  overflow-hidden ${selectedMode.bgColor}`}>
+      <div className="max-w-lg w-full p-10 text-white shadow-2xl backdrop-blur-lg  transform transition-transform duration-500 hover:scale-105">
         {/* Mode Icon & Name */}
-        <div className="text-center mb-12">
-          <div className="inline-block p-4 rounded-full bg-white/10 backdrop-blur-sm mb-4">
+        <div className="text-center mb-10">
+          <div className="inline-block p-6 rounded-full bg-white/30 backdrop-blur-sm mb-6 animate-pulse">
             {selectedMode.icon}
           </div>
-          <h2 className="text-2xl font-light mb-2">{selectedMode.name}</h2>
-          <p className="text-sm text-white/70">{selectedMode.description}</p>
+          <h2 className="text-4xl font-bold mb-3 animate-fade-in">{selectedMode.name}</h2>
+          <p className="text-lg text-white/90 animate-fade-in">{selectedMode.description}</p>
         </div>
 
         {/* Timer Circle with Ripple Effect */}
-        <div className="relative aspect-square mb-12">
+        <div className="relative aspect-square mb-10">
           {/* Ripple circles */}
           {isMeditating && (
             <>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full animate-ping-slow opacity-20 border border-white rounded-full" />
+              <div className="absolute inset-0 flex items-center justify-center ">
+                <div className="w-full h-full animate-ping-slow opacity-50 border border-white rounded-full" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-[90%] h-[90%] animate-ping-slower opacity-15 border border-white rounded-full" />
@@ -168,7 +168,7 @@ const MeditationSession: React.FC = () => {
 
           {/* Timer circle */}
           <div className="absolute inset-0">
-            <svg className="w-full h-full transform -rotate-90">
+            <svg className="w-full h-full transform -rotate-90 ">
               <circle
                 cx="50%"
                 cy="50%"
@@ -187,7 +187,7 @@ const MeditationSession: React.FC = () => {
                 fill="none"
                 strokeDasharray={`${2 * Math.PI * 45}`}
                 strokeDashoffset={`${2 * Math.PI * 45 * (timeLeft / 180)}`}
-                className="transition-all duration-1000"
+                className="transition-all duration-1000 "
               />
             </svg>
           </div>
@@ -195,10 +195,10 @@ const MeditationSession: React.FC = () => {
           {/* Timer display */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className={`text-center transition-all duration-500 ${isMeditating ? 'scale-105' : 'scale-100'}`}>
-              <div className="text-5xl font-extralight mb-2">
+              <div className="text-7xl font-light mb-2 animate-bounce">
                 {formatTime(timeLeft)}
               </div>
-              <div className="text-sm text-white/70">
+              <div className="text-xl text-white/70 animate-fade-in">
                 {isMeditating ? 'Breathe...' : 'Ready to meditate?'}
               </div>
             </div>
@@ -206,27 +206,27 @@ const MeditationSession: React.FC = () => {
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-between px-4">
+        <div className="flex items-center justify-between px-6">
           <button 
             onClick={prevTrack}
-            className="w-12 h-12 rounded-full flex items-center justify-center
+            className="w-14 h-14 rounded-full flex items-center justify-center
                      bg-white/10 hover:bg-white/20 transition-colors transform-none">
-            <FaStepBackward className="w-5 h-5" />
+            <FaStepBackward className="w-6 h-6" />
           </button>
           <button 
             onClick={togglePlay}
-            className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm
+            className="w-24 h-24 rounded-full bg-white/30 backdrop-blur-sm
                      flex items-center justify-center
-                     hover:bg-white/30 transition-all transform-none">
+                     hover:bg-white/40 transition-all transform-none">
             {isMeditating ? 
-              <FaPause className="w-8 h-8" /> : 
-              <FaPlay className="w-8 h-8 ml-1" />}
+              <FaPause className="w-10 h-10" /> : 
+              <FaPlay className="w-10 h-10 ml-1" />}
           </button>
           <button 
             onClick={nextTrack}
-            className="w-12 h-12 rounded-full flex items-center justify-center
+            className="w-14 h-14 rounded-full flex items-center justify-center
                      bg-white/10 hover:bg-white/20 transition-colors transform-none">
-            <FaStepForward className="w-5 h-5" />
+            <FaStepForward className="w-6 h-6" />
           </button>
         </div>
 

@@ -77,8 +77,12 @@ const Forest = () => {
   }
 
   return (
-    <div className="relative w-full h-[200px] overflow-hidden">
-      {forestData.length > 0 && forestData.map((tree, index) => {
+    <div className="relative w-full h-[216px] overflow-hidden my-2 
+      border border-white/60
+      shadow-[0_2px_8px_rgba(0,0,0,0.12),inset_0_1px_3px_rgba(255,255,255,0.95)]
+      bg-gradient-to-b from-white/15 to-transparent"
+    >
+        {forestData.length > 0 && forestData.map((tree, index) => {
         const position = getTreePosition(tree.id, tree.level);
         const isRemoving = removingTreeIndex === index;
 
@@ -97,7 +101,7 @@ const Forest = () => {
                 height: "40px",
                 transform: `scale(${position.scale}) rotate(${position.rotateAngle}deg)`,
                 animation: `treeWave ${position.waveDuration}s infinite ease-in-out, 
-                         treeSway ${position.waveDuration * 1.5}s infinite ease-in-out`,
+                           treeSway ${position.waveDuration * 1.5}s infinite ease-in-out`,
                 animationDelay: `${position.waveDelay}s`,
                 "--sway-amount": `${position.swayAmount}deg`,
               } as React.CSSProperties

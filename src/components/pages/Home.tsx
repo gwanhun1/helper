@@ -6,12 +6,12 @@ import MindTemplate from "../organisms/MindTemplate";
 const Home = () => {
   return (
     <PageLayout requireAuth>
-      <div className="flex flex-col ">
+      <div className="flex flex-col">
         <MindTemplate/>
         <Forest />
-        <div className="flex-1 overflow-hidden">
+        
           <ForestLog />
-        </div>
+        
       </div>
     </PageLayout>
   );

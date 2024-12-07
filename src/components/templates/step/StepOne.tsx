@@ -1,6 +1,8 @@
 import useStepStore from "../../../store/stepStore";
 import Text from "../../atoms/Text";
 import Title from "../../atoms/Title";
+import HowScrollButtons from "../../molecules/HowScrollButtons";
+import WhoScrollButtons from "../../molecules/WhoScrollButtons";
 
 const StepOne = () => {
   const { increase } = useStepStore();
@@ -16,13 +18,19 @@ const StepOne = () => {
       <div className="flex flex-col">
         {/* 1:7 비율 적용 */}
 
-        <div className="bg-gray-300" style={{ height: "55vh" }}></div>
+        <div className="bg-gray-300" style={{ height: "55vh" }}>
+          <WhoScrollButtons/>
+          <HowScrollButtons/>
+          <WhoScrollButtons/>
+          <HowScrollButtons/>
+
+        </div>
         <div
           className="flex items-center justify-center w-full "
           style={{ height: "10vh" }}
         >
           <button
-            className="flex items-center justify-center w-full p-5 mt-1 bg-green shadow-lg rounded-xl "
+            className="flex items-center justify-center w-full p-5 mt-1 bg-green-400 shadow-lg rounded-xl "
             onClick={() => increase()}
           >
             <span className="text-white truncate">Start</span>

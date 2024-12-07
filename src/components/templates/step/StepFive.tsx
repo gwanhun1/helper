@@ -28,7 +28,7 @@ const StepFive = () => {
         <div className="grid grid-cols-2 gap-4 mt-3 " style={{ height: "5vh" }}>
           <Button
             text="Back"
-            bgColor="bg-green-400"
+            bgColor="bg-green"
             onPress={() => decrease()}
           />
           <Button text="retry" bgColor="bg-gray-400" onPress={handleReset} />

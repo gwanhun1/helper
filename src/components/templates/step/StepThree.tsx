@@ -47,7 +47,7 @@ const StepThree = () => {
             key={index}
             onPress={() => handleHowSelection(button.how)}
             text={button.text}
-            bgColor="bg-green-400"
+            bgColor="bg-green"
           />
         ))}
       </div>

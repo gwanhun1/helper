@@ -98,7 +98,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
       ref={elementRef}
       className={`
         px-4
-        py-3
+        py-2
         transition-all duration-500 ease-in-out
         ${
           swipedItemId === data.id  ? "bg-red-400":

@@ -62,24 +62,26 @@ module.exports = {
           '100%': { transform: 'scale(2)', opacity: '0' }
         },
         wave: {
+          '0%': { transform: 'scale(1)', opacity: '0.5' },
+          '50%': { transform: 'scale(1.2)', opacity: '0.3' },
+          '100%': { transform: 'scale(1)', opacity: '0.5' }
+        },
+        wave2: {
+          '0%': { transform: 'scale(1)', opacity: '0.3' },
+          '50%': { transform: 'scale(1.4)', opacity: '0.1' },
+          '100%': { transform: 'scale(1)', opacity: '0.3' }
+        },
+        soundwave: {
+          '0%, 100%': { transform: 'scaleY(1)' },
+          '50%': { transform: 'scaleY(0.5)' }
+        },
+        waveOut: {
           '0%': { 
-            transform: 'scale(0.95) rotate(0deg)',
-            opacity: '0.9'
-          },
-          '25%': { 
-            transform: 'scale(1.2) rotate(1deg)',
-            opacity: '0.7'
-          },
-          '50%': { 
-            transform: 'scale(1.5) rotate(-1deg)',
-            opacity: '0.5'
-          },
-          '75%': { 
-            transform: 'scale(1.8) rotate(1deg)',
-            opacity: '0.3'
+            transform: 'scale(0.5)',
+            opacity: '0.8'
           },
           '100%': { 
-            transform: 'scale(2) rotate(0deg)',
+            transform: 'scale(1.5)',
             opacity: '0'
           }
         }
@@ -92,7 +94,15 @@ module.exports = {
         'wave-slower': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 1s',
         'wave-slowest': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 2s',
         'wave-final': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 3s',
+        wave: 'wave 2s ease-in-out infinite',
+        wave2: 'wave2 2s ease-in-out infinite 1s',
+        soundwave: 'soundwave 1s ease-in-out infinite',
+        waveOut: 'waveOut 1.5s ease-out infinite'
       },
+      transitionDelay: {
+        '100': '100ms',
+        '200': '200ms',
+      }
     },
   },
   plugins: [],

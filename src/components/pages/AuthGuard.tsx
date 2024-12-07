@@ -20,7 +20,7 @@ const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return null;
   }
 
-  return <>{children}</>; // 로그인된 사용자는 자식 컴포넌트 렌더링
+  return <div className="h-full">{children}</div>; // 로그인된 사용자는 자식 컴포넌트 렌더링
 };
 
 export default AuthGuard;

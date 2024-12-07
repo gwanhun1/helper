@@ -14,7 +14,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
     className = '',
 }) => {
     const content = (
-        <Container className={className}>
+        <Container className={`h-full ${className}`}>
             {children}
         </Container>
     );

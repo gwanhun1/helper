@@ -77,7 +77,7 @@ const Forest = () => {
   }
 
   return (
-    <div className="relative w-full h-[400px] overflow-hidden">
+    <div className="relative w-full h-[300px] overflow-hidden">
       {forestData.length > 0 && forestData.map((tree, index) => {
         const position = getTreePosition(tree.id, tree.level);
         const isRemoving = removingTreeIndex === index;

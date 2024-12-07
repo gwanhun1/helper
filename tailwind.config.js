@@ -56,35 +56,42 @@ module.exports = {
         },
       },
       keyframes: {
-        'ripple-1': {
-          '0%': { transform: 'scale(0)', opacity: '0.5' },
-          '100%': { transform: 'scale(2)', opacity: '0' }
-        },
-        'ripple-2': {
-          '0%': { transform: 'scale(0)', opacity: '0.5' },
-          '100%': { transform: 'scale(2)', opacity: '0' }
-        },
-        'ripple-3': {
-          '0%': { transform: 'scale(0)', opacity: '0.5' },
-          '100%': { transform: 'scale(2)', opacity: '0' }
-        },
         ping: {
-          '75%, 100%': {
-            transform: 'scale(2)',
-            opacity: '0'
-          },
+          '0%': { transform: 'scale(0.8)', opacity: '1' },
+          '50%': { transform: 'scale(1.5)', opacity: '0.5' },
+          '100%': { transform: 'scale(2)', opacity: '0' }
         },
+        wave: {
+          '0%': { 
+            transform: 'scale(0.95) rotate(0deg)',
+            opacity: '0.9'
+          },
+          '25%': { 
+            transform: 'scale(1.2) rotate(1deg)',
+            opacity: '0.7'
+          },
+          '50%': { 
+            transform: 'scale(1.5) rotate(-1deg)',
+            opacity: '0.5'
+          },
+          '75%': { 
+            transform: 'scale(1.8) rotate(1deg)',
+            opacity: '0.3'
+          },
+          '100%': { 
+            transform: 'scale(2) rotate(0deg)',
+            opacity: '0'
+          }
+        }
       },
       animation: {
-        'ripple-1': 'ripple-1 4s linear infinite',
-        'ripple-2': 'ripple-2 4s linear infinite 1.3s',
-        'ripple-3': 'ripple-3 4s linear infinite 2.6s',
-        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-        'ping-slower': 'ping 4s cubic-bezier(0, 0, 0.2, 1) infinite',
-        'ping-slowest': 'ping 5s cubic-bezier(0, 0, 0.2, 1) infinite',
-      },
-      borderWidth: {
-        '3': '3px',
+        'ping-slow': 'ping 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'ping-slower': 'ping 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 1.3s',
+        'ping-slowest': 'ping 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 2.6s',
+        'wave-slow': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'wave-slower': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 1s',
+        'wave-slowest': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 2s',
+        'wave-final': 'wave 4s cubic-bezier(0.4, 0, 0.6, 1) infinite 3s',
       },
     },
   },

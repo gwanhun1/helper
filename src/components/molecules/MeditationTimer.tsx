@@ -53,11 +53,11 @@ const MeditationTimer: React.FC<MeditationTimerProps> = ({
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div className={`text-center transition-all duration-500 ${isMeditating ? 'scale-105' : 'scale-100'}`}>
-          <div className={`text-7xl font-light mb-2 animate-bounce ${textColorClass}`}>
+          <div className={`text-3xl md:text-5xl lg:text-6xl font-light mb-1 md:mb-2 animate-bounce ${textColorClass}`}>
             {formatTime(timeLeft)}
           </div>
-          <div className={`text-xl ${textColorClass} opacity-70 animate-fade-in`}>
-            {isMeditating ? 'Breathe...' : 'Ready to meditate?'}
+          <div className={`text-sm md:text-base lg:text-lg ${textColorClass} opacity-70 animate-fade-in`}>
+            {isMeditating ? '깊은 호흡...' : '명상을 시작할까요?'}
           </div>
         </div>
       </div>

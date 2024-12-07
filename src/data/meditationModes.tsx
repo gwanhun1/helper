@@ -6,7 +6,7 @@ export const meditationModes: MeditationMode[] = [
     id: 'ice-water',
     name: 'Ice Water',
     description: '차가운 빙하수가 흐르는 고요한 계곡에서 마음의 평화를 찾아보세요',
-    icon: <FaWater size={48} className="text-blue-500" />,
+    icon: <FaWater size={36} className="text-blue-500 md:w-12 md:h-12" />,
     color: {
       primary: 'blue-700',
       secondary: 'blue-600',
@@ -19,7 +19,7 @@ export const meditationModes: MeditationMode[] = [
     id: 'nature-water',
     name: 'Nature Water',
     description: '자연의 생명력이 깃든 맑은 물소리와 함께 내면의 치유를 경험하세요',
-    icon: <FaLeaf size={48} className="text-green-500" />,
+    icon: <FaLeaf size={36} className="text-green-500 md:w-12 md:h-12" />,
     color: {
       primary: 'green-700',
       secondary: 'green-600',
@@ -32,7 +32,7 @@ export const meditationModes: MeditationMode[] = [
     id: 'summer-birds',
     name: 'Summer Birds',
     description: '새들의 평화로운 노래를 들으며 마음의 자유를 느껴보세요',
-    icon: <FaDove size={48} className="text-yellow-500" />,
+    icon: <FaDove size={36} className="text-yellow-500 md:w-12 md:h-12" />,
     color: {
       primary: 'yellow-700',
       secondary: 'yellow-600',

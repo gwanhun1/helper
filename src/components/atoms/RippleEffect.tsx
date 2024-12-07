@@ -18,16 +18,16 @@ const RippleEffect: React.FC<RippleEffectProps> = ({
   return (
     <>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-full h-full animate-ping-slow opacity-70 border-2 ${rippleColorClass} rounded-full scale-100 transition-transform duration-1000`} />
+        <div className={`w-full h-full animate-wave-slow opacity-90 border-[6px] ${rippleColorClass} rounded-full scale-100 transition-all duration-1000 ease-in-out`} />
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-[95%] h-[95%] animate-ping-slower opacity-50 border-2 ${rippleColorClass} rounded-full scale-105 transition-transform duration-1000`} />
+        <div className={`w-[95%] h-[95%] animate-wave-slower opacity-70 border-[5px] ${rippleColorClass} rounded-full scale-105 transition-all duration-1000 ease-in-out`} />
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-[85%] h-[85%] animate-ping-slowest opacity-30 border-2 ${rippleColorClass} rounded-full scale-110 transition-transform duration-1000`} />
+        <div className={`w-[85%] h-[85%] animate-wave-slowest opacity-50 border-[4px] ${rippleColorClass} rounded-full scale-110 transition-all duration-1000 ease-in-out`} />
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`w-[75%] h-[75%] animate-pulse opacity-40 border-3 ${rippleColorClass} rounded-full scale-115 transition-transform duration-1000`} />
+        <div className={`w-[75%] h-[75%] animate-wave-final opacity-40 border-[3px] ${rippleColorClass} rounded-full scale-115 transition-all duration-1000 ease-in-out`} />
       </div>
     </>
   );

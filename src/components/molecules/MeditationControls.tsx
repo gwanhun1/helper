@@ -21,14 +21,14 @@ const MeditationControls: React.FC<MeditationControlsProps> = ({
     <div className="flex items-center justify-between px-6">
       <IconButton
         onClick={onPrev}
-        icon={<FaStepBackward className="w-6 h-6" />}
+        icon={<FaStepBackward className="w-4 h-4 md:w-6 md:h-6" />}
         mode={mode}
       />
       <IconButton
         onClick={onPlayPause}
         icon={isMeditating ? 
-          <FaPause className="w-10 h-10" /> : 
-          <FaPlay className="w-10 h-10 ml-1" />
+          <FaPause className="w-8 h-8 md:w-10 md:h-10" /> : 
+          <FaPlay className="w-8 h-8 md:w-10 md:h-10 ml-1" />
         }
         size="lg"
         variant="primary"
@@ -36,7 +36,7 @@ const MeditationControls: React.FC<MeditationControlsProps> = ({
       />
       <IconButton
         onClick={onNext}
-        icon={<FaStepForward className="w-6 h-6" />}
+        icon={<FaStepForward className="w-4 h-4 md:w-6 md:h-6" />}
         mode={mode}
       />
     </div>

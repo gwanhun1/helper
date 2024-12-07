@@ -11,7 +11,7 @@ const ForestLog = () => {
   return (
     <>
       {forestData.length > 0 && (
-        <div className="h-1/5 max-h-[400px] overflow-y-auto">
+        <div className="h-1/5 max-h-[250px] overflow-y-auto">
           {forestData.map((e) => (
             <LogForm key={e.id} data={e} onDelete={refreshData} />
           ))}

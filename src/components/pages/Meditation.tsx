@@ -1,10 +1,12 @@
 import React from 'react';
 import MeditationSession from '../organisms/MeditationSession';
 
-const Meditation: React.FC = () => {
+const MeditationPage: React.FC = () => {
   return (
+    <div className="w-full h-full">
       <MeditationSession />
+    </div>
   );
 };
 
-export default Meditation;
+export default MeditationPage;

@@ -67,16 +67,25 @@ module.exports = {
         'ripple-3': {
           '0%': { transform: 'scale(0)', opacity: '0.5' },
           '100%': { transform: 'scale(2)', opacity: '0' }
-        }
+        },
+        ping: {
+          '75%, 100%': {
+            transform: 'scale(2)',
+            opacity: '0'
+          },
+        },
       },
       animation: {
         'ripple-1': 'ripple-1 4s linear infinite',
         'ripple-2': 'ripple-2 4s linear infinite 1.3s',
         'ripple-3': 'ripple-3 4s linear infinite 2.6s',
         'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
-        'ping-slower': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite 1s',
-        'ping-slowest': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite 2s',
-      }
+        'ping-slower': 'ping 4s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'ping-slowest': 'ping 5s cubic-bezier(0, 0, 0.2, 1) infinite',
+      },
+      borderWidth: {
+        '3': '3px',
+      },
     },
   },
   plugins: [],

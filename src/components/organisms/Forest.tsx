@@ -70,14 +70,14 @@ const Forest = () => {
       <div className="text-sm mb-3 text-gray-400">상담을 받으러 이동하실까요?</div>
       <Button
           text="이동하기"
-          bgColor="bg-green-400"
+          bgColor="bg-green"
           onPress={handleNavigate}
         />
       </div>;
   }
 
   return (
-    <div className="relative w-full h-[300px] overflow-hidden">
+    <div className="relative w-full h-[200px] overflow-hidden">
       {forestData.length > 0 && forestData.map((tree, index) => {
         const position = getTreePosition(tree.id, tree.level);
         const isRemoving = removingTreeIndex === index;

@@ -22,7 +22,7 @@ const StepOne = () => {
           style={{ height: "10vh" }}
         >
           <button
-            className="flex items-center justify-center w-full p-5 mt-1 bg-green-400 shadow-lg rounded-xl "
+            className="flex items-center justify-center w-full p-5 mt-1 bg-green shadow-lg rounded-xl "
             onClick={() => increase()}
           >
             <span className="text-white truncate">Start</span>

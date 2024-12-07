@@ -98,7 +98,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
       ref={elementRef}
       className={`
         px-4
-        my-1 cursor-pointer
+        py-3
         transition-all duration-500 ease-in-out
         ${
           swipedItemId === data.id  ? "bg-red-400":
@@ -128,11 +128,11 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
           </button>
         )}
       </div>
-       <div
+       {/* <div
        className={"flex justify-end"}
      >
        <p className="my-1 text-xs text-gray-500">{data.date}</p>
-     </div>
+     </div> */}
     </div>
   );
 };

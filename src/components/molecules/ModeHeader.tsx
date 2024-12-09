@@ -11,12 +11,68 @@ const ModeHeader: React.FC<ModeHeaderProps> = ({ mode }) => {
   const bgAlphaClass = getMeditationThemeClass(mode, 'bg-alpha');
 
   return (
-    <div className="text-center mb-6 md:mb-8">
-      <div className={`inline-block p-3 md:p-4 lg:p-6 rounded-full ${bgAlphaClass} backdrop-blur-sm mb-3 md:mb-4 lg:mb-6 animate-pulse bg-white/5`}>
-        {mode.icon}
+    <div className="text-center mb-6 px-4">
+      <div 
+        className={`
+          relative
+          inline-flex items-center justify-center
+          w-20 h-20 md:w-24 md:h-24
+          rounded-2xl
+          ${bgAlphaClass}
+          backdrop-blur-md
+          mb-4
+          transform hover:scale-110
+          transition-all duration-500
+          shadow-lg
+          overflow-hidden
+          group
+        `}
+      >
+        {/* Glowing background effect */}
+        <div className={`
+          absolute inset-0
+          bg-gradient-to-r ${mode.gradientStyle}
+          opacity-50
+          group-hover:opacity-75
+          transition-opacity duration-500
+        `} />
+        
+        {/* Animated border */}
+        <div className={`
+          absolute inset-0
+          border-2 ${textColorClass}
+          opacity-50
+          animate-pulse-glow
+        `} />
+        
+        {/* Icon */}
+        <div className="relative transform group-hover:scale-110 transition-transform duration-500">
+          {mode.icon}
+        </div>
       </div> 
-      <h2 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-2 md:mb-3 animate-fade-in ${textColorClass}`}>{mode.name}</h2>
-      <p className={`text-sm md:text-base lg:text-lg animate-fade-in ${textColorClass} max-w-xs md:max-w-sm mx-auto opacity-80`}>{mode.description}</p>
+
+      <h2 className={`
+        text-2xl md:text-3xl 
+        font-bold mb-2 
+        ${textColorClass}
+        tracking-wide
+        transform hover:scale-105
+        transition-all duration-300
+      `}>
+        {mode.name}
+      </h2>
+
+      <p className={`
+        text-sm md:text-base
+        ${textColorClass}
+        opacity-80
+        max-w-xs mx-auto
+        leading-relaxed
+        transform hover:opacity-100
+        transition-all duration-300
+      `}>
+        {mode.description}
+      </p>
     </div>
   );
 };

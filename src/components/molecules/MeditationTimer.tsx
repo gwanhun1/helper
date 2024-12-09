@@ -38,7 +38,18 @@ const MeditationTimer: React.FC<MeditationTimerProps> = ({
   const textColorClass = getTextColorClass(mode.color.accent);
 
   return (
-    <div className="relative aspect-square mb-10">
+    <div className="relative w-full aspect-square max-w-[280px] mx-auto group">
+      {/* Glow effect */}
+      <div className={`
+        absolute inset-0 
+        rounded-full 
+        bg-gradient-to-r ${mode.gradientStyle}
+        opacity-20 
+        blur-xl
+        group-hover:opacity-30
+        transition-opacity duration-500
+      `} />
+
       <RippleEffect 
         isActive={isMeditating}
         mode={mode}
@@ -52,14 +63,55 @@ const MeditationTimer: React.FC<MeditationTimerProps> = ({
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className={`text-center transition-all duration-500 ${isMeditating ? 'scale-105' : 'scale-100'}`}>
-          <div className={`text-3xl md:text-5xl lg:text-6xl font-light mb-1 md:mb-2 animate-bounce ${textColorClass}`}>
+        <div className={`
+          text-center 
+          ${textColorClass}
+          transform 
+          transition-all duration-500
+          group-hover:scale-105
+        `}>
+          <div className="
+            text-4xl md:text-5xl 
+            font-bold 
+            tracking-wider
+            bg-clip-text text-transparent
+            bg-gradient-to-r
+            from-white/90 to-white/70
+          ">
             {formatTime(timeLeft)}
           </div>
-          <div className={`text-sm md:text-base lg:text-lg ${textColorClass} opacity-70 animate-fade-in`}>
-            {isMeditating ? '깊은 호흡...' : '명상을 시작할까요?'}
+          <div className="
+            text-sm md:text-base 
+            mt-2 
+            opacity-80
+            group-hover:opacity-100
+            transition-opacity duration-300
+          ">
+            {isMeditating ? '명상 중...' : '준비'}
           </div>
         </div>
+      </div>
+
+      {/* Ambient particles */}
+      <div className="absolute inset-0">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <div
+            key={i}
+            className={`
+              absolute w-1 h-1
+              rounded-full
+              ${mode.color.accent === 'blue-500' ? 'bg-blue-400' : 
+                mode.color.accent === 'green-500' ? 'bg-green-400' : 'bg-yellow-400'}
+              animate-float-slow
+              opacity-30
+            `}
+            style={{
+              left: `${50 + (Math.cos(i * Math.PI / 6) * 45)}%`,
+              top: `${50 + (Math.sin(i * Math.PI / 6) * 45)}%`,
+              animationDelay: `${i * 0.3}s`
+            }}
+          />
+        ))}
       </div>
     </div>
   );

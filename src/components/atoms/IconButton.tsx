@@ -18,26 +18,35 @@ const IconButton: React.FC<IconButtonProps> = ({
   mode
 }) => {
   const sizeClasses = {
-    sm: 'w-14 h-14',
-    lg: 'w-24 h-24'
+    sm: 'w-12 h-12',
+    lg: 'w-20 h-20'
   };
 
-  const buttonClasses = getMeditationThemeClass(mode, 'bg', variant);
+  const getButtonClasses = () => {
+    const baseClasses = `
+      ${sizeClasses[size]}
+      rounded-2xl
+      flex 
+      items-center 
+      justify-center
+      backdrop-blur-md
+      transition-all
+      duration-300
+      hover:scale-105
+      active:scale-95
+      shadow-lg
+    `;
+
+    if (variant === 'primary') {
+      return `${baseClasses} ${getMeditationThemeClass(mode, 'bg', 'primary')}`;
+    }
+    return `${baseClasses} bg-white/10 hover:bg-white/20`;
+  };
 
   return (
     <button 
       onClick={onClick}
-      className={`
-        ${sizeClasses[size]}
-        ${buttonClasses}
-        rounded-full 
-        flex 
-        items-center 
-        justify-center
-        backdrop-blur-sm
-        transition-colors 
-        transform-none
-      `}
+      className={getButtonClasses()}
     >
       {icon}
     </button>

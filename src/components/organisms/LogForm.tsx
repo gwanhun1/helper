@@ -97,8 +97,8 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
       onMouseDown={handleMouseDown}
       ref={elementRef}
       className={`
-        px-4
-        py-2
+        px-2
+        py-1
         transition-all duration-500 ease-in-out
         ${
           swipedItemId === data.id  ? "bg-red-400":

@@ -13,7 +13,7 @@ const Title: React.FC<TitleProps> = ({
 }) => {
     return (
         <h1
-            className={`text-xl font-semibold tracking-tightest ${color} ${className}`}
+            className={`font-semibold tracking-tightest ${color} md:text-base ${className}`}
             style={{
                 fontStretch: 'ultra-condensed',
             }}

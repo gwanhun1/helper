@@ -148,7 +148,7 @@ const Home = () => {
               <FiCalendar className="text-lg" />
               <span className="font-semibold text-gray-700">기록 횟수</span>
             </div>
-            <div className="text-3xl font-bold text-gray-800">
+            <div className="text-xl font-bold text-gray-800">
               {forestData?.length || 0}회
             </div>
           </motion.div>
@@ -162,7 +162,7 @@ const Home = () => {
               <FiHeart className="text-lg" />
               <span className="font-semibold text-gray-700">현재 감정</span>
             </div>
-            <div className="text-3xl font-bold text-gray-800">{getRecentMood()}</div>
+            <div className="text-xl font-bold text-gray-800">{getRecentMood()}</div>
           </motion.div>
         </div>
 
@@ -175,13 +175,13 @@ const Home = () => {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2 text-gray-700">
               <FiClock className="text-green-500 text-lg" />
-              <span className="font-semibold text-gray-700 text-lg">최근 기록</span>
+              <span className="font-semibold text-gray-700 ">최근 기록</span>
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="text-sm text-green-500 hover:text-green-600 font-medium px-3 py-1 rounded-full hover:bg-green-50 transition-colors"
-              onClick={() => (window.location.href = "/log")}
+              onClick={() => (window.location.href = "/Worry")}
             >
               전체보기
             </motion.button>

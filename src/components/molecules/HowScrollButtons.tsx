@@ -3,7 +3,7 @@ import Button from '../atoms/Button';
 
 const HowScrollButtons = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const [scrollPosition, setScrollPosition] = useState(0);
   
   const actionButtons = [
     { action: "운동하기", text: "운동하기" },
@@ -35,25 +35,31 @@ const HowScrollButtons = () => {
     { action: "봉사활동하기", text: "봉사활동하기" },
   ];
 
-  const [buttons, setButtons] = useState([...actionButtons, ...actionButtons, ...actionButtons]);
+  const [buttons, setButtons] = useState([...actionButtons, ...actionButtons]);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // 스크롤 애니메이션 함수
+    // 초기 스크롤 위치를 최대로 설정
+    container.scrollLeft = container.scrollWidth;
+
     const animate = () => {
-      if (container.scrollLeft >= container.scrollWidth - container.offsetWidth - 500) {
-        // 스크롤이 끝부분에 가까워지면 새로운 버튼들을 추가
-        setButtons(prev => [...prev, ...actionButtons]);
-      }
-      container.scrollLeft += 100;
+      setScrollPosition(prev => {
+        const newPosition = prev - 1;
+        
+        if (newPosition <= 0) {
+          container.scrollLeft = container.scrollWidth;
+          return container.scrollWidth;
+        }
+        
+        container.scrollLeft = newPosition;
+        return newPosition;
+      });
     };
 
-    // 10ms마다 100px씩 이동
-    const animation = setInterval(animate, 10);
-
-    return () => clearInterval(animation);
+    const interval = setInterval(animate, 20);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -64,15 +70,15 @@ const HowScrollButtons = () => {
         style={{
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
-          msOverflowStyle: 'none',  /* IE and Edge */
-          scrollbarWidth: 'none',   /* Firefox */
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
         }}
       >
         <div className="flex gap-2 whitespace-nowrap pb-4">
           {buttons.map((button, index) => (
             <Button
               key={index}
-              onPress={() => handleActionSelection(button.action)}
+              onPress={() => console.log(button.action)}
               text={button.text}
               bgColor="bg-green-700"
               size="2xl"
@@ -82,16 +88,12 @@ const HowScrollButtons = () => {
       </div>
       <style>
         {`
-          ::-webkit-scrollbar {
+          .scrollbar-hide::-webkit-scrollbar {
             display: none;
-            width: 8px;
-            background-color: #f1f1f1;
           }
-          ::-webkit-scrollbar-thumb {
-            background-color: #888;
-          }
-          ::-webkit-scrollbar-thumb:hover {
-            background-color: #555;
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
           }
         `}
       </style>

@@ -16,9 +16,8 @@ const StepOne = () => {
           </Text>
         </div>
       <div className="flex flex-col">
-        {/* 1:7 비율 적용 */}
 
-        <div className="bg-gray-300" style={{ height: "55vh" }}>
+        <div style={{ height: "55vh" }}>
           <WhoScrollButtons/>
           <HowScrollButtons/>
           <WhoScrollButtons/>

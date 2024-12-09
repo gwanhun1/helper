@@ -10,17 +10,21 @@ const Home = () => {
 
   const getAverageLevel = () => {
     if (!forestData || forestData.length === 0) return 0;
-    const sum = forestData.reduce((acc, item) => acc + item.level, 0);
+    const sum = forestData.reduce(
+      (acc, item) => acc + (item.level !== undefined ? Number(item.level) : 0),
+      0
+    );
     return (sum / forestData.length).toFixed(2);
   };
 
   const getRecentMood = () => {
     if (!forestData || forestData.length === 0) return "아직 기록이 없습니다";
     const lastItem = forestData[forestData.length - 1];
-    return lastItem.level < 3
+    if (!lastItem) return "아직 기록이 없습니다";
+    return lastItem && lastItem.level && lastItem.level < 3
       ? "긍정적"
-      : lastItem.level < 6
-      ? "보통"
+      : lastItem.level && lastItem.level < 6
+      ? "중립적"
       : "부정적";
   };
 
@@ -119,7 +123,7 @@ const Home = () => {
                     <span>{formatDate(record.date).time}</span>
                   </div>
                   <span className="text-xl" role="img" aria-label="emotion">
-                    {getEmotionEmoji(record.level)}
+                    {record.level ? getEmotionEmoji(record.level) : null}
                   </span>
                 </div>
                 <p className="text-gray-700 line-clamp-2">{record.content}</p>

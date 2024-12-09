@@ -46,7 +46,7 @@ const useWorryData = (): UseWorryData => {
       } else {
         setData([]);
       }
-    } catch (e) {
+    } catch (error) {
       setError("데이터를 가져오는 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);

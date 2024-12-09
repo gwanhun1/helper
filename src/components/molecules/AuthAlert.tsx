@@ -13,7 +13,7 @@ const AuthAlert = () => {
   }, [user]);
 
   return (
-    <Snackbar 
+    <Snackbar
       show={showSnackbar}
       message="로그인하고 더 많은 기능을 이용해보세요 ✨"
       onClose={() => setShowSnackbar(false)}

@@ -12,7 +12,7 @@ const useSaveWorryData = () => {
     const db = getDatabase(app);
     // const dataRef = ref(db, `logs/${user.uid}/${item.id}`);
     const dataRef = ref(db, `logs/5sEM1OLG52PLUwjxEU8FPEFtVIu1`); // 사용자의 uid 기반 데이터 경로 설정
-    
+
     try {
       await set(dataRef, item);
     } catch (e) {

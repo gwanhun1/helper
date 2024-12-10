@@ -1,5 +1,4 @@
 import React from 'react';
-import Badge from '../atoms/Badge';
 import Text from '../atoms/Text';
 
 interface UserBadgeProps {
@@ -10,7 +9,7 @@ interface UserBadgeProps {
 
 const UserBadge: React.FC<UserBadgeProps> = ({
     email,
-    grade = '일반회원',
+    // grade = '일반회원',
     className = '',
 }) => {
     return (
@@ -20,9 +19,7 @@ const UserBadge: React.FC<UserBadgeProps> = ({
                     ? "카카오로 로그인한 계정입니다."
                     : email}
             </Text>
-            <div className="w-1/4 ml-2">
-                <Badge fontSize={10}>{grade}</Badge>
-            </div>
+            
         </div>
     );
 };

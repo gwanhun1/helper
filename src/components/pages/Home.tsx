@@ -253,7 +253,7 @@ const Home = () => {
             <div className="flex items-center gap-3">
               <span className="text-3xl">{currentTip.emoji}</span>
               <div className="flex flex-col items-start">
-                <span className="text-green-900 font-medium text-lg">
+                <span className="text-green-900 font-bold text-lg">
                   오늘의 마음 관리
                 </span>
                 <div className="flex items-center gap-1.5 mt-0.5">

@@ -17,6 +17,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
   const elementRef = useRef<HTMLDivElement>(null);
   const { deleteData, loading } = useDeleteData();
   const [swipedItemId, setSwipedItemId] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSelectTree = (data: Item) => {
     useSelectTreeStore.getState().select(data);
@@ -41,6 +42,10 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
 
   const handleSwipeRight = () => {
     setSwipedItemId(null);
+  };
+
+  const onToggle = () => {
+    setIsOpen(!isOpen);
   };
 
   const isSelected =
@@ -100,9 +105,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
         ${
           swipedItemId === data.id
             ? "translate-x-[-80px] bg-rose-50"
-            : isSelected
-            ? "bg-emerald-50/80"
-            : "hover:bg-slate-50"
+            :  "hover:bg-slate-50"
         }
       `}
       onClick={() => handleSelectTree(data)}
@@ -123,7 +126,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
             </div>
           </div>
           <div className="flex-1 min-w-0">
-            <Accordion title={data.content} content={data.response} />
+            <Accordion title={data.content} content={data.response} isOpen={true} onToggle={onToggle} />
           </div>
         </div>
       </div>

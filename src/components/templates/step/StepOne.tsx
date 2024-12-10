@@ -3,6 +3,7 @@ import Text from "../../atoms/Text";
 import Title from "../../atoms/Title";
 import Forest from "../../organisms/Forest";
 import ForestLog from "../../organisms/ForestLog";
+import { motion } from "framer-motion";
 
 const StepOne = () => {
   const { increase } = useStepStore();
@@ -17,20 +18,41 @@ const StepOne = () => {
           </Text>
         </div>
 
-        <div className="flex-1 overflow-y-auto min-h-0 pb-24">
+        <div className="flex-1 overflow-y-auto min-h-0 pb-2">
           <Forest />
           <ForestLog />
         </div>
       </div>
 
-      <div className="sticky left-0 right-0 bottom-4 flex items-center justify-center  backdrop-blur-sm z-20 ">
-        <button
-          className="flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl"
+      <motion.div 
+        className="flex items-center justify-center backdrop-blur-sm z-20"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <motion.button
+          className="flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl relative overflow-hidden group"
           onClick={() => increase()}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.3,
+            ease: "easeOut"
+          }}
         >
-          <span className="text-white truncate">Start</span>
-        </button>
-      </div>
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          />
+          <motion.div
+            className="absolute inset-0 bg-white opacity-0"
+            initial={{ opacity: 0 }}
+            whileTap={{ opacity: 0.2 }}
+          />
+          <span className="text-white truncate relative z-10">새로운 고민 시작하기</span>
+        </motion.button>
+      </motion.div>
     </div>
   );
 };

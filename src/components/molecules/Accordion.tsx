@@ -6,13 +6,13 @@ type AccordionProps = {
   title: string;
   content: string;
   width?: number;
+  isOpen: boolean;
+  onToggle: () => void;
 };
 
-const Accordion = ({ title, content, width }: AccordionProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
-
+const Accordion = ({ title, content, width, isOpen, onToggle }: AccordionProps) => {
   const toggleAccordion = () => {
-    setIsCollapsed(!isCollapsed);
+    onToggle();
   };
 
   return (
@@ -28,7 +28,7 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
       >
         <p
           className={`text-sm max-w-52 ${
-            isCollapsed
+            !isOpen
               ? "truncate whitespace-nowrap overflow-hidden"
               : "break-words text-left"
           }`}
@@ -36,7 +36,7 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
           {title}
         </p>
         <div className="flex items-center justify-center w-6 h-6 ml-2">
-          {isCollapsed ? (
+          {!isOpen ? (
             <FaPlusCircle className="text-gray-500" size={16} />
           ) : (
             <FaMinusCircle className="text-gray-500" size={16} />
@@ -45,7 +45,7 @@ const Accordion = ({ title, content, width }: AccordionProps) => {
       </button>
       <div
         className={`transition-all duration-300 ease-in-out overflow-hidden ${
-          isCollapsed ? "h-0 opacity-0" : "h-auto opacity-100"
+          !isOpen ? "h-0 opacity-0" : "h-auto opacity-100"
         }`}
       >
         <div className="flex items-center justify-center px-4 pt-2 pb-4">

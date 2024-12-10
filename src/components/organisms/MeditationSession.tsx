@@ -81,7 +81,6 @@ const MeditationSession: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div className="relative z-10 w-full">
         <MeditationControls
           isMeditating={isMeditating}
@@ -91,7 +90,6 @@ const MeditationSession: React.FC = () => {
           mode={selectedMode}
         />
       </div>
-
       <AudioPlayer
         src={selectedMode.soundFile}
         isPlaying={isMeditating}

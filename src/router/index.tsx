@@ -21,7 +21,7 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/User",
+        path: "/user",
         element: (
           <AuthGuard>
             <User />
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Worry",
+        path: "/worry",
         element: (
           <AuthGuard>
             <Worry />
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/Credit",
+        path: "/credit",
         element: <Credit />,
       },
       {

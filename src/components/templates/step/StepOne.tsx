@@ -16,16 +16,16 @@ const StepOne = () => {
             고민을 나누면 작은 나무가 자라날 거예요
           </Text>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto min-h-0 pb-24">
           <Forest />
           <ForestLog />
         </div>
       </div>
 
-      <div className="fixed left-0 right-0 bottom-20 flex items-center justify-center py-4 backdrop-blur-sm z-20 ">
+      <div className="sticky left-0 right-0 bottom-4 flex items-center justify-center  backdrop-blur-sm z-20 ">
         <button
-          className="flex items-center justify-center w-60 p-5 bg-green-400 shadow-lg rounded-xl"
+          className="flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl"
           onClick={() => increase()}
         >
           <span className="text-white truncate">Start</span>

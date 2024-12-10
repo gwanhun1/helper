@@ -2,6 +2,7 @@ import React from "react";
 import ProfileImage from "../atoms/ProfileImage";
 import UserBadge from "../molecules/UserBadge";
 import Text from "../atoms/Text";
+import Badge from "../atoms/Badge";
 
 interface UserProfileProps {
   photoURL?: string | null;
@@ -22,18 +23,23 @@ const UserProfile: React.FC<UserProfileProps> = ({
 }) => {
   return (
     <div className={`p-2 px-4 ${className}`}>
-      <div className="flex items-end">
-        <ProfileImage size={100} src={photoURL ?? undefined} />
-        {onLogout && (
-          <Text
-            className="text-red-400 text-sm font-bold ml-2 hover:cursor-pointer"
-            onClick={onLogout}
-          >
-            로그아웃
-          </Text>
-        )}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <ProfileImage size={100} src={photoURL ?? undefined} />
+          <div className="flex flex-col gap-2">
+            <Badge fontSize={10}>{grade}</Badge>
+            {onLogout && (
+              <Text
+                className="text-red-400 text-sm font-bold hover:cursor-pointer"
+                onClick={onLogout}
+              >
+                로그아웃
+              </Text>
+            )}
+          </div>
+        </div>
       </div>
-      <UserBadge email={email} grade={grade} className="my-2" />
+      <UserBadge email={email} className="mt-4 mb-2" />
       <Text className="text-gray-400">{displayName}</Text>
       <Text className="text-gray-400">
         {email === "이메일 없음" ? "" : "*********"}

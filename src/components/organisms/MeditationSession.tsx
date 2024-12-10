@@ -33,24 +33,7 @@ const MeditationSession: React.FC = () => {
   const handleAudioError = () => {
     toggleMeditation();
   };
-
  
-
-  const getTextColorClass = (colorName: string) => {
-    switch(colorName) {
-      case 'blue-500':
-        return 'text-blue-500';
-      case 'green-500':
-        return 'text-green-500';
-      case 'yellow-500':
-        return 'text-yellow-500';
-      default:
-        return 'text-white';
-    }
-  };
-
-  const textColorClass = getTextColorClass(selectedMode.color.accent);
-
   return (
     <div className="relative h-full flex flex-col items-center justify-between py-8 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
       {/* Animated Background */}

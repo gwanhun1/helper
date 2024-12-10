@@ -40,7 +40,7 @@ const ModeHeader: React.FC<ModeHeaderProps> = ({ mode }) => {
         {/* Animated border */}
         <div className={`
           absolute inset-0
-          border-2 ${textColorClass}
+           ${textColorClass}
           opacity-50
           animate-pulse-glow
         `} />

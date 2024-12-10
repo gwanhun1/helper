@@ -19,6 +19,7 @@ import StatCard from "../atoms/StatCard";
 import EmotionChart from "../molecules/EmotionChart";
 import WellnessTipCard from "../molecules/WellnessTipCard";
 import RecentRecords from "../organisms/RecentRecords";
+import WorryPromptCarousel from "../molecules/WorryPromptCarousel";
 
 ChartJS.register(
   CategoryScale,
@@ -114,6 +115,7 @@ const Home = () => {
     <PageLayout requireAuth>
       <div className="flex flex-col space-y-4 px-4 pb-4">
         <EmotionChart averageLevel={getAverageLevel()} chartData={chartData} />
+        <WorryPromptCarousel />
 
         <div className="grid grid-cols-2 gap-4">
           <StatCard

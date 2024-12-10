@@ -8,7 +8,6 @@ interface UserAccountProps {
 const UserAccount = ({ email }: UserAccountProps) => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
-      <h2 className="my-4 text-lg font-bold text-gray-900">Account details</h2>
       <IconRow
         icon={<AiOutlineMail className="w-6 h-6 text-gray-500" />}
         mainText={email ?? "이메일 없음"}

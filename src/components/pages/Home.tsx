@@ -16,7 +16,7 @@ import {
   Legend,
 } from "chart.js";
 import { wellnessTips } from "../../data/wellnessTips";
-import { FiRefreshCw, FiFeather, FiSun, FiCoffee, FiStar } from "react-icons/fi";
+import { FiFeather, FiSun, FiCoffee, FiStar } from "react-icons/fi";
 import { useState } from "react";
 
 ChartJS.register(
@@ -44,13 +44,13 @@ const Home = () => {
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case '마음챙김':
+      case "마음챙김":
         return <FiFeather className="text-green-500" />;
-      case '긍정':
+      case "긍정":
         return <FiSun className="text-green-500" />;
-      case '성장':
+      case "성장":
         return <FiStar className="text-green-500" />;
-      case '휴식':
+      case "휴식":
         return <FiCoffee className="text-green-500" />;
       default:
         return null;
@@ -98,20 +98,20 @@ const Home = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-blue-50 rounded-xl p-6 text-center shadow-md hover:shadow-lg transition-shadow border border-blue-100"
+          className="bg-gradient-to-br from-blue-300 to-blue-200 rounded-xl pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow border border-blue-100"
         >
           <div className="text-6xl font-bold text-blue-500 mb-3">
             {getAverageLevel()}
           </div>
-          <div className="text-blue-600 mb-2 font-medium">
+          <div className="text-blue-600 font-medium">
             마음이 차분하고 안정적입니다.
           </div>
           <div className="text-blue-400 text-sm font-medium">
             계속 잘 유지하세요!
           </div>
           {/* Level 차트 */}
-          <div className="flex items-center justify-center mt-4">
-            <div className="h-24 w-48">
+          <div className="flex items-center justify-center mt-2">
+            <div className="h-20 w-48">
               <Line
                 data={{
                   labels: chartData.map((item) => formatDate(item.date)),
@@ -201,16 +201,20 @@ const Home = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gradient-to-br from-green-50 to-blue-50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-green-100"
+          className="bg-gradient-to-br from-green-200 to-blue-100 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-green-100"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-3xl">{currentTip.emoji}</span>
               <div className="flex flex-col items-start">
-                <span className="text-green-700 font-medium text-lg">오늘의 마음 관리</span>
+                <span className="text-green-900 font-medium text-lg">
+                  오늘의 마음 관리
+                </span>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   {getCategoryIcon(currentTip.category)}
-                  <span className="text-green-600 text-xs font-medium">{currentTip.category}</span>
+                  <span className="text-green-600 text-xs font-medium">
+                    {currentTip.category}
+                  </span>
                 </div>
               </div>
             </div>

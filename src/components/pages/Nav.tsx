@@ -8,9 +8,7 @@ const Nav = () => {
       {location.pathname !== "/credit" &&
       location.pathname !== "/auth" &&
       location.pathname !== "/meditation" ? (
-        <div
-          className={`${location.pathname === "/credit" ? "" : "mt-8  px-4"}`}
-        >
+        <div className="mt-8  px-4">
           <div className="flex items-center justify-between">
             <p className="text-xl font-bold text-green">HELPER</p>
             <div className="p-4">

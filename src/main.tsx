@@ -7,22 +7,19 @@ import { Toaster } from "react-hot-toast";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <>
     <RouterProvider router={router} />
-    <Toaster 
-      position="bottom-center"
+    <Toaster
+      position="top-center"
       reverseOrder={false}
       gutter={8}
-      containerStyle={{
-        bottom: 40
-      }}
       toastOptions={{
         duration: 3000,
         style: {
-          background: '#363636',
-          color: '#fff',
-          padding: '16px',
-          fontSize: '16px',
-          borderRadius: '10px',
-          maxWidth: '500px'
+          background: "#363636",
+          color: "#fff",
+          padding: "16px",
+          fontSize: "16px",
+          borderRadius: "10px",
+          maxWidth: "500px",
         },
       }}
     />

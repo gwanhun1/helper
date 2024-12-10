@@ -37,7 +37,7 @@ const User = () => {
           onLogout={handleLogOut}
         />
         <div className="p-4">
-          <UserAccount />
+          <UserAccount email={user?.email} />
           <UserNotice />
         </div>
       </motion.div>

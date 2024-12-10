@@ -5,6 +5,7 @@ import useWorryData from "../../hooks/useWorryData";
 import { FiCalendar, FiClock, FiHeart } from "react-icons/fi";
 import { formatDate } from "../../utils/date";
 import { Line } from "react-chartjs-2";
+import { toast } from "react-hot-toast";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,7 +18,7 @@ import {
 } from "chart.js";
 import { wellnessTips } from "../../data/wellnessTips";
 import { FiFeather, FiSun, FiCoffee, FiStar } from "react-icons/fi";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 ChartJS.register(
   CategoryScale,
@@ -31,6 +32,51 @@ ChartJS.register(
 
 const Home = () => {
   const { data: forestData } = useWorryData();
+
+  useEffect(() => {
+    if (forestData && forestData.length > 0) {
+      const lastRecord = forestData[forestData.length - 1];
+      if (lastRecord && lastRecord.level !== undefined) {
+        const level = Number(lastRecord.level);
+
+        if (level >= 6) {
+          toast(
+            <div className="flex flex-col gap-1">
+              <span className="font-medium">
+                힘든 시간을 보내고 계시네요 😔
+              </span>
+              <span className="text-sm">
+                고민을 글로 적어보면 마음이 한결 가벼워질 수 있어요
+              </span>
+            </div>,
+            { icon: "🌱", duration: 5000 }
+          );
+        } else if (level >= 3) {
+          toast(
+            <div className="flex flex-col gap-1">
+              <span className="font-medium">
+                평온한 하루를 보내고 계시네요 😊
+              </span>
+              <span className="text-sm">
+                잠시 명상을 하며 마음을 돌아보는 건 어떨까요?
+              </span>
+            </div>,
+            { icon: "🍃", duration: 5000 }
+          );
+        } else {
+          toast(
+            <div className="flex flex-col gap-1">
+              <span className="font-medium">기분 좋은 하루네요! 💫</span>
+              <span className="text-sm">
+                오늘의 긍정적인 순간들을 기록해보세요
+              </span>
+            </div>,
+            { icon: "✨", duration: 5000 }
+          );
+        }
+      }
+    }
+  }, [forestData]);
 
   // 날짜를 기반으로 팁 선택
   const getTodaysTip = () => {
@@ -71,10 +117,10 @@ const Home = () => {
     const lastItem = forestData[forestData.length - 1];
     if (!lastItem) return "아직 기록이 없습니다";
     return lastItem && lastItem.level && lastItem.level < 3
-      ? "긍정적"
+      ? "마음이 따뜻해요"
       : lastItem.level && lastItem.level < 6
-      ? "중립적"
-      : "부정적";
+      ? "차분한 상태에요"
+      : "힘이 들어요";
   };
 
   const getEmotionEmoji = (level: number) => {

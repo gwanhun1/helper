@@ -1,5 +1,4 @@
 import { AiOutlineUser, AiOutlineDelete } from "react-icons/ai";
-import IconRow from "../molecules/IconRow";
 import Accordion from "../molecules/Accordion";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import { useRef, useEffect, useState } from "react";
@@ -13,7 +12,6 @@ type LogFormProps = {
 };
 
 const LogForm = ({ data, onDelete }: LogFormProps) => {
-
   const { content: selectContent, response: selectResponse } =
     useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -24,14 +22,12 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
     useSelectTreeStore.getState().select(data);
   };
 
-  
-
   const handleDelete = async (e: React.MouseEvent) => {
     try {
       e.stopPropagation();
       if (window.confirm("정말 삭제하시겠습니까?")) {
         await deleteData(data.id);
-        await onDelete(); // 삭제 후 데이터 새로고침
+        await onDelete();
       }
     } catch (error) {
       console.error("Failed to delete item:", error);
@@ -97,42 +93,50 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
       onMouseDown={handleMouseDown}
       ref={elementRef}
       className={`
-        px-2
-        py-1
-        transition-all duration-500 ease-in-out
+        relative 
+        border-b border-slate-200
+        transition-all 
+        duration-300
         ${
-          swipedItemId === data.id  ? "bg-red-400":
-          isSelected
-            ? "bg-green-200 -translate-y-1 shadow-md order-first"
-            : "bg-white"
+          swipedItemId === data.id
+            ? "translate-x-[-80px] bg-rose-50"
+            : isSelected
+            ? "bg-emerald-50/80"
+            : "hover:bg-slate-50"
         }
       `}
       onClick={() => handleSelectTree(data)}
-      style={{
-        position: "relative",
-        zIndex: isSelected ? 10 : 1,
-      }}
     >
-      <div className="flex justify-between items-center">
-        <IconRow
-          icon={<AiOutlineUser className="w-6 h-6 text-gray-500" />}
-          mainText={<Accordion title={data.content} content={data.response} />}
-        />
-        {swipedItemId === data.id && (
-          <button
-            onClick={handleDelete}
-            disabled={loading}
-            className="p-2 hover:text-red-500 transition-colors"
-          >
-            <AiOutlineDelete className="w-5 h-5" />
-          </button>
-        )}
+      <div className="py-4 px-5">
+        <div className="flex items-center gap-4">
+          <div className="shrink-0">
+            <div
+              className={`
+              w-10 h-10 
+              rounded-full 
+              flex items-center justify-center
+              transition-colors
+              ${isSelected ? "bg-emerald-100" : "bg-slate-100"}
+            `}
+            >
+              <AiOutlineUser className={`w-5 h-5 ${isSelected ? 'text-emerald-600' : 'text-slate-500'}`} />
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <Accordion title={data.content} content={data.response} />
+          </div>
+        </div>
       </div>
-       {/* <div
-       className={"flex justify-end"}
-     >
-       <p className="my-1 text-xs text-gray-500">{data.date}</p>
-     </div> */}
+
+      {swipedItemId === data.id && (
+        <button
+          onClick={handleDelete}
+          disabled={loading}
+          className="absolute right-[-80px] top-0 bottom-0 w-[80px] bg-rose-500 hover:bg-rose-600 transition-colors flex items-center justify-center"
+        >
+          <AiOutlineDelete className="w-6 h-6 text-white" />
+        </button>
+      )}
     </div>
   );
 };

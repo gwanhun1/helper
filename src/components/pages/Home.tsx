@@ -224,7 +224,7 @@ const Home = () => {
               <FiCalendar className="text-lg" />
               <span className="font-semibold text-gray-700">기록 횟수</span>
             </div>
-            <div className="text-xl font-bold text-gray-800">
+            <div className="text-md font-bold text-gray-800">
               {forestData?.length || 0}회
             </div>
           </motion.div>
@@ -236,9 +236,9 @@ const Home = () => {
           >
             <div className="flex items-center gap-2 text-rose-500 mb-3">
               <FiHeart className="text-lg" />
-              <span className="font-semibold text-gray-700">현재 감정</span>
+              <span className="font-semibold text-gray-700 ">현재 감정</span>
             </div>
-            <div className="text-xl font-bold text-gray-800">
+            <div className="font-bold text-gray-800 text-md">
               {getRecentMood()}
             </div>
           </motion.div>

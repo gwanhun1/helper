@@ -6,7 +6,7 @@ import Text from "../../atoms/Text";
 
 const StepThree = () => {
   const { increase, decrease } = useStepStore();
-  const { setHow } = useWorryStore();
+  const { setHow, how } = useWorryStore();
 
   const handleHowSelection = (how: string) => {
     setHow(how);
@@ -47,7 +47,7 @@ const StepThree = () => {
             key={index}
             onPress={() => handleHowSelection(button.how)}
             text={button.text}
-            bgColor="bg-green"
+            bgColor={how === button.how ? "bg-blue-500" : "bg-green"}
           />
         ))}
       </div>

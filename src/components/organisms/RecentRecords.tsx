@@ -15,8 +15,8 @@ interface RecentRecordsProps {
 
 const RecentRecords = ({ records }: RecentRecordsProps) => {
   const getEmotionEmoji = (level: number) => {
-    if (level < 3) return "😊";
-    if (level < 6) return "😐";
+    if (level >= 4) return "😊";
+    if (level >= 2) return "😐";
     return "😔";
   };
 

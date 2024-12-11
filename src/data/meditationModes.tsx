@@ -13,7 +13,7 @@ export const meditationModes: MeditationMode[] = [
       accent: 'blue-500'
     },
     gradientStyle: 'from-blue-700 via-blue-600 to-blue-500',
-    soundFile: '/sounds/IceWater.wav'
+    soundFile: '/sounds/IceWater.mp3'
   },
   {
     id: 'nature-water',

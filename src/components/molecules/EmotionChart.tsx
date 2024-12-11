@@ -57,20 +57,29 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
 
   const style = getEmotionStyle(averageLevel);
 
+
+  const getEmotionEmoji = (level: number) => {
+    if (level >= 4) return "😊";
+    if (level >= 2) return "😐";
+    return "😔";
+  };
+
+
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={`bg-gradient-to-br ${style.gradient} rounded-xl pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow border ${style.borderColor}`}
-    >
+    ><div className="flex justify-center items-center">
       <div className={`font-medium ${style.messageColor}`}>
-        {style.message} | {averageLevel}
-      </div>
+        {style.message} | 
+      </div><p className={`font-bold ${style.messageColor} ml-2`}>{averageLevel}</p></div>
       <div className={`text-sm font-medium ${style.subMessageColor}`}>
         {style.subMessage}
       </div>
       <div className="flex items-center justify-center mt-2">
-        <div className="h-20 w-48">
+        <div className="h-32 w-60">
           <Line
             data={{
               labels: chartData.map((item) => formatDate(item.date)),
@@ -87,7 +96,14 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
             }}
             options={{
               responsive: true,
-              maintainAspectRatio: false,
+              maintainAspectRatio: false, layout: {
+                padding: {
+                  top: 32,
+                  left:20,
+                  right:20  
+                    
+                }
+              },
               scales: {
                 x: {
                   display: false,
@@ -110,19 +126,18 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
                 tooltip: {
                   enabled: false,
                 },
-                datalabels: {
-                  color: 'white',
-                  backgroundColor: style.chartColor,
+                  datalabels: {
+                  backgroundColor: "white",
                   borderRadius: 4,
-                  padding: { top: 4, bottom: 4, left: 6, right: 6 },
+                  padding: 4,
                   anchor: 'end',
                   align: 'top',
-                  offset: 0,
+                  offset: 3,
                   font: {
-                    size: 10,
+                    size: 13,
                     weight: 'bold'
                   },
-                  formatter: (value) => value
+                  formatter: (value) => getEmotionEmoji(value as number)
                 }
               },
               elements: {

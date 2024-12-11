@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        pretendard: ["Pretendard", "sans-serif"],
+        noto: ["Noto Sans KR", "sans-serif"],
+      },
       colors: {
         navy: {
           DEFAULT: "#242f44", // 기본 색

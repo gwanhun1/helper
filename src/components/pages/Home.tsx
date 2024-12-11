@@ -124,12 +124,12 @@ const Home = () => {
         <div className="grid grid-cols-2 gap-4">
           <StatCard
             icon={<FiCalendar className="text-lg" />}
-            title="기록 횟수"
-            value={`${forestData?.length || 0}회`}
+            title="나의 기록"
+            value={`총 ${forestData?.length || 0}회의 기록`}
           />
           <StatCard
             icon={<FiHeart className="text-lg" />}
-            title="현재 감정"
+            title="오늘의 기분"
             value={getRecentMood()}
             iconColor="text-rose-500"
           />

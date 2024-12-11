@@ -81,8 +81,8 @@ const WorryPromptCarousel = () => {
       className="mt-4 bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300 border-2 border-green-900"
     >
       <div className=" text-green-800 mb-4 flex flex-col">
-        <span className="text-xl font-bold">고민을 나누면 반이 됩니다.</span>
-        <span className="text-sm ">지금 시작해 보세요!!</span>
+        <span className="text-xl font-bold font-noto tracking-tight">고민을 나누면 반이 됩니다.</span>
+        <span className="text-sm font-noto tracking-tight">지금 시작해 보세요!!</span>
       </div>
       <div className="flex flex-col space-y-1">
         {/* Combined Carousel */}

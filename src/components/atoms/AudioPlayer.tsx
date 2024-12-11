@@ -14,12 +14,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   onError
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.onended = onEnd;
+      audioRef.current.loop = true;  // 오디오 반복 재생 설정
     }
-  }, [onEnd]);
+  }, []);
 
   useEffect(() => {
     const playAudio = async () => {
@@ -28,9 +29,21 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           if (isPlaying && audioRef.current.paused) {
             audioRef.current.currentTime = 0;
             await audioRef.current.play();
+            
+            // 3분(180000ms) 후에 재생 중지
+            timerRef.current = setTimeout(() => {
+              if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+                onEnd();
+              }
+            }, 180000);
           } else if (!isPlaying) {
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
+            if (timerRef.current) {
+              clearTimeout(timerRef.current);
+            }
           }
         } catch (e) {
           console.log('Audio play failed:', e);
@@ -40,7 +53,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     };
 
     playAudio();
-  }, [isPlaying, onError]);
+
+    // 컴포넌트 언마운트 시 타이머 정리
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [isPlaying, onEnd, onError]);
 
   useEffect(() => {
     if (audioRef.current) {

@@ -19,11 +19,15 @@ interface LoadingState {
   step: number;
 }
 
-const resetLoadingState = (setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>) => {
+const resetLoadingState = (
+  setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>
+) => {
   setLoadingState({ isLoading: false, step: 0 });
 };
 
-const startLoading = (setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>) => {
+const startLoading = (
+  setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>
+) => {
   setLoadingState({ isLoading: true, step: 0 });
   return setInterval(() => {
     setLoadingState((prev) => ({
@@ -35,7 +39,7 @@ const startLoading = (setLoadingState: React.Dispatch<React.SetStateAction<Loadi
 
 const StepFour = () => {
   const { increase, decrease } = useStepStore();
-  const { setWorry, worry } = useWorryStore();
+  const { setWorry, worry, how, who } = useWorryStore();
   const { fetchResponse } = useCounselingPrompt();
   const [loadingState, setLoadingState] = useState<LoadingState>({
     isLoading: false,
@@ -64,8 +68,10 @@ const StepFour = () => {
         clearInterval(interval);
       }
     } else {
-      alert('오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!');
-      navigate('/Credit');
+      alert(
+        "오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!"
+      );
+      navigate("/Credit");
     }
   };
 
@@ -78,9 +84,15 @@ const StepFour = () => {
       <div className="p-2">
         <div className="px-2 pb-2 mb-4 border-b border-gray-300">
           <Title>당신의 고민을 적어주세요.</Title>
-          <Text className="px-2 mt-2 ml-2 text-xs text-gray-600">
-            고민을 자유롭게 적어주세요.
-          </Text>
+          <div className=" flex">
+            <Text className="mt-2 ml-2 text-xs text-gray-600">
+              고민을 자유롭게 적어주세요.
+            </Text>
+
+            <Text className="ml-1 mt-2 text-xs text-gray-400">
+              ({who}/{how})
+            </Text>
+          </div>
         </div>
 
         <div className="max-w-sm px-2 mx-auto">

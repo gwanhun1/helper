@@ -82,7 +82,7 @@ const WorryPromptCarousel = () => {
     >
       <div className=" text-green-800 mb-4 flex flex-col">
         <span className="text-xl font-bold">고민을 나누면 반이 됩니다.</span>
-        <span className="text-lg font-semibold">지금 시작해 보세요!!</span>
+        <span className="text-sm ">지금 시작해 보세요!!</span>
       </div>
       <div className="flex flex-col space-y-1">
         {/* Combined Carousel */}
@@ -103,7 +103,7 @@ const WorryPromptCarousel = () => {
                 {whoList[whoIndex].text}
               </motion.div>
             </AnimatePresence>
-            
+
             <span className="mx-2 text-gray-400">•</span>
 
             <AnimatePresence mode="wait">

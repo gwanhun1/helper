@@ -52,16 +52,20 @@ const WorryPromptCarousel = () => {
   const { setWho, setHow } = useWorryStore();
   const [whoIndex, setWhoIndex] = useState(0);
   const [howIndex, setHowIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      setIsTransitioning(true);
       setWhoIndex((prev) => (prev + 1) % whoList.length);
       setHowIndex((prev) => (prev + 1) % howList.length);
+      setTimeout(() => setIsTransitioning(false), 300); // Match transition duration
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
   const handleSelection = () => {
+    if (isTransitioning) return; // Prevent selection during transition
     setWho(whoList[whoIndex].who);
     setHow(howList[howIndex].how);
     setTimeout(() => {
@@ -74,10 +78,14 @@ const WorryPromptCarousel = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300 border-2 border-green-900 "
+      className="mt-4 bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300 border-2 border-green-900"
     >
+      <div className=" text-green-800 mb-4 flex flex-col">
+        <span className="text-xl font-bold">고민을 나누면 반이 됩니다.</span>
+        <span className="text-lg font-semibold">지금 시작해 보세요!!</span>
+      </div>
       <div className="flex flex-col space-y-1">
-        {/* Who Carousel */}
+        {/* Combined Carousel */}
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/30 to-transparent" />
           <div className="relative h-10 flex items-center justify-center overflow-hidden">
@@ -95,20 +103,9 @@ const WorryPromptCarousel = () => {
                 {whoList[whoIndex].text}
               </motion.div>
             </AnimatePresence>
-          </div>
-        </div>
+            
+            <span className="mx-2 text-gray-400">•</span>
 
-        {/* Divider */}
-        <div className="flex items-center justify-center opacity-30">
-          <div className="w-6 h-[0.5px] bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
-        </div>
-
-        {/* How Carousel */}
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/30 to-transparent" />
-          <div className="relative h-10 flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
-            <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
             <AnimatePresence mode="wait">
               <motion.div
                 key={"how" + howIndex}
@@ -129,7 +126,7 @@ const WorryPromptCarousel = () => {
         onClick={handleSelection}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="w-full mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-1.5 px-3 rounded transition-all duration-300 shadow-sm hover:shadow"
+        className="w-full mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded shadow-sm hover:shadow sparkle-effect"
       >
         바로 시작하기
       </motion.button>

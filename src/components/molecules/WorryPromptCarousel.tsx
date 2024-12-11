@@ -74,7 +74,7 @@ const WorryPromptCarousel = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300"
+      className="bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300 border-2 border-green-900 "
     >
       <div className="flex flex-col space-y-1">
         {/* Who Carousel */}

@@ -1,13 +1,13 @@
 /* src/index.css 또는 src/tailwind.css */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .helper-text {
-  font-family: 'Orbitron', sans-serif;
-  letter-spacing: 0.1em;
+  font-family: 'Righteous', cursive;
+  letter-spacing: 0.05em;
 }
 
 @keyframes shimmer {

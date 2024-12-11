@@ -6,7 +6,7 @@ import Text from "../../atoms/Text";
 
 const StepTwo = () => {
   const { increase, decrease } = useStepStore();
-  const { setWho } = useWorryStore();
+  const { setWho, who } = useWorryStore();
 
   const handleWhoSelection = (who: string) => {
     setWho(who);
@@ -65,7 +65,7 @@ const StepTwo = () => {
             key={index}
             onPress={() => handleWhoSelection(button.who)}
             text={button.text}
-            bgColor="bg-green-700"
+            bgColor={who === button.who ? "bg-blue-800" : "bg-green-800"}
           />
         ))}
       </div>

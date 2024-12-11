@@ -43,7 +43,9 @@ const Home = () => {
         if (level >= 6) {
           toast(
             <div className="flex flex-col gap-1">
-              <span className="font-medium">힘든 시간을 보내고 계시네요 😔</span>
+              <span className="font-medium">
+                힘든 시간을 보내고 계시네요 😔
+              </span>
               <span className="text-sm">
                 고민을 글로 적어보면 마음이 한결 가벼워질 수 있어요
               </span>
@@ -53,7 +55,9 @@ const Home = () => {
         } else if (level >= 3) {
           toast(
             <div className="flex flex-col gap-1">
-              <span className="font-medium">평온한 하루를 보내고 계시네요 😊</span>
+              <span className="font-medium">
+                평온한 하루를 보내고 계시네요 😊
+              </span>
               <span className="text-sm">
                 잠시 명상을 하며 마음을 돌아보는 건 어떨까요?
               </span>
@@ -114,8 +118,8 @@ const Home = () => {
   return (
     <PageLayout requireAuth>
       <div className="flex flex-col space-y-4 px-4 pb-4">
-        <EmotionChart averageLevel={getAverageLevel()} chartData={chartData} />
         <WorryPromptCarousel />
+        <EmotionChart averageLevel={getAverageLevel()} chartData={chartData} />
 
         <div className="grid grid-cols-2 gap-4">
           <StatCard

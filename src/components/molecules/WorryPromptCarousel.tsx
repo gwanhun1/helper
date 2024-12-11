@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import useStepStore from '../../store/stepStore';
-import useWorryStore from '../../store/worryStore';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import useStepStore from "../../store/stepStore";
+import useWorryStore from "../../store/worryStore";
+import { useNavigate } from "react-router-dom";
 
 const whoList = [
   { who: "엄마", text: "엄마" },
@@ -30,7 +31,7 @@ const whoList = [
   { who: "악당", text: "악당" },
   { who: "마법사", text: "마법사" },
   { who: "아이돌", text: "아이돌" },
-  { who: "동화 속 캐릭터", text: "동화 속 캐릭터" }
+  { who: "동화 속 캐릭터", text: "동화 속 캐릭터" },
 ];
 
 const howList = [
@@ -42,10 +43,11 @@ const howList = [
   { how: "유머러스하게", text: "유머러스하게" },
   { how: "진지하게", text: "진지하게" },
   { how: "따뜻하게", text: "따뜻하게" },
-  { how: "감성적으로", text: "감성적으로" }
+  { how: "감성적으로", text: "감성적으로" },
 ];
 
 const WorryPromptCarousel = () => {
+  const navigate = useNavigate();
   const { setStep } = useStepStore();
   const { setWho, setHow } = useWorryStore();
   const [whoIndex, setWhoIndex] = useState(0);
@@ -63,6 +65,7 @@ const WorryPromptCarousel = () => {
     setWho(whoList[whoIndex].who);
     setHow(howList[howIndex].how);
     setTimeout(() => {
+      navigate("/worry");
       setStep(4);
     }, 1000);
   };
@@ -71,7 +74,7 @@ const WorryPromptCarousel = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300"
+      className="bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300"
     >
       <div className="flex flex-col space-y-1">
         {/* Who Carousel */}
@@ -82,7 +85,7 @@ const WorryPromptCarousel = () => {
             <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
             <AnimatePresence mode="wait">
               <motion.div
-                key={'who' + whoIndex}
+                key={"who" + whoIndex}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -108,7 +111,7 @@ const WorryPromptCarousel = () => {
             <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
             <AnimatePresence mode="wait">
               <motion.div
-                key={'how' + howIndex}
+                key={"how" + howIndex}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -126,9 +129,9 @@ const WorryPromptCarousel = () => {
         onClick={handleSelection}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="w-full mt-3 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white text-xs font-medium py-1.5 px-3 rounded transition-all duration-300 shadow-sm hover:shadow"
+        className="w-full mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-1.5 px-3 rounded transition-all duration-300 shadow-sm hover:shadow"
       >
-        선택하기
+        바로 시작하기
       </motion.button>
     </motion.div>
   );

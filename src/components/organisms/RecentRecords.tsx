@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import { FiClock } from 'react-icons/fi';
-import { formatDate } from '../../utils/date';
+import { motion } from "framer-motion";
+import { FiClock } from "react-icons/fi";
+import { formatDate } from "../../utils/date";
 
 interface Record {
   id: string;
@@ -15,9 +15,9 @@ interface RecentRecordsProps {
 
 const RecentRecords = ({ records }: RecentRecordsProps) => {
   const getEmotionEmoji = (level: number) => {
-    if (level < 3) return '😊';
-    if (level < 6) return '😐';
-    return '😔';
+    if (level < 3) return "😊";
+    if (level < 6) return "😐";
+    return "😔";
   };
 
   return (
@@ -35,7 +35,7 @@ const RecentRecords = ({ records }: RecentRecordsProps) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="text-sm text-green-500 hover:text-green-600 font-medium px-3 py-1 rounded-full hover:bg-green-50 transition-colors"
-          onClick={() => (window.location.href = '/Worry')}
+          onClick={() => (window.location.href = "/Worry")}
         >
           전체보기
         </motion.button>
@@ -52,7 +52,9 @@ const RecentRecords = ({ records }: RecentRecordsProps) => {
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span className="font-medium">{formatDate(record.date).date}</span>
+                <span className="font-medium">
+                  {formatDate(record.date).date}
+                </span>
                 <span className="text-gray-300">|</span>
                 <span>{formatDate(record.date).time}</span>
               </div>
@@ -60,14 +62,18 @@ const RecentRecords = ({ records }: RecentRecordsProps) => {
                 {record.level ? getEmotionEmoji(record.level) : null}
               </span>
             </div>
-            <p className="text-gray-700 line-clamp-2 leading-relaxed">{record.content}</p>
+            <p className="text-gray-700 line-clamp-2 leading-relaxed">
+              {record.content}
+            </p>
           </motion.div>
         ))}
 
         {records.length === 0 && (
           <div className="text-center py-10 text-gray-500">
             <p className="text-lg font-medium">아직 기록이 없습니다</p>
-            <p className="text-sm mt-2 text-gray-400">새로운 기록을 남겨보세요!</p>
+            <p className="text-sm mt-2 text-gray-400">
+              새로운 기록을 남겨보세요!
+            </p>
           </div>
         )}
       </div>

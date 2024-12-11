@@ -126,7 +126,7 @@ const WorryPromptCarousel = () => {
         onClick={handleSelection}
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="w-full mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded shadow-sm hover:shadow sparkle-effect"
+        className="w-full mt-4 mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded-xl shadow-sm hover:shadow sparkle-effect"
       >
         바로 시작하기
       </motion.button>

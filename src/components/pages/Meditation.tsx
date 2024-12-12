@@ -1,5 +1,5 @@
-import React from 'react';
-import MeditationSession from '../organisms/MeditationSession';
+import React from "react";
+import MeditationSession from "../organisms/MeditationSession";
 
 const MeditationPage: React.FC = () => {
   return (

@@ -10,8 +10,8 @@ const UserNotice = () => {
     <div className="p-4 mt-5 bg-white rounded-lg shadow-md">
       <IconRow
         icon={<AiOutlineNotification className="w-6 h-6 text-gray-500" />}
-        mainText="공지1"
-        subText="공지1"
+        mainText="공지"
+        subText="버전 1.0.0 이 출시되었습니다! 🎉🎊"
       />
       <IconRow
         icon={<AiOutlineQuestionCircle className="w-6 h-6 text-gray-500" />}

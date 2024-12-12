@@ -6,6 +6,7 @@ type ButtonType = {
     onPress?: () => void;
     outline?: boolean;
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
+    className?: string;
 };
 
 const Button = ({
@@ -16,6 +17,7 @@ const Button = ({
     onPress,
     outline,
     size = 'md',
+    className,
 }: ButtonType) => {
     // Define the sizes from extra small to triple extra large
     const sizeClasses = {
@@ -37,7 +39,8 @@ const Button = ({
             ${outline ? 'border border-gray-300' : ''} 
             ${sizeClasses[size]} 
             hover:bg-opacity-80 active:bg-opacity-60 focus:outline-none 
-            transition-all duration-300`}
+            transition-all duration-300
+            ${className || ''}`}
             style={{
                 fontSize: fontSize || undefined,
                 minWidth: size === 'xs' ? '40px' : 

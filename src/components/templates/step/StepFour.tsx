@@ -104,7 +104,12 @@ const StepFour = () => {
           />
           <div className="grid grid-cols-2 gap-4 mt-3">
             <Button text="Cancel" bgColor="bg-gray-400" onPress={decrease} />
-            <Button text="Ask" bgColor="bg-green" onPress={handleAsk} />
+            <Button
+              text="Ask"
+              bgColor="bg-green"
+              onPress={handleAsk}
+              className="sparkle-effect"
+            />
           </div>
         </div>
       </div>

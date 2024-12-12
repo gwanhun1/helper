@@ -66,6 +66,7 @@ const StepTwo = () => {
             onPress={() => handleWhoSelection(button.who)}
             text={button.text}
             bgColor={who === button.who ? "bg-blue-800" : "bg-green-800"}
+            className={who === button.who ? "sparkle-effect" : ""}
           />
         ))}
       </div>

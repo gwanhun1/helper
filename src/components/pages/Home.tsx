@@ -117,21 +117,24 @@ const Home = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="flex flex-col space-y-4 px-4 pb-4">
+      <div className="flex flex-col space-y-4  pb-4">
         <WorryPromptCarousel />
         <EmotionChart averageLevel={getAverageLevel()} chartData={chartData} />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 px-4 mt-2">
           <StatCard
-            icon={<FiCalendar className="text-lg" />}
+            icon={<FiCalendar />}
             title="나의 기록"
-            value={`총 ${forestData?.length || 0}회의 기록`}
+            value={`${forestData?.length || 0}회`}
+            iconColor="text-green-600"
+            iconBgColor="bg-green-50"
           />
           <StatCard
-            icon={<FiHeart className="text-lg" />}
+            icon={<FiHeart />}
             title="오늘의 기분"
             value={getRecentMood()}
             iconColor="text-rose-500"
+            iconBgColor="bg-rose-50"
           />
         </div>
 

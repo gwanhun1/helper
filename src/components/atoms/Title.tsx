@@ -8,7 +8,7 @@ interface TitleProps {
 
 const Title: React.FC<TitleProps> = ({
     children,
-    color = 'text-green-500',
+    color = 'text-green-600',
     className = '',
 }) => {
     return (

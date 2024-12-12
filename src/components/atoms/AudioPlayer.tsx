@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from "react";
 
 interface AudioPlayerProps {
   src: string;
@@ -11,14 +11,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   src,
   isPlaying,
   onEnd,
-  onError
+  onError,
 }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.loop = true;  // 오디오 반복 재생 설정
+      audioRef.current.loop = true;
     }
   }, []);
 
@@ -29,8 +29,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           if (isPlaying && audioRef.current.paused) {
             audioRef.current.currentTime = 0;
             await audioRef.current.play();
-            
-            // 3분(180000ms) 후에 재생 중지
+
             timerRef.current = setTimeout(() => {
               if (audioRef.current) {
                 audioRef.current.pause();
@@ -46,7 +45,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
             }
           }
         } catch (e) {
-          console.log('Audio play failed:', e);
+          console.log("Audio play failed:", e);
           onError();
         }
       }
@@ -68,13 +67,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   }, [src]);
 
-  return (
-    <audio
-      ref={audioRef}
-      src={src}
-      preload="auto"
-    />
-  );
+  return <audio ref={audioRef} src={src} preload="auto" />;
 };
 
 export default AudioPlayer;

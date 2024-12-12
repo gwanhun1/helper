@@ -20,12 +20,12 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
       style={{
         width: size,
         height: size,
-        borderRadius: "50%", // 동그라미 모양
-        overflow: "hidden", // 이미지가 컨테이너를 벗어나지 않도록
+        borderRadius: "50%",
+        overflow: "hidden",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f0f0f0", // 기본 배경색
+        backgroundColor: "#f0f0f0",
       }}
     >
       {src ? (
@@ -35,7 +35,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
           style={{
             width: size,
             height: size,
-            objectFit: "cover", // 이미지를 컨테이너에 맞게 잘라서 채움
+            objectFit: "cover",
           }}
         />
       ) : (
@@ -43,7 +43,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
           style={{
             width: size,
             height: size,
-            color: "#999", // 기본 아이콘 색상
+            color: "#999",
           }}
         />
       )}

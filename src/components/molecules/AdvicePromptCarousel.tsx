@@ -67,7 +67,7 @@ const AdvicePromptCarousel = ({ prompts,  onPrev, onNext }: AdvicePromptCarousel
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={1}
-          onDragEnd={( { offset, velocity }) => {
+          onDragEnd={(e, { offset, velocity }) => {
             const swipe = swipePower(offset.x, velocity.x);
 
             if (swipe < -swipeConfidenceThreshold) {

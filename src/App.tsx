@@ -11,7 +11,7 @@ const App = () => {
         <Nav />
 
         {/* Outlet을 감싸는 div에 스크롤 추가 */}
-        <div className="flex-grow overflow-hidden bg-gray-50">
+        <div className="flex-grow overflow-hidden bg-gray-100">
           <Outlet />
         </div>
 

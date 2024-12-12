@@ -37,7 +37,7 @@ const RecentRecords = ({ records }: RecentRecordsProps) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           className="text-[11px] text-green-600 font-bold px-3 py-1.5 rounded-full bg-green-50"
-          onClick={() => (window.location.href = "/Worry")}
+          onClick={() => (window.location.href = "/worry")}
         >
           전체보기
         </motion.button>

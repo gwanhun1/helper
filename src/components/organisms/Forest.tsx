@@ -103,7 +103,7 @@ const Forest = () => {
   }, [forestData]);
 
   const handleNavigate = () => {
-    navigate("/Worry");
+    navigate("/worry");
   };
 
   if (!forestData || !Array.isArray(forestData)) {
@@ -125,7 +125,7 @@ const Forest = () => {
       className="relative w-full h-40 overflow-hidden 
       border border-white/60 bg-slate-100
       shadow-[0_2px_8px_rgba(0,0,0,0.12),inset_0_1px_3px_rgba(255,255,255,0.95)]
-      bg-gradient-to-b from-white/15 to-transparent"
+      bg-white"
     >
       {forestData.length > 0 &&
         forestData.map((tree, index) => {

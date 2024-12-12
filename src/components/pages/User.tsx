@@ -25,7 +25,7 @@ const User = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="bg-gradient-to-b from-green-700 to-green-800 pb-6">
+      <div className="bg-white pb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

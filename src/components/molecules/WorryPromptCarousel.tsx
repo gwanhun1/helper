@@ -46,13 +46,13 @@ const WorryPromptCarousel = () => {
               <div className="absolute inset-x-0 top-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
               <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
 
-              <div className="text-lg font-medium text-gray-700 text-center px-2">
+              <div className="text-md font-medium text-gray-700 text-center px-2">
                 {currentPrompts.who.text}
               </div>
 
               <span className="mx-2 text-gray-400">•</span>
 
-              <div className="text-lg font-medium text-gray-700 text-center px-2">
+              <div className="text-md font-medium text-gray-700 text-center px-2">
                 {currentPrompts.how.text}
               </div>
             </div>

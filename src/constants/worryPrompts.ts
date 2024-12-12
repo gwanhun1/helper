@@ -48,4 +48,15 @@ export const howList: HowPrompt[] = [
   { how: "진지하게", text: "진지하게" },
   { how: "따뜻하게", text: "따뜻하게" },
   { how: "감성적으로", text: "감성적으로" },
+  { how: "시적으로", text: "시적으로" },
+  { how: "귀엽게", text: "귀엽게" },
+  { how: "철학적으로", text: "철학적으로" },
+  { how: "신비롭게", text: "신비롭게" },
+  { how: "장난스럽게", text: "장난스럽게" },
+  { how: "차분하게", text: "차분하게" },
+  { how: "열정적으로", text: "열정적으로" },
+  { how: "위트있게", text: "위트있게" },
+  { how: "담담하게", text: "담담하게" },
+  { how: "재치있게", text: "재치있게" },
+  { how: "공감하며", text: "공감하며" }
 ];

@@ -29,7 +29,7 @@ const WellnessTipCard = ({ tip }: WellnessTipProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-br from-green-200 to-blue-100 p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-green-100"
+      className="bg-gradient-to-br from-green-200 to-blue-100 p-6 shadow-md hover:shadow-lg transition-all duration-300 border-green-100"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">

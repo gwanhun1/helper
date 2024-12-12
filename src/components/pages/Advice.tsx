@@ -10,7 +10,7 @@ const SAMPLE_PROMPTS = [
   "요즘 취업 준비하면서 자신감이 많이 떨어졌어요...",
   "친구와 사소한 일로 다퉜는데 먼저 연락하기가 망설여져요.",
   "일과 공부를 병행하는게 너무 힘들어요. 어떻게 하면 좋을까요?",
-  "연애를 시작하고 싶은데 용기가 나지 않아요.",
+  "연애를 시작하고 싶은데 용気が 나지 않아요.",
   "부모님과의 세대차이를 어떻게 극복하면 좋을까요?",
 ];
 
@@ -39,6 +39,7 @@ const Advice = () => {
     },
   ]);
   const [newWorry, setNewWorry] = useState("");
+  const [_, setCurrentIndex] = useState(0);
 
   const handlePromptSelect = (prompt: string) => {
     setNewWorry(prompt);
@@ -74,6 +75,16 @@ const Advice = () => {
           : worry
       )
     );
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex(
+      (prev) => (prev - 1 + SAMPLE_PROMPTS.length) % SAMPLE_PROMPTS.length
+    );
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % SAMPLE_PROMPTS.length);
   };
 
   return (
@@ -120,6 +131,8 @@ const Advice = () => {
                 <AdvicePromptCarousel
                   prompts={SAMPLE_PROMPTS}
                   onSelect={handlePromptSelect}
+                  onPrev={handlePrev}
+                  onNext={handleNext}
                 />
               )}
               <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
@@ -132,6 +145,14 @@ const Advice = () => {
                     다른 고민 선택하기
                   </button>
                 )}
+                <div className="flex items-center gap-1">
+                  <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
+                    ME
+                  </span>
+                  <span className="text-xs text-green-600 font-medium">
+                    내가 쓴 글
+                  </span>
+                </div>
                 <button
                   type="submit"
                   className="bg-[#2AC1BC] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#2AC1BC]/90 disabled:opacity-50 ml-auto"

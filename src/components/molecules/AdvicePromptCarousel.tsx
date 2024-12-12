@@ -4,30 +4,29 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface AdvicePromptCarouselProps {
   prompts: string[];
-  onSelect: (prompt: string) => void;
   onPrev: () => void;
   onNext: () => void;
 }
 
-const AdvicePromptCarousel = ({ prompts, onSelect, onPrev, onNext }: AdvicePromptCarouselProps) => {
+const AdvicePromptCarousel = ({ prompts,  onPrev, onNext }: AdvicePromptCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
   const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
+    enter: {
+      opacity: 0,
+      scale: 0.95
+    },
     center: {
       zIndex: 1,
-      x: 0,
-      opacity: 1
+      opacity: 1,
+      scale: 1
     },
-    exit: (direction: number) => ({
+    exit: {
       zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
+      opacity: 0,
+      scale: 1.05
+    }
   };
 
   const swipeConfidenceThreshold = 10000;
@@ -51,8 +50,8 @@ const AdvicePromptCarousel = ({ prompts, onSelect, onPrev, onNext }: AdvicePromp
   };
 
   return (
-    <div className="relative min-h-[120px] flex flex-col overflow-hidden">
-      <AnimatePresence initial={false} custom={direction}>
+    <div className="relative flex flex-col">
+      <AnimatePresence initial={false} custom={direction} mode="wait">
         <motion.div
           key={currentIndex}
           custom={direction}
@@ -61,13 +60,14 @@ const AdvicePromptCarousel = ({ prompts, onSelect, onPrev, onNext }: AdvicePromp
           animate="center"
           exit="exit"
           transition={{
-            x: { type: "spring", stiffness: 300, damping: 30 },
-            opacity: { duration: 0.2 }
+            opacity: { duration: 0.3, ease: "easeInOut" },
+            scale: { duration: 0.3, ease: "easeInOut" },
+            height: { type: "spring", stiffness: 70, damping: 15, mass: 0.3 }
           }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={1}
-          onDragEnd={(e, { offset, velocity }) => {
+          onDragEnd={( { offset, velocity }) => {
             const swipe = swipePower(offset.x, velocity.x);
 
             if (swipe < -swipeConfidenceThreshold) {
@@ -76,31 +76,41 @@ const AdvicePromptCarousel = ({ prompts, onSelect, onPrev, onNext }: AdvicePromp
               paginate(-1);
             }
           }}
-          className="absolute w-full px-4"
+          className="w-full px-4 mb-12"
+          layout
         >
-          <div
-            onClick={() => onSelect(prompts[currentIndex])}
-            className="bg-white p-4 rounded-lg cursor-pointer min-h-[120px] flex items-center justify-center text-center"
+          <motion.div
+            layout
+            className="px-4 pt-4 rounded-lg cursor-pointer flex items-center justify-center text-center"
           >
-            {prompts[currentIndex]}
-          </div>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                opacity: { duration: 0.2, ease: "easeInOut" }
+              }}
+            >
+              {prompts[currentIndex]}
+            </motion.span>
+          </motion.div>
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center items-center gap-2 pb-2">
+      <div className="absolute -bottom-2 left-0 right-0 flex justify-between items-center px-8 pb-4 z-10">
         <button
           onClick={() => paginate(-1)}
-          className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md"
+          className="w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
           aria-label="Previous prompt"
         >
-          <IoIosArrowBack size={16} />
+          <IoIosArrowBack size={18} />
         </button>
         <button
           onClick={() => paginate(1)}
-          className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-md"
+          className="w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
           aria-label="Next prompt"
         >
-          <IoIosArrowForward size={16} />
+          <IoIosArrowForward size={18} />
         </button>
       </div>
     </div>

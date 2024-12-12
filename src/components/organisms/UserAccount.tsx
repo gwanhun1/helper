@@ -8,7 +8,7 @@ interface UserAccountProps {
 
 const UserAccount = ({ email }: UserAccountProps) => {
   return (
-    <div className="bg-white rounded-[22px] shadow-[0_2px_16px_rgb(0,0,0,0.04)] overflow-hidden">
+    <div className="bg-white rounded-[22px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_4px_6px_-1px_rgba(0,0,0,0.1)] overflow-hidden">
       <Text variant="h3" weight="bold" className="px-5 pt-5 pb-3">
         계정 정보
       </Text>

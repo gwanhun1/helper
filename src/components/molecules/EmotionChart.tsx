@@ -67,7 +67,7 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-gradient-to-br ${style.gradient} pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow border ${style.borderColor}`}
+      className={`bg-gradient-to-br ${style.gradient} pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow  ${style.borderColor}`}
     >
       <div className="flex justify-center items-center">
         <div className={`font-medium ${style.messageColor}`}>

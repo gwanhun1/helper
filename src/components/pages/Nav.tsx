@@ -25,10 +25,10 @@ const Nav = () => {
       {location.pathname !== "/credit" &&
       location.pathname !== "/auth" &&
       location.pathname !== "/meditation" ? (
-        <div className="pt-6 px-4 bg-gradient-to-b bg-green-700">
+        <div className="pt-6 px-4  bg-gradient-to-b bg-white">
           <div className="flex items-center justify-between pb-4">
             <p
-              className="text-xl font-extrabold text-white helper-text cursor-pointer select-none"
+              className="opacity-60 text-xl font-extrabold text-green helper-text cursor-pointer select-none"
               onClick={() => navigate("/")}
             >
               Help
@@ -42,7 +42,7 @@ const Nav = () => {
               r
             </p>
             <div className="relative group z-20">
-              <div className="p-2 bg-green-800 backdrop-blur-sm rounded-full">
+              <div className="p-2 bg-green-200 backdrop-blur-sm rounded-full">
                 <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors" />
               </div>
               <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">

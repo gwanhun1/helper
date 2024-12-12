@@ -3,11 +3,12 @@ import { useState } from "react";
 import { FiSend } from "react-icons/fi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import { FaRobot } from "react-icons/fa";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
 
 const SAMPLE_PROMPTS = [
-  "요즘 취업 준비하면서 자신감이 많이 떨어졌어요...",
+  "요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...",
   "친구와 사소한 일로 다퉜는데 먼저 연락하기가 망설여져요.",
   "일과 공부를 병행하는게 너무 힘들어요. 어떻게 하면 좋을까요?",
   "연애를 시작하고 싶은데 용気が 나지 않아요.",
@@ -38,30 +39,8 @@ const Advice = () => {
       ],
     },
   ]);
-  const [newWorry, setNewWorry] = useState("");
   const [_, setCurrentIndex] = useState(0);
 
-  const handlePromptSelect = (prompt: string) => {
-    setNewWorry(prompt);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newWorry.trim()) return;
-
-    setWorries((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        content: newWorry,
-        likes: 0,
-        isLiked: false,
-        createdAt: "방금 전",
-        replies: [],
-      },
-    ]);
-    setNewWorry("");
-  };
 
   const toggleLike = (worryId: number) => {
     setWorries((prev) =>
@@ -89,12 +68,12 @@ const Advice = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="bg-[#F2F4F6] pb-4 overflow-scroll">
+      <div className="bg-[#F2F4F6] pb-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {/* 상단 헤더 */}
         <div className="bg-white px-5 py-3 border-b relative">
-          <div className="flex items-center gap-3">
+          <div className="flex items-end gap-3">
             <h1 className="text-xl font-bold text-[#333333]">고민나누기</h1>
-            <span className="text-sm text-[#666666]">함께 고민을 나눠요</span>
+            <span className="text-[10px] text-[#666666] mb-1">함께 고민을 나눠요</span>
           </div>
         </div>
 
@@ -102,7 +81,7 @@ const Advice = () => {
         <div className="p-4 space-y-4">
           {/* 상단 배너 */}
           <div className="bg-white rounded-2xl p-4 border border-[#E5E8EB]">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-2 mb-3">
               <div className="w-10 h-10 bg-[#2AC1BC] rounded-full flex items-center justify-center">
                 <RiKakaoTalkFill className="text-white" size={24} />
               </div>
@@ -117,34 +96,14 @@ const Advice = () => {
             </div>
           </div>
 
-          {/* 고민 작성 폼 */}
-          <form onSubmit={handleSubmit}>
+          {/* 고민 폼 */}
             <div className="bg-white rounded-2xl border border-[#E5E8EB]">
-              {newWorry ? (
-                <textarea
-                  value={newWorry}
-                  onChange={(e) => setNewWorry(e.target.value)}
-                  placeholder="고민을 익명으로 공유해보세요&#13;&#10;다른 사람들의 따뜻한 응원을 받을 수 있어요"
-                  className="w-full p-4 rounded-t-2xl focus:outline-none min-h-[120px] text-[15px] placeholder:text-[#999999]"
-                />
-              ) : (
                 <AdvicePromptCarousel
                   prompts={SAMPLE_PROMPTS}
-                  onSelect={handlePromptSelect}
                   onPrev={handlePrev}
                   onNext={handleNext}
                 />
-              )}
               <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
-                {newWorry && (
-                  <button
-                    type="button"
-                    onClick={() => setNewWorry("")}
-                    className="text-[#666666] text-sm"
-                  >
-                    다른 고민 선택하기
-                  </button>
-                )}
                 <div className="flex items-center gap-1">
                   <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
                     ME
@@ -155,14 +114,12 @@ const Advice = () => {
                 </div>
                 <button
                   type="submit"
-                  className="bg-[#2AC1BC] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#2AC1BC]/90 disabled:opacity-50 ml-auto"
-                  disabled={!newWorry.trim()}
+                  className="sparkle-effect bg-[#2AC1BC] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#2AC1BC]/90 disabled:opacity-50 ml-auto"
                 >
                   공유하기
                 </button>
               </div>
             </div>
-          </form>
 
           {/* 고민 목록 */}
           <div className="space-y-4 mt-6">
@@ -177,7 +134,9 @@ const Advice = () => {
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-                      <span className="text-sm text-[#666666]">익명</span>
+                      <div className="flex items-center gap-1">
+                        <FaRobot className="text-[#666666] text-sm" />
+                      </div>
                     </div>
                     <span className="text-xs text-[#999999]">
                       {worry.createdAt}
@@ -214,8 +173,8 @@ const Advice = () => {
                     >
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span className="text-xs text-[#666666]">A</span>
+                          <div className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center">
+                            <span className="text-xs text-[#666666]">익명</span>
                           </div>
                           <span className="text-xs text-[#999999]">
                             {reply.createdAt}
@@ -236,7 +195,7 @@ const Advice = () => {
                 </div>
 
                 {/* 답변 입력 */}
-                <div className="mt-4 flex gap-2 ml-10">
+                <div className="mt-4 flex gap-2 ">
                   <input
                     type="text"
                     placeholder="따뜻한 답변을 남겨주세요"

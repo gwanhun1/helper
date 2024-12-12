@@ -1,5 +1,6 @@
 import { AiOutlineCreditCard, AiOutlineMail } from "react-icons/ai";
 import IconRow from "../molecules/IconRow";
+import Text from "../atoms/Text";
 
 interface UserAccountProps {
   email?: string | null;
@@ -7,19 +8,29 @@ interface UserAccountProps {
 
 const UserAccount = ({ email }: UserAccountProps) => {
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <IconRow
-        icon={<AiOutlineMail className="w-6 h-6 text-gray-500" />}
-        mainText={email ?? "이메일 없음"}
-        subText={email ? "로그인한 계정입니다." : "카카오로 로그인 되었습니다."}
-      />
-      <div className="my-4 border-t border-gray-200"></div>
-      <IconRow
-        icon={<AiOutlineCreditCard className="w-6 h-6 text-gray-500" />}
-        mainText="*********"
-        subText="**** **"
-      />
+    <div className="bg-white rounded-[22px] shadow-[0_2px_16px_rgb(0,0,0,0.04)] overflow-hidden">
+      <Text variant="h3" weight="bold" className="px-5 pt-5 pb-3">
+        계정 정보
+      </Text>
+      
+      <div className="px-5 py-3 border-b border-gray-100">
+        <IconRow
+          icon={<AiOutlineMail className="w-5 h-5 text-green-600" />}
+          mainText={email ?? "이메일 없음"}
+          subText={email ? "로그인한 계정입니다." : "카카오로 로그인 되었습니다."}
+        />
+      </div>
+      
+      <div className="px-5 py-3">
+        <IconRow
+          icon={<AiOutlineCreditCard className="w-5 h-5 text-green-600" />}
+          mainText="결제 정보"
+          subText="등록된 결제 수단이 없습니다"
+          onClick={() => {}}
+        />
+      </div>
     </div>
   );
 };
+
 export default UserAccount;

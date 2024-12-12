@@ -22,10 +22,10 @@ const Nav = () => {
       {location.pathname !== "/credit" &&
       location.pathname !== "/auth" &&
       location.pathname !== "/meditation" ? (
-        <div className="mt-8 px-4">
-          <div className="flex items-center justify-between">
+        <div className="pt-6 px-4 bg-gradient-to-b bg-green-700">
+          <div className="flex items-center justify-between pb-4">
             <p
-              className="text-xl font-bold text-white helper-text"
+              className="text-xl font-extrabold text-white helper-text cursor-pointer select-none"
               onClick={() => navigate("/")}
             >
               MoodM
@@ -38,14 +38,16 @@ const Nav = () => {
               </span>
               ntor
             </p>
-            <div className="p-4 relative group z-20">
-              <AiTwotoneSmile className="text-xl hover:text-yellow-400 transition-colors" />
+            <div className="relative group z-20">
+              <div className="p-2 bg-green-800 backdrop-blur-sm rounded-full">
+                <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors" />
+              </div>
               <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <div className="bg-white rounded-lg shadow-lg p-3 relative">
-                  <div className="text-gray-800 whitespace-nowrap">
+                <div className="bg-white rounded-[14px] shadow-[0_2px_16px_rgb(0,0,0,0.08)] p-3 relative">
+                  <div className="text-[13px] font-medium text-gray-800 whitespace-nowrap">
                     버전 1.0.0 이 출시되었습니다! 🎉🎊
                   </div>
-                  <div className="absolute -top-2 right-5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white"></div>
+                  <div className="absolute -top-2 right-3 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white"></div>
                 </div>
               </div>
             </div>

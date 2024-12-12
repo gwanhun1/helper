@@ -1,46 +1,53 @@
 import React from 'react';
 
 interface TextProps {
-    children: React.ReactNode;
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl';
-    fontWeight?: 'light' | 'normal' | 'medium' | 'bold' | 'extrabold';
-    className?: string;
-    onClick?: () => void;
+  children: React.ReactNode;
+  variant?: 'h1' | 'h2' | 'h3' | 'body' | 'caption' | 'small';
+  color?: 'primary' | 'secondary' | 'tertiary' | 'green';
+  weight?: 'normal' | 'medium' | 'bold' | 'extrabold';
+  className?: string;
+  onClick?: () => void;
 }
 
 const Text: React.FC<TextProps> = ({
-    children,
-    size = 'md',
-    fontWeight = 'normal',
-    className = '',
-    onClick,
+  children,
+  variant = 'body',
+  color = 'primary',
+  weight = 'normal',
+  className = '',
+  onClick,
 }) => {
-    const sizeClasses = {
-        xs: 'text-xs',
-        sm: 'text-sm',
-        md: 'text-base',
-        lg: 'text-lg',
-        xl: 'text-xl',
-        '2xl': 'text-2xl',
-        '3xl': 'text-3xl',
-    };
+  const variantClasses = {
+    h1: 'text-[22px] leading-tight',
+    h2: 'text-[18px] leading-tight',
+    h3: 'text-[15px] leading-normal',
+    body: 'text-[13px] leading-relaxed',
+    caption: 'text-[12px] leading-normal',
+    small: 'text-[11px] leading-normal',
+  };
 
-    const fontWeightClasses = {
-        light: 'font-light',
-        normal: 'font-normal',
-        medium: 'font-medium',
-        bold: 'font-bold',
-        extrabold: 'font-extrabold',
-    };
+  const colorClasses = {
+    primary: 'text-gray-900',
+    secondary: 'text-gray-600',
+    tertiary: 'text-gray-400',
+    green: 'text-green-600',
+  };
 
-    return (
-        <span
-            className={`${sizeClasses[size]} ${fontWeightClasses[fontWeight]} ${className}`}
-            onClick={onClick}
-        >
-            {children}
-        </span>
-    );
+  const weightClasses = {
+    normal: 'font-normal',
+    medium: 'font-medium',
+    bold: 'font-bold',
+    extrabold: 'font-extrabold',
+  };
+
+  return (
+    <div 
+      className={`${variantClasses[variant]} ${colorClasses[color]} ${weightClasses[weight]} ${className}`}
+      onClick={onClick}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default Text;

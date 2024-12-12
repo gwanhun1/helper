@@ -1,6 +1,5 @@
 import React from "react";
 import ProfileImage from "../atoms/ProfileImage";
-import UserBadge from "../molecules/UserBadge";
 import Text from "../atoms/Text";
 import Badge from "../atoms/Badge";
 
@@ -22,28 +21,35 @@ const UserProfile: React.FC<UserProfileProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`p-2 px-4 ${className}`}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <ProfileImage size={100} src={photoURL ?? undefined} />
-          <div className="flex flex-col gap-2">
-            <Badge fontSize={10}>{grade}</Badge>
-            {onLogout && (
-              <Text
-                className="text-red-400 text-sm font-bold hover:cursor-pointer"
-                onClick={onLogout}
-              >
-                로그아웃
-              </Text>
-            )}
-          </div>
+    <div className={`p-5 ${className}`}>
+      <div className="flex items-start gap-4">
+        <div className="relative">
+          <ProfileImage
+            size={80}
+            src={photoURL ?? undefined}
+            className="rounded-[16px] border-2 border-green-50"
+          />
+          <Badge variant="default" className="absolute -top-2 -right-2">
+            {grade}
+          </Badge>
+        </div>
+        <div className="flex-1 min-w-0">
+          <Text variant="h2" weight="extrabold" className="mb-1">
+            {displayName || "사용자"}
+          </Text>
+          <Text variant="caption" color="secondary" className="break-all">
+            {email || "이메일 없음"}
+          </Text>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              className="mt-2 px-3 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-[12px] text-[11px] font-bold transition-colors"
+            >
+              로그아웃
+            </button>
+          )}
         </div>
       </div>
-      <UserBadge email={email} className="mt-4 mb-2" />
-      <Text className="text-gray-400">{displayName}</Text>
-      <Text className="text-gray-400">
-        {email === "이메일 없음" ? "" : "*********"}
-      </Text>
     </div>
   );
 };

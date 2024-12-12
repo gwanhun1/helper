@@ -1,37 +1,29 @@
 import React, { ReactNode } from 'react';
 
-type BadgeProps = {
-    color?: string; // 텍스트 및 테두리 색상
-    backgroundColor?: string; // 배경색
-    fontSize?: number; // 텍스트 크기
-    children: ReactNode; // 뱃지 안의 내용
-};
+interface BadgeProps {
+  children: ReactNode;
+  className?: string;
+  variant?: 'default' | 'outline' | 'filled';
+}
 
 const Badge: React.FC<BadgeProps> = ({
-    color = '#50b196',
-    backgroundColor = '#e6f8f2',
-    fontSize = 16,
-    children,
+  children,
+  className = '',
+  variant = 'default'
 }) => {
-    return (
-        <div
-            className="inline-flex items-center justify-center px-3 py-1 rounded-full shadow-md"
-            style={{
-                border: `2px solid ${color}`, // 테두리 색
-                backgroundColor, // 배경색
-            }}
-        >
-            <span
-                className="font-medium"
-                style={{
-                    color, // 텍스트 색
-                    fontSize, // 텍스트 크기
-                }}
-            >
-                {children}
-            </span>
-        </div>
-    );
+  const baseStyle = 'inline-flex items-center justify-center px-2 py-1 rounded-full text-[11px] font-bold';
+  
+  const variantStyles = {
+    default: 'bg-green-50 text-green-600',
+    outline: 'border border-green-600 text-green-600',
+    filled: 'bg-green-600 text-white'
+  };
+
+  return (
+    <div className={`${baseStyle} ${variantStyles[variant]} ${className}`}>
+      {children}
+    </div>
+  );
 };
 
 export default Badge;

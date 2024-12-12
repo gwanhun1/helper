@@ -1,4 +1,8 @@
-import {  AiOutlineNotification, AiOutlineQuestionCircle, AiOutlineInfoCircle } from "react-icons/ai";
+import {
+  AiOutlineNotification,
+  AiOutlineQuestionCircle,
+  AiOutlineInfoCircle,
+} from "react-icons/ai";
 import IconRow from "../molecules/IconRow";
 
 const UserNotice = () => {
@@ -17,7 +21,7 @@ const UserNotice = () => {
       <IconRow
         icon={<AiOutlineInfoCircle className="w-6 h-6 text-gray-500" />}
         mainText={
-          <div className="flex justify-center items-center mt-5">
+          <div className="flex justify-center items-center ">
             <div className="font-bold">웹/앱버전</div>
             <div className="font-bold text-gray-300 ml-2">v1.0.0</div>
           </div>

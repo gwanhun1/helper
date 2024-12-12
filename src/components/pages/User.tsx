@@ -24,23 +24,39 @@ const User = () => {
   };
 
   return (
-    <PageLayout requireAuth className="mt-2">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <UserProfile
-          photoURL={user?.photoURL}
-          email={user?.email}
-          displayName={user?.displayName}
-          onLogout={handleLogOut}
-        />
-        <div className="p-4">
+    <PageLayout requireAuth>
+      <div className="bg-gradient-to-b from-green-700 to-green-800 pb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <UserProfile
+            photoURL={user?.photoURL}
+            email={user?.email}
+            displayName={user?.displayName}
+            onLogout={handleLogOut}
+          />
+        </motion.div>
+      </div>
+
+      <div className="px-4 space-y-4 -mt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+        >
           <UserAccount email={user?.email} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <UserNotice />
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
     </PageLayout>
   );
 };

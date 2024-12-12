@@ -15,7 +15,7 @@ const UserAccount = ({ email }: UserAccountProps) => {
       
       <div className="px-5 py-3 border-b border-gray-100">
         <IconRow
-          icon={<AiOutlineMail className="w-5 h-5 text-green-600" />}
+          icon={<AiOutlineMail className="w-5 h-5" />}
           mainText={email ?? "이메일 없음"}
           subText={email ? "로그인한 계정입니다." : "카카오로 로그인 되었습니다."}
         />
@@ -23,10 +23,9 @@ const UserAccount = ({ email }: UserAccountProps) => {
       
       <div className="px-5 py-3">
         <IconRow
-          icon={<AiOutlineCreditCard className="w-5 h-5 text-green-600" />}
+          icon={<AiOutlineCreditCard className="w-5 h-5" />}
           mainText="결제 정보"
           subText="등록된 결제 수단이 없습니다"
-          onClick={() => {}}
         />
       </div>
     </div>

@@ -27,7 +27,7 @@ const StatCard = ({
           <div className="text-[11px] text-gray-500 font-medium">
             {title}
           </div>
-          <div className="text-[15px] font-extrabold text-gray-900">
+          <div className="text-[13px] font-extrabold text-gray-900">
             {value}
           </div>
         </div>

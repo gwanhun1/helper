@@ -71,7 +71,7 @@ const StepFour = () => {
       alert(
         "오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!"
       );
-      navigate("/Credit");
+      navigate("/credit");
     }
   };
 
@@ -103,7 +103,7 @@ const StepFour = () => {
             placeholder="고민을 자유롭게 적어주세요."
           />
           <div className="grid grid-cols-2 gap-4 mt-3">
-            <Button text="Cancel" bgColor="bg-gray-400" onPress={decrease} />
+            <Button text="Back" bgColor="bg-gray-400" onPress={decrease} />
             <Button
               text="Ask"
               bgColor="bg-green"

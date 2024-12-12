@@ -29,11 +29,25 @@ const Nav = () => {
               onClick={() => navigate("/")}
             >
               MoodM
-              <span className={`inline-block ${isAnimating ? 'animate-sequence' : ''}`}>e</span>
+              <span
+                className={`inline-block ${
+                  isAnimating ? "animate-sequence" : ""
+                }`}
+              >
+                e
+              </span>
               ntor
             </p>
-            <div className="p-4">
-              <AiTwotoneSmile />
+            <div className="p-4 relative group z-20">
+              <AiTwotoneSmile className="text-xl hover:text-yellow-400 transition-colors" />
+              <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="bg-white rounded-lg shadow-lg p-3 relative">
+                  <div className="text-gray-800 whitespace-nowrap">
+                    버전 1.0.0 이 출시되었습니다! 🎉🎊
+                  </div>
+                  <div className="absolute -top-2 right-5 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

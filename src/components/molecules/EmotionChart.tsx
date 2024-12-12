@@ -1,9 +1,9 @@
 import { Line } from "react-chartjs-2";
 import { formatDate } from "../../utils/date";
 import { motion } from "framer-motion";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Chart as ChartJS } from 'chart.js';
-import 'chart.js/auto';
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Chart as ChartJS } from "chart.js";
+import "chart.js/auto";
 
 ChartJS.register(ChartDataLabels);
 
@@ -57,24 +57,24 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
 
   const style = getEmotionStyle(averageLevel);
 
-
   const getEmotionEmoji = (level: number) => {
     if (level >= 4) return "😊";
     if (level >= 2) return "😐";
     return "😔";
   };
 
-
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`bg-gradient-to-br ${style.gradient} rounded-xl pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow border ${style.borderColor}`}
-    ><div className="flex justify-center items-center">
-      <div className={`font-medium ${style.messageColor}`}>
-        {style.message} | 
-      </div><p className={`font-bold ${style.messageColor} ml-2`}>{averageLevel}</p></div>
+      className={`bg-gradient-to-br ${style.gradient} pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow border ${style.borderColor}`}
+    >
+      <div className="flex justify-center items-center">
+        <div className={`font-medium ${style.messageColor}`}>
+          {style.message} |
+        </div>
+        <p className={`font-bold ${style.messageColor} ml-2`}>{averageLevel}</p>
+      </div>
       <div className={`text-sm font-medium ${style.subMessageColor}`}>
         {style.subMessage}
       </div>
@@ -88,7 +88,7 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
                   label: "감정 레벨",
                   data: chartData.map((item) => item.level),
                   borderColor: style.chartColor,
-                  backgroundColor: 'white',
+                  backgroundColor: "white",
                   tension: 0.4,
                   fill: false,
                 },
@@ -96,13 +96,13 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
             }}
             options={{
               responsive: true,
-              maintainAspectRatio: false, layout: {
+              maintainAspectRatio: false,
+              layout: {
                 padding: {
                   top: 32,
-                  left:20,
-                  right:20  
-                    
-                }
+                  left: 20,
+                  right: 20,
+                },
               },
               scales: {
                 x: {
@@ -126,19 +126,19 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
                 tooltip: {
                   enabled: false,
                 },
-                  datalabels: {
+                datalabels: {
                   backgroundColor: "white",
                   borderRadius: 4,
                   padding: 4,
-                  anchor: 'end',
-                  align: 'top',
+                  anchor: "end",
+                  align: "top",
                   offset: 3,
                   font: {
                     size: 13,
-                    weight: 'bold'
+                    weight: "bold",
                   },
-                  formatter: (value) => getEmotionEmoji(value as number)
-                }
+                  formatter: (value) => getEmotionEmoji(value as number),
+                },
               },
               elements: {
                 line: {

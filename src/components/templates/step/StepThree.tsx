@@ -48,6 +48,7 @@ const StepThree = () => {
             onPress={() => handleHowSelection(button.how)}
             text={button.text}
             bgColor={how === button.how ? "bg-blue-500" : "bg-green"}
+            className={how === button.how ? "sparkle-effect" : ""}
           />
         ))}
       </div>

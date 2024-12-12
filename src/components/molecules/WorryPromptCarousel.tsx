@@ -78,15 +78,94 @@ const WorryPromptCarousel = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-4 bg-white rounded-lg p-4 shadow-sm hover:shadow transition-all duration-300 border-2 border-green-900"
+      className="mt-4 mx-4 bg-white rounded-[28px] p-7 shadow-[0_2px_16px_rgb(0,0,0,0.04)] relative overflow-hidden"
     >
-      <div className=" text-green-800 mb-4 flex flex-col">
-        <span className="text-xl font-bold font-noto tracking-tight">고민을 나누면 반이 됩니다.</span>
-        <span className="text-sm font-noto tracking-tight">지금 시작해 보세요!!</span>
-      </div>
-      <div className="flex flex-col space-y-1">
+      {/* Background Decorations */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-green-50 to-transparent rounded-full -mr-16 -mt-16 opacity-40" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-blue-50 to-transparent rounded-full -ml-10 -mb-10 opacity-30" />
+
+      <div className="relative">
+        {/* Label */}
+        <div className="inline-flex items-center space-x-2 bg-[#40C057] rounded-full px-3 py-1 mb-4">
+          <span className="text-white text-sm font-extrabold tracking-tight">
+            AI 멘토
+          </span>
+        </div>
+
+        {/* Main Content */}
+        <div className="space-y-2">
+          <h2 className="text-[26px] font-black text-gray-900 tracking-tight leading-8">
+            고민이 있으신가요?
+          </h2>
+          <p className="text-[15px] text-gray-600 tracking-tight">
+            AI와 함께 이야기해요
+          </p>
+        </div>
+
+        {/* Decorations */}
+        <div className="absolute -top-1 -right-1 mt-2">
+          <motion.div
+            animate={{
+              rotate: [0, 15, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="text-2xl"
+          >
+            🤗
+          </motion.div>
+        </div>
+        <div className="absolute top-8 right-6">
+          <motion.div
+            animate={{
+              y: [0, -4, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="text-xl"
+          >
+            💝
+          </motion.div>
+        </div>
+        <div className="absolute top-16 right-2">
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="text-xl"
+          >
+            💭
+          </motion.div>
+        </div>
+        <div className="absolute -bottom-2 right-12">
+          <motion.div
+            animate={{
+              rotate: [0, -10, 0],
+            }}
+            transition={{
+              duration: 2.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="text-xl"
+          >
+            🌟
+          </motion.div>
+        </div>
         {/* Combined Carousel */}
-        <div className="relative">
+        <div className="relative mt-4">
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/30 to-transparent" />
           <div className="relative h-10 flex items-center justify-center overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
@@ -120,16 +199,16 @@ const WorryPromptCarousel = () => {
             </AnimatePresence>
           </div>
         </div>
-      </div>
 
-      <motion.button
-        onClick={handleSelection}
-        whileHover={{ scale: 1.01 }}
-        whileTap={{ scale: 0.99 }}
-        className="w-full mt-4 mt-3 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded-xl shadow-sm hover:shadow sparkle-effect"
-      >
-        바로 시작하기
-      </motion.button>
+        <motion.button
+          onClick={handleSelection}
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
+          className="w-full mt-4  bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded-xl shadow-sm hover:shadow sparkle-effect"
+        >
+          바로 시작하기
+        </motion.button>
+      </div>
     </motion.div>
   );
 };

@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { AiTwotoneSmile } from "react-icons/ai";
 import { useEffect, useState } from "react";
+import useUserStore from "../../store/userStore";
 
 const Nav = () => {
   const location = useLocation();
@@ -17,6 +18,8 @@ const Nav = () => {
     return () => clearInterval(animationInterval);
   }, []);
 
+  const user = useUserStore((state) => state.user);
+
   return (
     <>
       {location.pathname !== "/credit" &&
@@ -28,7 +31,7 @@ const Nav = () => {
               className="text-xl font-extrabold text-white helper-text cursor-pointer select-none"
               onClick={() => navigate("/")}
             >
-              MoodM
+              Help
               <span
                 className={`inline-block ${
                   isAnimating ? "animate-sequence" : ""
@@ -36,18 +39,25 @@ const Nav = () => {
               >
                 e
               </span>
-              ntor
+              r
             </p>
             <div className="relative group z-20">
               <div className="p-2 bg-green-800 backdrop-blur-sm rounded-full">
                 <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors" />
               </div>
               <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
-                <div className="bg-white rounded-[14px] shadow-[0_2px_16px_rgb(0,0,0,0.08)] p-3 relative">
-                  <div className="text-[13px] font-medium text-gray-800 whitespace-nowrap">
-                    버전 1.0.0 이 출시되었습니다! 🎉🎊
+                <div className="bg-white rounded-[14px] shadow-[0_2px_16px_rgb(0,0,0,0.08)] p-4 relative animate-fadeIn hover:shadow-[0_4px_20px_rgb(0,0,0,0.12)] transition-shadow duration-300">
+                  <div className="flex flex-col gap-2">
+                    <div className="text-[14px] font-semibold text-gray-800 whitespace-nowrap flex items-center gap-2">
+                      <span className="animate-wave inline-block">👋</span>{" "}
+                      {user?.displayName}님 안녕하세요!
+                    </div>
+                    <div className="text-[14px] font-medium text-gray-800 whitespace-nowrap flex items-center gap-1">
+                      🎉<span className="text-blue-500">버전 1.0.0</span> 이
+                      출시되었습니다! 🎊
+                    </div>
                   </div>
-                  <div className="absolute -top-2 right-3 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white"></div>
+                  <div className="absolute -top-2 right-3 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white drop-shadow-sm"></div>
                 </div>
               </div>
             </div>
@@ -72,6 +82,39 @@ const Nav = () => {
           display: inline-block;
           animation: sequence 2.5s ease-in-out;
           transform-origin: center;
+        }
+
+        @keyframes fadeIn {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes wave {
+          0% { transform: rotate(0deg); }
+          10% { transform: rotate(10deg); }
+          20% { transform: rotate(-10deg); }
+          30% { transform: rotate(10deg); }
+          40% { transform: rotate(-10deg); }
+          50% { transform: rotate(0deg); }
+          100% { transform: rotate(0deg); }
+        }
+
+        .animate-wave {
+          animation: wave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+          0% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0); }
+        }
+
+        .animate-bounce {
+          animation: bounce 1s ease-in-out infinite;
         }
       `}</style>
     </>

@@ -1,37 +1,8 @@
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import useStepStore from "../../store/stepStore";
-import useWorryStore from "../../store/worryStore";
-import { useNavigate } from "react-router-dom";
-import { whoList, howList } from '../../constants/worryPrompts';
+import { useWorryPrompt } from "../../hooks/useWorryPrompt";
 
 const WorryPromptCarousel = () => {
-  const navigate = useNavigate();
-  const { setStep } = useStepStore();
-  const { setWho, setHow } = useWorryStore();
-  const [whoIndex, setWhoIndex] = useState(0);
-  const [howIndex, setHowIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setWhoIndex((prev) => (prev + 1) % whoList.length);
-      setHowIndex((prev) => (prev + 1) % howList.length);
-      setTimeout(() => setIsTransitioning(false), 300);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleSelection = () => {
-    if (isTransitioning) return;
-    setWho(whoList[whoIndex].who);
-    setHow(howList[howIndex].how);
-    setTimeout(() => {
-      navigate("/worry");
-      setStep(4);
-    }, 1000);
-  };
+  const { currentPrompts, isTransitioning, handleSelection } = useWorryPrompt();
 
   return (
     <motion.div
@@ -61,115 +32,108 @@ const WorryPromptCarousel = () => {
           </p>
         </div>
 
-        {/* Decorations */}
-        <div className="absolute -top-1 -right-1 mt-2">
+        {/* Carousel Content */}
+        <AnimatePresence mode="wait">
           <motion.div
-            animate={{
-              rotate: [0, 15, 0],
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="text-2xl"
+            key={`${currentPrompts.who.who}-${currentPrompts.how.how}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="relative mt-4"
           >
-            🤗
-          </motion.div>
-        </div>
-        <div className="absolute top-8 right-6">
-          <motion.div
-            animate={{
-              y: [0, -4, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="text-xl"
-          >
-            💝
-          </motion.div>
-        </div>
-        <div className="absolute top-16 right-2">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="text-xl"
-          >
-            💭
-          </motion.div>
-        </div>
-        <div className="absolute -bottom-2 right-12">
-          <motion.div
-            animate={{
-              rotate: [0, -10, 0],
-            }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-            className="text-xl"
-          >
-            🌟
-          </motion.div>
-        </div>
-        {/* Combined Carousel */}
-        <div className="relative mt-4">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/30 to-transparent" />
-          <div className="relative h-10 flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
-            <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={"who" + whoIndex}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-lg font-medium text-gray-700 text-center px-2"
-              >
-                {whoList[whoIndex].text}
-              </motion.div>
-            </AnimatePresence>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-slate-100/30 to-transparent" />
+            <div className="relative h-10 flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-x-0 top-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
+              <div className="absolute inset-x-0 bottom-0 h-[0.5px] bg-gradient-to-r from-transparent via-slate-200 to-transparent opacity-50" />
 
-            <span className="mx-2 text-gray-400">•</span>
+              <div className="text-lg font-medium text-gray-700 text-center px-2">
+                {currentPrompts.who.text}
+              </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={"how" + howIndex}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="text-lg font-medium text-gray-700 text-center px-2"
-              >
-                {howList[howIndex].text}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+              <span className="mx-2 text-gray-400">•</span>
+
+              <div className="text-lg font-medium text-gray-700 text-center px-2">
+                {currentPrompts.how.text}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
         <motion.button
           onClick={handleSelection}
-          whileHover={{ scale: 1.01 }}
-          whileTap={{ scale: 0.99 }}
-          className="w-full mt-4  bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded-xl shadow-sm hover:shadow sparkle-effect"
+          whileHover={{ scale: isTransitioning ? 1 : 1.01 }}
+          whileTap={{ scale: isTransitioning ? 1 : 0.99 }}
+          disabled={isTransitioning}
+          className={`w-full mt-4 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white text-xs font-medium py-3 px-3 rounded-xl shadow-sm hover:shadow sparkle-effect z-20 
+            
+          `}
         >
           바로 시작하기
         </motion.button>
+
+        {/* Decorations */}
+        <Decorations />
       </div>
     </motion.div>
   );
 };
+
+const Decorations = () => (
+  <>
+    <motion.div
+      className="absolute -top-1 -right-1 mt-2 text-2xl"
+      animate={{
+        rotate: [0, 15, 0],
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      🤗
+    </motion.div>
+    <motion.div
+      className="absolute top-8 right-6 text-xl"
+      animate={{
+        y: [0, -4, 0],
+      }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      💝
+    </motion.div>
+    <motion.div
+      className="absolute top-16 right-2 text-xl"
+      animate={{
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      💭
+    </motion.div>
+    <motion.div
+      className="absolute -bottom-3 right-12 text-xl"
+      animate={{
+        rotate: [0, -10, 0],
+      }}
+      transition={{
+        duration: 2.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      🌟
+    </motion.div>
+  </>
+);
 
 export default WorryPromptCarousel;

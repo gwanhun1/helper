@@ -3,6 +3,7 @@ import useWorryStore from "../../../store/worryStore";
 import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
 import Text from "../../atoms/Text";
+import { howList } from "../../../constants/worryPrompts";
 
 const StepThree = () => {
   const { increase, decrease } = useStepStore();
@@ -12,18 +13,6 @@ const StepThree = () => {
     setHow(how);
     increase();
   };
-
-  const howButtons = [
-    { how: "웃기게", text: "웃기게" },
-    { how: "다정하게", text: "다정하게" },
-    { how: "랩으로", text: "랩으로" },
-    { how: "비아냥거리게", text: "비아냥거리게" },
-    { how: "다급하게", text: "다급하게" },
-    { how: "유머러스하게", text: "유머러스하게" },
-    { how: "진지하게", text: "진지하게" },
-    { how: "따뜻하게", text: "따뜻하게" },
-    { how: "감성적으로", text: "감성적으로" },
-  ];
 
   return (
     <div className="p-2">
@@ -42,7 +31,7 @@ const StepThree = () => {
           bgColor="bg-slate-100"
           outline
         />
-        {howButtons.map((button, index) => (
+        {howList.map((button, index) => (
           <Button
             key={index}
             onPress={() => handleHowSelection(button.how)}

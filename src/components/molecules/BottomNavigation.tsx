@@ -2,37 +2,53 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import {
   AiOutlinePlusCircle,
-  AiOutlineSearch,
+  // AiOutlineSearch,
   AiOutlineHome,
   AiOutlineCreditCard,
   AiOutlineUser,
+  AiOutlineMessage,
 } from "react-icons/ai";
-import { AiFillHome, AiFillCreditCard, AiFillPlusCircle } from "react-icons/ai";
-import { FaYinYang } from "react-icons/fa";
+import {
+  AiFillHome,
+  AiFillCreditCard,
+  AiFillPlusCircle,
+  AiFillMessage,
+} from "react-icons/ai";
 import TabButton from "../atoms/TabButton";
 
 const BottomNavigation: React.FC = () => {
-  const location = useLocation(); // 현재 경로 가져오기
+  const location = useLocation();
 
   return (
-    <div className="bottom-0 left-0 flex items-center justify-between w-full p-4 bg-white border-t-2 shadow-lg">
-      {/* 각 탭 버튼들 */}
+    <div className="bottom-0 left-0 flex items-center justify-between w-full p-2 pb-0 bg-white border-t-2 shadow-lg">
       <TabButton
         to="/"
         icon={location.pathname === "/" ? <AiFillHome /> : <AiOutlineHome />}
-        label="Home"
+        label="홈"
         active={location.pathname === "/"}
       />
-     
-     <TabButton
+
+      <TabButton
+        to="/advice"
+        icon={
+          location.pathname === "/advice" ? (
+            <AiFillMessage />
+          ) : (
+            <AiOutlineMessage />
+          )
+        }
+        label="고민"
+        active={location.pathname === "/advice"}
+      />
+      {/* <TabButton
         to="/meditation"
         icon={
           <FaYinYang className={location.pathname === "/meditation" ? "text-green" : "text-gray-600 hover:text-green"} />
         }
         label="명상"
         active={location.pathname === "/meditation"}
-      />
-      
+      /> */}
+
       <TabButton
         to="/worry"
         icon={
@@ -45,7 +61,6 @@ const BottomNavigation: React.FC = () => {
         label="조언"
         active={location.pathname === "/worry"}
       />
-      
       <TabButton
         to="/credit"
         icon={
@@ -60,13 +75,12 @@ const BottomNavigation: React.FC = () => {
       />
       <TabButton
         to="/user"
-        icon={
-          location.pathname === "/user" ? <AiOutlineUser /> : <AiOutlineUser />
-        }
+        icon={<AiOutlineUser />}
         label="내정보"
         active={location.pathname === "/user"}
       />
     </div>
   );
 };
+
 export default BottomNavigation;

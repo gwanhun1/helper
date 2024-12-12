@@ -9,6 +9,7 @@ import Auth from "../components/pages/Auth";
 import AuthGuard from "../components/pages/AuthGuard";
 import Error from "../components/pages/Error";
 import Meditation from "../components/pages/Meditation";
+import Advice from "../components/pages/Advice";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
         element: (
           <AuthGuard>
             <Meditation />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/advice",
+        element: (
+          <AuthGuard>
+            <Advice />
           </AuthGuard>
         ),
       },

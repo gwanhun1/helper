@@ -6,7 +6,7 @@ interface TabButtonProps {
   to: string;
   icon: React.ReactNode;
   label: string;
-  active: boolean; // 활성화 여부
+  active: boolean;
 }
 
 const TabButton: React.FC<TabButtonProps> = ({ to, icon, label, active }) => {
@@ -14,9 +14,7 @@ const TabButton: React.FC<TabButtonProps> = ({ to, icon, label, active }) => {
     <Link
       to={to}
       className={`flex flex-col items-center flex-1 justify-center ${
-        active
-          ? "text-green" // 활성화된 탭에서 글자 색만 변함
-          : "text-gray-600 hover:text-green" // 비활성화된 탭에서 hover 시 글자 색 변함
+        active ? "text-green" : "text-gray-600 hover:text-green"
       } py-2 px-4 transition-all duration-200`}
     >
       <div className="text-xl">{icon}</div>

@@ -29,7 +29,7 @@ interface RequestBody {
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse, setLevel } = useWorryStore();
   const { saveData } = useSaveWorryData();
-  const user = useUserStore((state) => state.user); // Zustand에서 사용자 정보 가져오기
+  const user = useUserStore((state) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -109,14 +109,14 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
 
       if (data.choices?.[0]?.message?.content) {
         const responseContent = data.choices[0].message.content;
-        const [responseMessage, riskLevel] = responseContent.split('level:');
+        const [responseMessage, riskLevel] = responseContent.split("level:");
         setResponse(responseMessage.trim());
         setLevel(parseInt(riskLevel.trim()));
-        
-        const item = { 
+
+        const item = {
           content: worry,
           date: new Date().toISOString(),
-          id: "unique-id", // Generate or use a unique ID
+          id: "unique-id",
           response: responseMessage.trim(),
           level: parseInt(riskLevel.trim()),
           username: user?.displayName ?? "Unknown User",

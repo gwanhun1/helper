@@ -6,7 +6,7 @@ import AudioPlayer from "../atoms/AudioPlayer";
 import { useTimer } from "../../hooks/useTimer";
 import { useMeditationState } from "../../hooks/useMeditationState";
 
-const MEDITATION_DURATION = 180; // 3 minutes in seconds
+const MEDITATION_DURATION = 180;
 
 const MeditationSession: React.FC = () => {
   const { isMeditating, selectedMode, toggleMeditation, nextMode, prevMode } =

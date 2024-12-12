@@ -10,19 +10,19 @@ type TextareaContainerProps = {
 const TextareaContainer = ({ setSelect }: TextareaContainerProps) => {
   const [value, setValue] = useState("");
   const [isRed, setIsRed] = useState(false);
-  const [isVisible, setIsVisible] = useState(true); // 텍스트 영역의 나타나는/사라지는 상태 관리
+  const [isVisible, setIsVisible] = useState(true);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
   };
 
   const toggleHeartColor = () => {
-    setIsRed(!isRed); // Simplified state toggle
+    setIsRed(!isRed);
   };
 
   const handleClose = () => {
-    setIsVisible(false); // 텍스트 영역을 숨깁니다.
-    setSelect(-1); // 부모 컴포넌트에서 select를 -1로 설정
+    setIsVisible(false);
+    setSelect(-1);
   };
 
   return (

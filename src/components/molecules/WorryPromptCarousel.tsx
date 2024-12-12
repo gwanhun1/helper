@@ -59,13 +59,13 @@ const WorryPromptCarousel = () => {
       setIsTransitioning(true);
       setWhoIndex((prev) => (prev + 1) % whoList.length);
       setHowIndex((prev) => (prev + 1) % howList.length);
-      setTimeout(() => setIsTransitioning(false), 300); // Match transition duration
+      setTimeout(() => setIsTransitioning(false), 300);
     }, 2000);
     return () => clearInterval(interval);
   }, []);
 
   const handleSelection = () => {
-    if (isTransitioning) return; // Prevent selection during transition
+    if (isTransitioning) return;
     setWho(whoList[whoIndex].who);
     setHow(howList[howIndex].how);
     setTimeout(() => {

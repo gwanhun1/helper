@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
+import useUserContents from "../../hooks/useUserContents";
+import { Item } from "../../hooks/useContentsData";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import treeImage from "/tree.png";
 import selectTreeImage from "/selectTree.png";
-import useLogsData from "../../hooks/useLogsData";
-import { Item } from "../../hooks/useContentsData"; // Item 타입 추가
 
 const Forest = () => {
-  const { logsData: forestData } = useLogsData(); // useWorryData 대신 useLogsData 사용
+  const { userContents: forestData } = useUserContents();
   const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(
     null
   );
@@ -162,25 +162,23 @@ const Forest = () => {
               key={tree.id}
               className={`absolute transition-all duration-500 ease-in-out group
               ${selectedTreeIndex === index ? "z-10" : ""}
-              ${isRemoving ? "opacity-0 scale-0 rotate-90 translate-y-10" : ""}
-            `}
-              style={
-                {
-                  left: `${position.xPos}%`,
-                  top: `${position.yPos}%`,
-                  width: "40px",
-                  height: "40px",
-                  transform: `scale(${position.scale}) rotate(${position.rotateAngle}deg)`,
-                  animation: `treeWave ${
-                    position.waveDuration
-                  }s infinite ease-in-out, 
-                           treeSway ${
-                             position.waveDuration * 1.5
-                           }s infinite ease-in-out`,
-                  animationDelay: `${position.waveDelay}s`,
-                  "--sway-amount": `${position.swayAmount}deg`,
-                } as React.CSSProperties
+              ${isRemoving ? "opacity-0 scale-0 rotate-90 translate-y-10" : ""}`
               }
+              style={{
+                left: `${position.xPos}%`,
+                top: `${position.yPos}%`,
+                width: "40px",
+                height: "40px",
+                transform: `scale(${position.scale}) rotate(${position.rotateAngle}deg)`,
+                animation: `treeWave ${
+                  position.waveDuration
+                }s infinite ease-in-out, 
+                         treeSway ${
+                           position.waveDuration * 1.5
+                         }s infinite ease-in-out`,
+                animationDelay: `${position.waveDelay}s`,
+                "--sway-amount": `${position.swayAmount}deg`,
+              } as React.CSSProperties}
             >
               <img
                 src={selectedTreeIndex === index ? selectTreeImage : treeImage}

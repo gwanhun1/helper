@@ -11,7 +11,7 @@ const StepOne = () => {
   return (
     <div className="py-2 h-full relative">
       <div className="h-full flex flex-col">
-        <div className="px-4  border-b border-gray-300">
+        <div className="px-4 pb-2  border-b border-gray-300">
           <Title>당신의 이야기를 나무로 심어보세요</Title>
           <Text className="px-2 mt-1 sm:mt-2 md:mt-3 ml-0 sm:ml-1 md:ml-2 text-[10px] sm:text-xs md:text-sm text-gray-600">
             고민을 나누면 작은 나무가 자라날 거예요

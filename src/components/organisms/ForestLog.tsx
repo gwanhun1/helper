@@ -1,11 +1,11 @@
-import useLogsData from "../../hooks/useLogsData";
+import useUserContents from "../../hooks/useUserContents";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import LogForm from "./LogForm";
 import { BsArrowUpCircle } from "react-icons/bs";
 import { motion } from "framer-motion";
 
 const ForestLog = () => {
-  const { logsData: forestData, refreshData } = useLogsData();
+  const { userContents: forestData, refreshUserContents: refreshData } = useUserContents();
   const { content: selectedContent, response: selectedResponse } =
     useSelectTreeStore();
 

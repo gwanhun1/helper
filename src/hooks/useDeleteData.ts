@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { getDatabase, ref, remove, get } from "firebase/database";
+import { ref, remove, get, set, getDatabase } from "firebase/database";
 import { app } from "../firebaseConfig";
+import { useState } from "react";
 import useUserStore from "../store/userStore";
 
 interface UseDeleteData {
@@ -30,37 +30,28 @@ const useDeleteData = (): UseDeleteData => {
 
     try {
       const db = getDatabase(app);
-      
-      // contents와 logs 모두에서 데이터 확인 및 삭제
       const contentsRef = ref(db, `contents/${id}`);
-      const logsRef = ref(db, `logs/${user.uid}/${id}`);
+      const contentSnapshot = await get(contentsRef);
 
-      // 데이터 존재 여부 확인
-      const [contentsSnapshot, logsSnapshot] = await Promise.all([
-        get(contentsRef),
-        get(logsRef)
-      ]);
-
-      const deletePromises = [];
-
-      // contents에 있는 데이터 삭제
-      if (contentsSnapshot.exists()) {
-        deletePromises.push(remove(contentsRef));
+      if (contentSnapshot.exists()) {
+        await remove(contentsRef);
       }
 
-      // logs에 있는 데이터 삭제
-      if (logsSnapshot.exists()) {
-        deletePromises.push(remove(logsRef));
+      // Update user's contentIds
+      const userRef = ref(db, `users/${user.uid}/contentIds`);
+      const userSnapshot = await get(userRef);
+      
+      if (userSnapshot.exists()) {
+        const currentIds = userSnapshot.val();
+        const updatedIds = currentIds.filter((contentId: string) => contentId !== id);
+        await set(userRef, updatedIds);
       }
-
-      // 모든 삭제 작업 실행
-      await Promise.all(deletePromises);
 
       console.log("데이터가 성공적으로 삭제되었습니다:", id);
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
       setError("데이터 삭제 중 오류가 발생했습니다.");
-      throw error; // 에러를 상위 컴포넌트로 전파
+      throw error;
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { get, getDatabase, ref, onValue } from "firebase/database";
 import { app } from "../firebaseConfig";
+import { processContentsData } from "../utils/contentUtils";
 
 export interface Comment {
   id?: string;
@@ -47,20 +48,16 @@ const useContentsData = (): UseContentsData => {
 
       if (snapshot.exists()) {
         const contentsData = snapshot.val();
-        const processedData = Object.entries(contentsData).map(
-          ([key, value]) => ({
-            ...(value as Omit<Item, "id">),
-            id: key,
-            comments: (value as any).comments || [],
-            like: (value as any).like || 0,
-            likedBy: (value as any).likedBy || [],
-          })
-        );
+        console.log("Raw contents data:", contentsData); // 디버깅용
+        const processedData = processContentsData(contentsData);
+        console.log("Processed data:", processedData); // 디버깅용
         setData(processedData.reverse());
       } else {
+        console.log("No data exists in snapshot"); // 디버깅용
         setData([]);
       }
     } catch (e) {
+      console.error("Error fetching data:", e); // 디버깅용
       setError(
         `데이터를 가져오는 중 오류가 발생했습니다: ${
           e instanceof Error ? e.message : "알 수 없는 오류"
@@ -72,35 +69,48 @@ const useContentsData = (): UseContentsData => {
   };
 
   useEffect(() => {
+    let mounted = true;
     setLoading(true);
+    
     const db = getDatabase(app);
     const contentsRef = ref(db, "contents");
 
     const unsubscribe = onValue(
       contentsRef,
       (snapshot) => {
+        if (!mounted) return;
+
         if (snapshot.exists()) {
           const rawData = snapshot.val();
-          const processedData = Object.entries(rawData).map(([key, value]) => ({
-            ...(value as Omit<Item, "id">),
-            id: key,
-            comments: (value as any).comments || [],
-            like: (value as any).like || 0,
-            likedBy: (value as any).likedBy || [],
-          }));
-          setData(processedData.reverse());
+          console.log("Real-time raw data:", rawData); // 디버깅용
+          const processedData = processContentsData(rawData);
+          console.log("Real-time processed data:", processedData); // 디버깅용
+          if (mounted) {
+            setData(processedData.reverse());
+          }
         } else {
-          setData([]);
+          console.log("No real-time data exists"); // 디버깅용
+          if (mounted) {
+            setData([]);
+          }
         }
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       },
       (error) => {
-        setError(`데이터를 가져오는 중 오류가 발생했습니다: ${error.message}`);
-        setLoading(false);
+        console.error("Real-time data error:", error); // 디버깅용
+        if (mounted) {
+          setError(`데이터를 가져오는 중 오류가 발생했습니다: ${error.message}`);
+          setLoading(false);
+        }
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      mounted = false;
+      unsubscribe();
+    };
   }, []);
 
   return { data, loading, error, refreshData: fetchData };

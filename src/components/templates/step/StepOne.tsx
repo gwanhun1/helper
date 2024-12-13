@@ -31,7 +31,7 @@ const StepOne = () => {
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <motion.button
-          className="sparkle-effect flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl relative overflow-hidden group"
+          className="sparkle-effect flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl relative overflow-hidden group mb-2"
           onClick={() => increase()}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
@@ -46,7 +46,7 @@ const StepOne = () => {
             className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           />
           <motion.div
-            className="absolute inset-0 bg-white opacity-0"
+            className="absolute inset-0 bg-white opacity-0 "
             initial={{ opacity: 0 }}
             whileTap={{ opacity: 0.2 }}
           />

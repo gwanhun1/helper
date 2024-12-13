@@ -18,7 +18,7 @@ const Worry = () => {
     5: <StepFive />,
   };
 
-  return <div className="">{stepFrom[step]}</div>;
+  return <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">{stepFrom[step]}</div>;
 };
 
 export default Worry;

@@ -1,12 +1,16 @@
 import Lottie from "lottie-react";
 import loading from "./loading.json";
 
-const Loading = () => {
+interface LoadingProps {
+  className?: string;
+}
+
+const Loading = ({ className }: LoadingProps) => {
   return (
-      <Lottie
-        animationData={loading}
-        style={{ height: "300px", margin: "60px" }}
-      />
+    <Lottie
+      animationData={loading}
+      className={className}
+    />
   );
 };
 

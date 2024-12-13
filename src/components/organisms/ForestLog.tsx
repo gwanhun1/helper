@@ -35,7 +35,7 @@ const ForestLog = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex flex-col items-center justify-center text-slate-500 select-none py-8 sm:pt-12 sm:pb-2"
+              className="flex flex-col items-center justify-center text-slate-500 select-none pt-8 sm:pt-12 "
             >
               <motion.div
                 animate={{

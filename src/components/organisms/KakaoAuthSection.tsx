@@ -12,7 +12,7 @@ const KakaoAuthSection = () => {
     }
   }, [handleKakaoLogin]);
 
-  return <Loading />;
+  return (<div className="mt-10"><Loading className="h-32"/></div>)
 };
 
 export default KakaoAuthSection;

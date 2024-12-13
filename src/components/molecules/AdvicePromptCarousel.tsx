@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { Item } from "../../hooks/useLogData";
+import { Item } from "../../hooks/useContentsData";
+// import useLikeManager from "../../hooks/useLikeManager";
+// import useCommentManager from "../../hooks/useCommentManager";
 
 interface AdvicePromptCarouselProps {
   prompts: Item[];
@@ -19,6 +21,8 @@ const AdvicePromptCarousel = ({
   setCurrentIndex,
 }: AdvicePromptCarouselProps) => {
   const [direction, setDirection] = useState(0);
+  // const { togglePostLike, isPostLiked } = useLikeManager();
+  // const { addComment } = useCommentManager();
 
   const slideVariants = {
     enter: {

@@ -1,8 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useWorryPrompt } from "../../hooks/useWorryPrompt";
+import useWorryManager from "../../hooks/useWorryManager";
 
 const WorryPromptCarousel = () => {
   const { currentPrompts, isTransitioning, handleSelection } = useWorryPrompt();
+  const { saveWorry } = useWorryManager();
 
   return (
     <motion.div

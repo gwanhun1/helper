@@ -1,6 +1,6 @@
 import PageLayout from "../organisms/PageLayout";
 import AuthAlert from "../molecules/AuthAlert";
-import useWorryData from "../../hooks/useWorryData";
+import useLogsData from "../../hooks/useLogsData";
 import { FiCalendar, FiHeart } from "react-icons/fi";
 import { toast } from "react-hot-toast";
 import {
@@ -32,7 +32,7 @@ ChartJS.register(
 );
 
 const Home = () => {
-  const { data: forestData } = useWorryData();
+  const { logsData: forestData } = useLogsData();
 
   useEffect(() => {
     if (forestData && forestData.length > 0) {

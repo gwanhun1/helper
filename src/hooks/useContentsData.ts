@@ -1,26 +1,37 @@
 import { useEffect, useState } from "react";
 import { get, getDatabase, ref, onValue } from "firebase/database";
 import { app } from "../firebaseConfig";
-import useUserStore from "../store/userStore";
 
-export interface Item {
-  content: string; // 내용
-  date: string; // 날짜
-  id: string; // 고유 ID
-  response: string; // 답변
-  username: string; // 사용자명
-  open?: boolean;
+export interface Comment {
+  id?: string;
+  content?: string;
+  username?: string;
+  date?: string;
+  likes?: number;
+  likedBy?: string[];
 }
 
-interface UseLogData {
+export interface Item {
+  content: string;
+  date: string;
+  id: string;
+  response: string;
+  username: string;
+  open?: boolean;
+  level?: number;
+  comments?: Comment[];
+  like?: number;
+  likedBy?: string[];
+}
+
+interface UseContentsData {
   data: Item[];
   loading: boolean;
   error: string | null;
   refreshData: () => Promise<void>;
 }
 
-const useLogData = (): UseLogData => {
-  const user = useUserStore((state) => state.user);
+const useContentsData = (): UseContentsData => {
   const [data, setData] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,16 +42,21 @@ const useLogData = (): UseLogData => {
 
     try {
       const db = getDatabase(app);
-      const dataRef = ref(db, "contents");
-      const snapshot = await get(dataRef);
+      const contentsRef = ref(db, "contents");
+      const snapshot = await get(contentsRef);
 
       if (snapshot.exists()) {
-        const rawData = snapshot.val();
-        const userData = Object.entries(rawData).map(([key, value]) => ({
-          ...(value as Omit<Item, "id">),
-          id: key,
-        }));
-        setData(userData.reverse());
+        const contentsData = snapshot.val();
+        const processedData = Object.entries(contentsData).map(
+          ([key, value]) => ({
+            ...(value as Omit<Item, "id">),
+            id: key,
+            comments: (value as any).comments || [],
+            like: (value as any).like || 0,
+            likedBy: (value as any).likedBy || [],
+          })
+        );
+        setData(processedData.reverse());
       } else {
         setData([]);
       }
@@ -56,26 +72,23 @@ const useLogData = (): UseLogData => {
   };
 
   useEffect(() => {
-    if (!user?.uid) {
-      setData([]);
-      return;
-    }
-
     setLoading(true);
     const db = getDatabase(app);
-    const dataRef = ref(db, "contents");
+    const contentsRef = ref(db, "contents");
 
-    // 실시간 리스너 설정
     const unsubscribe = onValue(
-      dataRef,
+      contentsRef,
       (snapshot) => {
         if (snapshot.exists()) {
           const rawData = snapshot.val();
-          const userData = Object.entries(rawData).map(([key, value]) => ({
+          const processedData = Object.entries(rawData).map(([key, value]) => ({
             ...(value as Omit<Item, "id">),
             id: key,
+            comments: (value as any).comments || [],
+            like: (value as any).like || 0,
+            likedBy: (value as any).likedBy || [],
           }));
-          setData(userData.reverse());
+          setData(processedData.reverse());
         } else {
           setData([]);
         }
@@ -87,13 +100,10 @@ const useLogData = (): UseLogData => {
       }
     );
 
-    // 컴포넌트 언마운트 시 리스너 제거
-    return () => {
-      unsubscribe();
-    };
-  }, [user]);
+    return () => unsubscribe();
+  }, []);
 
   return { data, loading, error, refreshData: fetchData };
 };
 
-export default useLogData;
+export default useContentsData;

@@ -4,7 +4,7 @@ import useSelectTreeStore from "../../store/selectTreeStore";
 import { useRef, useEffect, useState } from "react";
 import useDeleteData from "../../hooks/useDeleteData";
 import { useSwipeable } from "react-swipeable";
-import { Item } from "../../hooks/useWorryData";
+import { Item } from "../../hooks/useLogData";
 
 type LogFormProps = {
   data: Item;
@@ -105,7 +105,7 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
         ${
           swipedItemId === data.id
             ? "translate-x-[-80px] bg-rose-50"
-            :  "hover:bg-slate-50"
+            : "hover:bg-slate-50"
         }
       `}
       onClick={() => handleSelectTree(data)}
@@ -122,11 +122,20 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
               ${isSelected ? "bg-emerald-100" : "bg-slate-100"}
             `}
             >
-              <AiOutlineUser className={`w-5 h-5 ${isSelected ? 'text-emerald-600' : 'text-slate-500'}`} />
+              <AiOutlineUser
+                className={`w-5 h-5 ${
+                  isSelected ? "text-emerald-600" : "text-slate-500"
+                }`}
+              />
             </div>
           </div>
           <div className="flex-1 min-w-0">
-            <Accordion title={data.content} content={data.response} isOpen={true} onToggle={onToggle} />
+            <Accordion
+              title={data.content}
+              content={data.response}
+              isOpen={true}
+              onToggle={onToggle}
+            />
           </div>
         </div>
       </div>

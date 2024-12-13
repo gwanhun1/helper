@@ -63,6 +63,32 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
     return "😔";
   };
 
+  if (!chartData || chartData.length === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-br from-slate-100 to-white pt-6 pb-4 text-center shadow-sm rounded-lg"
+      >
+        <div className="flex flex-col items-center justify-center px-4 py-2 space-y-3">
+          <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center shadow-inner">
+            <span className="text-2xl">📊</span>
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base font-medium text-slate-700">
+              아직 기록이 없어요
+            </h3>
+            <p className="text-sm text-slate-500">
+              첫 번째 이야기를 기록하면
+              <br />
+              감정 변화를 그래프로 볼 수 있어요
+            </p>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

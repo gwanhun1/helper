@@ -129,12 +129,18 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
                 datalabels: {
                   backgroundColor: "white",
                   borderRadius: 4,
-                  padding: 4,
+                  borderWidth: 1.5,
+                  padding: {
+                    top: 3,
+                    bottom: 2,
+                    left: 3.5,
+                    right: 0,
+                  },
                   anchor: "end",
                   align: "top",
                   offset: 3,
                   font: {
-                    size: 13,
+                    size: 16,
                     weight: "bold",
                   },
                   formatter: (value) => getEmotionEmoji(value as number),

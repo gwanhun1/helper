@@ -27,7 +27,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
           <ProfileImage
             size={80}
             src={photoURL ?? undefined}
-            className="rounded-[16px] border-2 border-green-50"
+            className="rounded-[16px] border-2 border-green-500"
           />
           <Badge variant="default" className="absolute -top-2 -right-2">
             {grade}

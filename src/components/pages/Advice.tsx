@@ -6,13 +6,17 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaRobot } from "react-icons/fa";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
-import useLogData from "../../hooks/useLogData";
 import useUserStore from "../../store/userStore";
+import useContentsData from "../../hooks/useContentsData";
+// import useLikeManager from "../../hooks/useLikeManager";
+// import useCommentManager from "../../hooks/useCommentManager";
 
 const Advice = () => {
-  const { data } = useLogData();
+  const { data } = useContentsData();
   const [currentIndex, setCurrentIndex] = useState(0);
   const user = useUserStore((state) => state.user);
+  // const { togglePostLike, isPostLiked } = useLikeManager();
+  // const { addComment, updateComment, deleteComment } = useCommentManager();
 
   const [worries, setWorries] = useState([
     {

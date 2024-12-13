@@ -2,12 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import treeImage from "/tree.png";
 import selectTreeImage from "/selectTree.png";
-import Button from "../atoms/Button";
-import { useNavigate } from "react-router-dom";
-import useWorryData, { Item } from "../../hooks/useWorryData";
+import useLogsData from "../../hooks/useLogsData";
+import { Item } from "../../hooks/useContentsData"; // Item 타입 추가
 
 const Forest = () => {
-  const { data: forestData } = useWorryData();
+  const { logsData: forestData } = useLogsData(); // useWorryData 대신 useLogsData 사용
   const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(
     null
   );
@@ -16,7 +15,6 @@ const Forest = () => {
   );
   const prevTreesRef = useRef<Item[]>([]);
   const treePositionsMap = useRef(new Map()).current;
-  const navigate = useNavigate();
 
   // 글자 수를 기반으로 한 더 큰 크기 조정
   const calculateTreeScale = (level: number = 3) => {
@@ -24,15 +22,25 @@ const Forest = () => {
   };
 
   // 두 위치 사이의 거리를 계산하는 함수
-  const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
+  const calculateDistance = (
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number
+  ) => {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
   };
 
   // 위치가 다른 나무들과 충분히 떨어져 있는지 확인
-  const isPositionValid = (x: number, y: number, scale: number, existingPositions: Array<{x: number, y: number, scale: number}>) => {
+  const isPositionValid = (
+    x: number,
+    y: number,
+    scale: number,
+    existingPositions: Array<{ x: number; y: number; scale: number }>
+  ) => {
     const minDistance = 25; // 최소 거리 설정
-    return existingPositions.every(pos => {
-      const requiredDistance = minDistance * (scale + pos.scale) / 2; // 두 나무의 크기를 고려한 최소 거리
+    return existingPositions.every((pos) => {
+      const requiredDistance = (minDistance * (scale + pos.scale)) / 2; // 두 나무의 크기를 고려한 최소 거리
       const actualDistance = calculateDistance(x, y, pos.x, pos.y);
       return actualDistance > requiredDistance;
     });
@@ -44,13 +52,15 @@ const Forest = () => {
       const scale = calculateTreeScale(level);
       const horizontalMargin = 10 * scale;
       const verticalMargin = 20 * scale;
-      
+
       // 기존 나무들의 위치 수집
-      const existingPositions = Array.from(treePositionsMap.values()).map(pos => ({
-        x: pos.xPos,
-        y: pos.yPos,
-        scale: pos.scale
-      }));
+      const existingPositions = Array.from(treePositionsMap.values()).map(
+        (pos) => ({
+          x: pos.xPos,
+          y: pos.yPos,
+          scale: pos.scale,
+        })
+      );
 
       // 최대 시도 횟수 설정
       const maxAttempts = 50;
@@ -62,7 +72,10 @@ const Forest = () => {
         newX = Math.random() * (90 - horizontalMargin) + 5;
         newY = Math.random() * (100 - verticalMargin * 2) + verticalMargin;
         attempts++;
-      } while (!isPositionValid(newX, newY, scale, existingPositions) && attempts < maxAttempts);
+      } while (
+        !isPositionValid(newX, newY, scale, existingPositions) &&
+        attempts < maxAttempts
+      );
 
       treePositionsMap.set(treeId, {
         xPos: newX,
@@ -102,20 +115,32 @@ const Forest = () => {
     prevTreesRef.current = forestData;
   }, [forestData]);
 
-  const handleNavigate = () => {
-    navigate("/worry");
-  };
-
-  if (!forestData || !Array.isArray(forestData)) {
+  if (!forestData || !Array.isArray(forestData) || forestData.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="text-md mb-3 text-gray-500 mt-5">
-          고민이 없으십니다. 👍
+      <div className="flex flex-col items-center justify-center h-full bg-gradient-to-b from-emerald-50/50 to-white">
+        <div className="relative w-full max-w-sm mx-auto px-6 py-8">
+          {/* 배경 장식 */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-emerald-400 blur-2xl"></div>
+            <div className="absolute bottom-4 right-4 w-24 h-24 rounded-full bg-emerald-300 blur-2xl"></div>
+          </div>
+
+          {/* 메인 컨텐츠 */}
+          <div className="relative space-y-6 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 shadow-inner">
+              <span className="text-3xl">🌱</span>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold text-gray-800">
+                첫 번째 이야기를 들려주세요
+              </h3>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                당신의 생각이 자라나 아름다운 나무가 될 거예요
+              </p>
+            </div>
+          </div>
         </div>
-        <div className="text-sm mb-3 text-gray-400">
-          상담을 받으러 이동하실까요?
-        </div>
-        <Button text="이동하기" bgColor="bg-green" onPress={handleNavigate} />
       </div>
     );
   }

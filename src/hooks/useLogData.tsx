@@ -9,6 +9,7 @@ export interface Item {
   id: string; // 고유 ID
   response: string; // 답변
   username: string; // 사용자명
+  open?: boolean;
 }
 
 interface UseLogData {

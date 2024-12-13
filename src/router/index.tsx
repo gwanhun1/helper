@@ -8,7 +8,6 @@ import KakaoAuthSection from "../components/organisms/KakaoAuthSection";
 import Auth from "../components/pages/Auth";
 import AuthGuard from "../components/pages/AuthGuard";
 import Error from "../components/pages/Error";
-import Meditation from "../components/pages/Meditation";
 import Advice from "../components/pages/Advice";
 
 const router = createBrowserRouter([
@@ -43,14 +42,6 @@ const router = createBrowserRouter([
       {
         path: "/auth",
         element: <Auth />,
-      },
-      {
-        path: "/meditation",
-        element: (
-          <AuthGuard>
-            <Meditation />
-          </AuthGuard>
-        ),
       },
       {
         path: "/advice",

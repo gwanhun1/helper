@@ -68,20 +68,19 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-slate-100 to-white pt-6 pb-4 text-center shadow-sm rounded-lg"
+        className="bg-gradient-to-br from-[#F0F7EA] to-white pt-6 pb-4 text-center shadow-md  border border-[#8BC34A]/30"
       >
-        <div className="flex flex-col items-center justify-center px-4 py-2 space-y-3">
-          <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center shadow-inner">
-            <span className="text-2xl">📊</span>
+        <div className="flex flex-col items-center justify-center px-4 py-2 space-y-4">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-md border border-[#8BC34A]/20">
+            <span className="text-3xl">📝</span>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-base font-medium text-slate-700">
+          <div className="space-y-2">
+            <h3 className="text-lg font-bold text-[#2E7D32] font-ibm">
               아직 기록이 없어요
             </h3>
-            <p className="text-sm text-slate-500">
-              첫 번째 이야기를 기록하면
-              <br />
-              감정 변화를 그래프로 볼 수 있어요
+            <p className="font-ibm text-[15px] text-[#666666] leading-relaxed">
+              첫 번째 이야기를 들려주시면<br />
+              멋진 그래프를 그려드릴게요 ✨
             </p>
           </div>
         </div>
@@ -96,12 +95,12 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
       className={`bg-gradient-to-br ${style.gradient} pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow  ${style.borderColor}`}
     >
       <div className="flex justify-center items-center">
-        <div className={`font-medium ${style.messageColor}`}>
+        <div className={`font-ibm font-medium ${style.messageColor}`}>
           {style.message} |
         </div>
-        <p className={`font-bold ${style.messageColor} ml-2`}>{averageLevel}</p>
+        <p className={`font-ibm font-bold ${style.messageColor} ml-2`}>{averageLevel}</p>
       </div>
-      <div className={`text-sm font-medium ${style.subMessageColor}`}>
+      <div className={` text-sm font-medium ${style.subMessageColor}`}>
         {style.subMessage}
       </div>
       <div className="flex items-center justify-center mt-2">

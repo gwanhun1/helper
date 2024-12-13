@@ -9,10 +9,10 @@ const Credit = () => {
             <FiPackage className="text-3xl text-green-600" />
           </div>
         </div>
-        <h1 className="text-[22px] font-extrabold text-gray-900 mb-3">
+        <h1 className="font-ibm text-[22px] font-extrabold text-gray-900 mb-3">
           프리미엄 회원권
         </h1>
-        <p className="text-[15px] text-gray-600 font-medium">
+        <p className="font-ibm text-[15px] text-gray-600 font-medium">
           곧 돌아옵니다
           <span className="inline-block ml-1 animate-bounce">🎁</span>
         </p>

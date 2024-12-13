@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { FiSend } from "react-icons/fi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { RiKakaoTalkFill } from "react-icons/ri";
@@ -8,63 +8,110 @@ import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
 import useUserStore from "../../store/userStore";
 import useContentsData from "../../hooks/useContentsData";
-// import useLikeManager from "../../hooks/useLikeManager";
-// import useCommentManager from "../../hooks/useCommentManager";
+import useLikeManager from "../../hooks/useLikeManager";
+import useCommentManager from "../../hooks/useCommentManager";
 
 const Advice = () => {
-  const { data } = useContentsData();
+  const { data: contentsData = [] } = useContentsData();
   const [currentIndex, setCurrentIndex] = useState(0);
   const user = useUserStore((state) => state.user);
-  // const { togglePostLike, isPostLiked } = useLikeManager();
-  // const { addComment, updateComment, deleteComment } = useCommentManager();
+  const { togglePostLike, toggleCommentLike, isPostLiked, isCommentLiked } = useLikeManager();
+  const { addComment } = useCommentManager();
+  const [newComment, setNewComment] = useState("");
+  const [postLikeStates, setPostLikeStates] = useState<{ [key: string]: boolean }>({});
+  const [commentLikeStates, setCommentLikeStates] = useState<{ [key: string]: boolean }>({});
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [worries, setWorries] = useState([
-    {
-      id: 1,
-      content: "취업 준비하는데 너무 힘들어요...",
-      likes: 5,
-      isLiked: false,
-      createdAt: "방금 전",
-      replies: [
-        {
-          id: 1,
-          content: "한 걸음씩 천천히 나아가보세요! 포기하지 마세요 💪",
-          likes: 3,
-          createdAt: "1시간 전",
-        },
-        {
-          id: 2,
-          content: "저도 같은 상황이에요. 함께 힘내봐요!",
-          likes: 2,
-          createdAt: "30분 전",
-        },
-      ],
-    },
-  ]);
+  const currentContent = contentsData[currentIndex] || null;
 
-  const toggleLike = (worryId: number) => {
-    setWorries((prev) =>
-      prev.map((worry) =>
-        worry.id === worryId
-          ? {
-              ...worry,
-              isLiked: !worry.isLiked,
-              likes: worry.isLiked ? worry.likes - 1 : worry.likes + 1,
-            }
-          : worry
-      )
+  const updateLikeStates = useCallback(async () => {
+    if (!currentContent?.id || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      // 게시글 좋아요 상태 업데이트
+      const isLiked = await isPostLiked(currentContent.id);
+      setPostLikeStates(prev => ({ ...prev, [currentContent.id]: isLiked }));
+
+      // 댓글들의 좋아요 상태를 Promise.all로 한 번에 처리
+      if (currentContent.comments && Array.isArray(currentContent.comments)) {
+        const commentPromises = currentContent.comments
+          .filter((comment): comment is { id: string } => Boolean(comment?.id))
+          .map(async comment => {
+            const isCommentLikedState = await isCommentLiked(currentContent.id, comment.id);
+            return [comment.id, isCommentLikedState];
+          });
+
+        const results = await Promise.all(commentPromises);
+        const newCommentStates = Object.fromEntries(results);
+        setCommentLikeStates(prev => ({ ...prev, ...newCommentStates }));
+      }
+    } catch (error) {
+      console.error('Error updating like states:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentContent?.id, isPostLiked, isCommentLiked]);
+
+  useEffect(() => {
+    updateLikeStates();
+  }, [updateLikeStates]);
+
+  const handlePrev = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + contentsData.length) % contentsData.length);
+  }, [contentsData.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % contentsData.length);
+  }, [contentsData.length]);
+
+  const handleAddComment = useCallback(async () => {
+    if (!user?.uid || !newComment.trim() || !currentContent?.id) return;
+    
+    try {
+      await addComment(currentContent.id, newComment.trim());
+      setNewComment("");
+      // 댓글이 추가된 후 좋아요 상태 업데이트
+      updateLikeStates();
+    } catch (error) {
+      console.error("Failed to add comment:", error);
+    }
+  }, [user?.uid, newComment, currentContent?.id, addComment, updateLikeStates]);
+
+  const handleTogglePostLike = useCallback(async (postId: string) => {
+    if (!postId) return;
+
+    try {
+      await togglePostLike(postId);
+      const newState = await isPostLiked(postId);
+      setPostLikeStates(prev => ({ ...prev, [postId]: newState }));
+    } catch (error) {
+      console.error('Error toggling post like:', error);
+    }
+  }, [togglePostLike, isPostLiked]);
+
+  const handleToggleCommentLike = useCallback(async (postId: string, commentId: string) => {
+    if (!postId || !commentId) return;
+
+    try {
+      await toggleCommentLike(postId, commentId);
+      const newState = await isCommentLiked(postId, commentId);
+      setCommentLikeStates(prev => ({ ...prev, [commentId]: newState }));
+    } catch (error) {
+      console.error('Error toggling comment like:', error);
+    }
+  }, [toggleCommentLike, isCommentLiked]);
+
+  if (!currentContent) {
+    return (
+      <PageLayout requireAuth>
+        <div className="flex items-center justify-center h-full">
+          <p>데이터를 불러오는 중입니다...</p>
+        </div>
+      </PageLayout>
     );
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % data.length);
-  };
-
-  console.log(data[currentIndex]);
+  }
 
   return (
     <PageLayout requireAuth>
@@ -99,19 +146,18 @@ const Advice = () => {
           </div>
 
           {/* 고민 폼 */}
-
           <div className="bg-white rounded-2xl border border-[#E5E8EB]">
             <AdvicePromptCarousel
               currentIndex={currentIndex}
               setCurrentIndex={setCurrentIndex}
-              prompts={data}
+              prompts={contentsData}
               onPrev={handlePrev}
               onNext={handleNext}
             />
-            {data[currentIndex]?.username &&
+            {currentContent?.username &&
               user?.displayName &&
-              data[currentIndex]?.username?.replace(/\s+/g, "") ===
-                user?.displayName && (
+              currentContent.username.replace(/\s+/g, "") ===
+                user.displayName && (
                 <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
                   <div className="flex items-center gap-1">
                     <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
@@ -124,11 +170,11 @@ const Advice = () => {
                   <button
                     type="submit"
                     className={`${
-                      data[currentIndex]?.open
+                      currentContent.open
                         ? "sparkle-effect bg-[#2AC1BC] hover:bg-[#2AC1BC]/90 "
                         : "bg-gray"
                     }  text-white px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto`}
-                    disabled={!data[currentIndex]?.open}
+                    disabled={!currentContent.open}
                   >
                     공유하기
                   </button>
@@ -138,9 +184,8 @@ const Advice = () => {
 
           {/* 고민 목록 */}
           <div className="space-y-4 mt-6">
-            {worries.map((worry) => (
               <motion.div
-                key={worry.id}
+                key={currentContent.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-white p-4 rounded-2xl border border-[#E5E8EB]"
@@ -154,7 +199,7 @@ const Advice = () => {
                       </div>
                     </div>
                     <span className="text-xs text-[#999999]">
-                      {worry.createdAt}
+                      {currentContent.date}
                     </span>
                   </div>
                 </div>
@@ -162,26 +207,27 @@ const Advice = () => {
                 {/* 고민 내용 */}
                 <div className="ml-10">
                   <p className="text-[15px] text-[#333333] leading-relaxed mb-3">
-                    {worry.content}
+                    {currentContent.response}
                   </p>
 
                   {/* 좋아요 버튼 */}
                   <button
-                    onClick={() => toggleLike(worry.id)}
+                    onClick={() => handleTogglePostLike(currentContent.id)}
+                    disabled={isLoading}
                     className="flex items-center gap-1.5 text-[#666666]"
                   >
-                    {worry.isLiked ? (
+                    {postLikeStates[currentContent.id] ? (
                       <AiFillHeart className="text-[#FF3D3D]" size={18} />
                     ) : (
                       <AiOutlineHeart size={18} />
                     )}
-                    <span className="text-sm">{worry.likes}</span>
+                    <span className="text-sm">{currentContent.like || 0}</span>
                   </button>
                 </div>
 
                 {/* 답변 목록 */}
                 <div className="space-y-3 mt-4 ml-10">
-                  {worry.replies.map((reply) => (
+                  {(currentContent.comments || []).map((reply) => (
                     <div
                       key={reply.id}
                       className="bg-[#F8F9FA] p-3.5 rounded-xl"
@@ -189,10 +235,10 @@ const Advice = () => {
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
                           <div className="w-7 h-7 bg-gray-200 rounded-full flex items-center justify-center">
-                            <span className="text-xs text-[#666666]">익명</span>
+                            <span className="text-xs text-[#666666]">{reply.username || '익명'}</span>
                           </div>
                           <span className="text-xs text-[#999999]">
-                            {reply.createdAt}
+                            {reply.date}
                           </span>
                         </div>
                       </div>
@@ -200,8 +246,20 @@ const Advice = () => {
                         {reply.content}
                       </p>
                       <div className="mt-2 ml-8">
-                        <button className="flex items-center gap-1.5 text-[#666666]">
-                          <AiOutlineHeart size={16} />
+                        <button 
+                          onClick={() => {
+                            if (currentContent?.id && reply?.id) {
+                              handleToggleCommentLike(currentContent.id, reply.id);
+                            }
+                          }}
+                          disabled={isLoading}
+                          className="flex items-center gap-1.5 text-[#666666]"
+                        >
+                          {reply.id && commentLikeStates[reply.id] ? (
+                            <AiFillHeart className="text-[#FF3D3D]" size={16} />
+                          ) : (
+                            <AiOutlineHeart size={16} />
+                          )}
                           <span className="text-xs">{reply.likes}</span>
                         </button>
                       </div>
@@ -210,18 +268,23 @@ const Advice = () => {
                 </div>
 
                 {/* 답변 입력 */}
-                <div className="mt-4 flex gap-2 ">
+                <div className="mt-4 flex gap-2">
                   <input
                     type="text"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
                     placeholder="따뜻한 답변을 남겨주세요"
                     className="flex-1 px-4 py-2.5 rounded-xl border border-[#E5E8EB] text-sm focus:outline-none focus:border-[#2AC1BC] placeholder:text-[#999999]"
                   />
-                  <button className="text-[#2AC1BC] hover:text-[#2AC1BC]/80 p-2">
+                  <button 
+                    onClick={handleAddComment}
+                    disabled={isLoading}
+                    className="text-[#2AC1BC] hover:text-[#2AC1BC]/80 p-2"
+                  >
                     <FiSend size={20} />
                   </button>
                 </div>
               </motion.div>
-            ))}
           </div>
         </div>
       </div>

@@ -13,13 +13,13 @@ const WellnessTipCard = ({ tip }: WellnessTipProps) => {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case "마음챙김":
-        return <FiFeather className="text-green-500" />;
+        return <FiFeather className="text-[#8BC34A]" />;
       case "긍정":
-        return <FiSun className="text-green-500" />;
+        return <FiSun className="text-[#8BC34A]" />;
       case "성장":
-        return <FiStar className="text-green-500" />;
+        return <FiStar className="text-[#8BC34A]" />;
       case "휴식":
-        return <FiCoffee className="text-green-500" />;
+        return <FiCoffee className="text-[#8BC34A]" />;
       default:
         return null;
     }
@@ -29,25 +29,25 @@ const WellnessTipCard = ({ tip }: WellnessTipProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-[22px] mx-4 bg-gradient-to-br from-green-200 to-blue-100 p-6 shadow-md hover:shadow-lg transition-all duration-300 border-green-100"
+      className="rounded-[28px] mx-4 bg-gradient-to-br from-green-200 to-[#F0F9EE] p-7 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-green-200"
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <span className="text-3xl">{tip.emoji}</span>
+        <div className="flex items-center gap-4">
+          <span className="text-4xl">{tip.emoji}</span>
           <div className="flex flex-col items-start">
-            <span className="text-green-900 font-bold text-lg">
+            <span className="text-[#333333] font-bold text-lg tracking-tight font-ibm">
               오늘의 마음 관리
             </span>
-            <div className="flex items-center gap-1.5 mt-0.5">
+            <div className="flex items-center gap-2 mt-1">
               {getCategoryIcon(tip.category)}
-              <span className="text-green-600 text-xs font-medium">
+              <span className="text-[#8BC34A] text-sm font-semibold font-ibm">
                 {tip.category}
               </span>
             </div>
           </div>
         </div>
       </div>
-      <div className="mt-4 text-gray-700 text-base leading-relaxed">
+      <div className="mt-5 text-[#666666] text-sm leading-relaxed ">
         {tip.text}
       </div>
     </motion.div>

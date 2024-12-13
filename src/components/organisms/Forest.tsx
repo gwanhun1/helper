@@ -147,10 +147,9 @@ const Forest = () => {
 
   return (
     <div
-      className="relative w-full h-40 overflow-hidden 
+      className="relative w-full h-52 overflow-hidden 
       border border-white/60 bg-slate-100
-      shadow-[0_2px_8px_rgba(0,0,0,0.12),inset_0_1px_3px_rgba(255,255,255,0.95)]
-      bg-white"
+      shadow-[0_2px_8px_rgba(0,0,0,0.12),inset_0_1px_3px_rgba(255,255,255,0.95)]"
     >
       {forestData.length > 0 &&
         forestData.map((tree, index) => {

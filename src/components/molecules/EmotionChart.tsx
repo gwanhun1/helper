@@ -4,15 +4,16 @@ import { motion } from "framer-motion";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Chart as ChartJS } from "chart.js";
 import "chart.js/auto";
+import Loading from "../atoms/Loading";
 
 ChartJS.register(ChartDataLabels);
 
 interface EmotionChartProps {
   averageLevel: number | string;
-  chartData: Array<{ date: string; level?: number }>;
+  chartData: Array<{ date: string; level?: number }>;loading:boolean;
 }
 
-const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
+const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) => {
   const getEmotionStyle = (level: number | string) => {
     const numLevel = typeof level === "string" ? parseFloat(level) : level;
 
@@ -56,13 +57,19 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
   };
 
   const style = getEmotionStyle(averageLevel);
-console.log(chartData);
 
   const getEmotionEmoji = (level: number) => {
     if (level >= 4) return "😊";
     if (level >= 2) return "😐";
     return "😔";
   };
+
+if(loading){
+  return (
+    <div className="bg-gradient-to-br from-[#F0F7EA] to-white flex flex-col items-center justify-center px-4 py-2 space-y-4 h-40">
+      <Loading className="h-32" />
+    </div>)
+}
 
   if (!chartData || chartData.length === 0) {
     return (

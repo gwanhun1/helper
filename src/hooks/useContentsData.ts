@@ -48,12 +48,9 @@ const useContentsData = (): UseContentsData => {
 
       if (snapshot.exists()) {
         const contentsData = snapshot.val();
-        console.log("Raw contents data:", contentsData); // 디버깅용
         const processedData = processContentsData(contentsData);
-        console.log("Processed data:", processedData); // 디버깅용
         setData(processedData.reverse());
       } else {
-        console.log("No data exists in snapshot"); // 디버깅용
         setData([]);
       }
     } catch (e) {
@@ -82,14 +79,11 @@ const useContentsData = (): UseContentsData => {
 
         if (snapshot.exists()) {
           const rawData = snapshot.val();
-          console.log("Real-time raw data:", rawData); // 디버깅용
           const processedData = processContentsData(rawData);
-          console.log("Real-time processed data:", processedData); // 디버깅용
           if (mounted) {
             setData(processedData.reverse());
           }
         } else {
-          console.log("No real-time data exists"); // 디버깅용
           if (mounted) {
             setData([]);
           }

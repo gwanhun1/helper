@@ -97,6 +97,9 @@ const useUserContents = (): UseUserContents => {
     // 전체 데이터베이스 연결 확인
     const rootRef = ref(db);
     
+    // 초기 로딩 상태 설정
+    setLoading(true);
+    
     get(rootRef).then((snapshot) => {
       const data = snapshot.val();
       
@@ -106,9 +109,14 @@ const useUserContents = (): UseUserContents => {
         const userRef = ref(db, `users/users/${user.uid}`);
         
         const unsubscribe = onValue(userRef, async (snapshot) => {
+          if (!mounted) return;
+          
+          // 데이터 변경 시작시 로딩 상태 설정
+          setLoading(true);
+          
           try {
-            if (!mounted || !snapshot.exists()) {
-              if (mounted) setUserContents([]);
+            if (!snapshot.exists()) {
+              setUserContents([]);
               return;
             }
 
@@ -141,9 +149,14 @@ const useUserContents = (): UseUserContents => {
         const userRef = ref(db, `users/${user.uid}`);
 
         const unsubscribe = onValue(userRef, async (snapshot) => {
+          if (!mounted) return;
+          
+          // 데이터 변경 시작시 로딩 상태 설정
+          setLoading(true);
+          
           try {
-            if (!mounted || !snapshot.exists()) {
-              if (mounted) setUserContents([]);
+            if (!snapshot.exists()) {
+              setUserContents([]);
               return;
             }
             const userData = snapshot.val();
@@ -172,6 +185,10 @@ const useUserContents = (): UseUserContents => {
       }
     }).catch((error) => {
       console.log('[DB] Database connection error:', error);
+      if (mounted) {
+        setError(`데이터베이스 연결 오류: ${error instanceof Error ? error.message : "알 수 없는 오류"}`);
+        setLoading(false);
+      }
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.uid]);

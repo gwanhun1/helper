@@ -21,7 +21,6 @@ const useLikeManager = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 게시글 좋아요 토글
   const togglePostLike = async (postId: string) => {
     const displayName = user?.displayName;
     if (!displayName) {
@@ -35,32 +34,29 @@ const useLikeManager = () => {
       const db = getDatabase(app);
       const postRef = ref(db, `contents/${postId}`);
 
-      // 현재 게시글 데이터 가져오기
       const snapshot = await get(postRef);
-      const post = snapshot.val();
+      if (!snapshot.exists()) {
+        throw new Error("Post not found");
+      }
 
-      // 기존 데이터가 없는 경우 초기값 설정
-      const currentPost: Post = {
+      const post = snapshot.val();
+      const currentPost = {
         ...post,
         like: post.like || 0,
-        likedBy: post.likedBy || [],
-        comments: post.comments || [],
+        likedBy: Array.isArray(post.likedBy) ? post.likedBy : [],
       };
 
-      const likedBy = currentPost.likedBy;
-      const userIndex = likedBy.indexOf(displayName);
-
+      const userIndex = currentPost.likedBy.indexOf(displayName);
       let updatedPost;
+
       if (userIndex === -1) {
-        // 좋아요 추가
         updatedPost = {
           ...currentPost,
           like: currentPost.like + 1,
-          likedBy: [...likedBy, displayName],
+          likedBy: [...currentPost.likedBy, displayName],
         };
       } else {
-        // 좋아요 취소
-        const newLikedBy = [...likedBy];
+        const newLikedBy = [...currentPost.likedBy];
         newLikedBy.splice(userIndex, 1);
         updatedPost = {
           ...currentPost,
@@ -69,19 +65,16 @@ const useLikeManager = () => {
         };
       }
 
-      // Firebase 업데이트
       await update(postRef, updatedPost);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to toggle post like"
-      );
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Failed to toggle post like";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // 댓글 좋아요 토글
   const toggleCommentLike = async (postId: string, commentId: string) => {
     const displayName = user?.displayName;
     if (!displayName) {
@@ -95,40 +88,34 @@ const useLikeManager = () => {
       const db = getDatabase(app);
       const postRef = ref(db, `contents/${postId}`);
 
-      // 현재 게시글 데이터 가져오기
       const snapshot = await get(postRef);
+      if (!snapshot.exists()) {
+        throw new Error("Post not found");
+      }
+
       const post = snapshot.val();
+      if (!Array.isArray(post.comments)) {
+        throw new Error("No comments found");
+      }
 
-      // 기존 데이터가 없는 경우 초기값 설정
-      const currentPost: Post = {
-        ...post,
-        like: post.like || 0,
-        likedBy: post.likedBy || [],
-        comments: post.comments || [],
-      };
-
-      // 댓글의 좋아요 수정
-      const updatedComments = currentPost.comments.map((comment: Comment) => {
+      const updatedComments = post.comments.map((comment: Comment) => {
         if (comment.id === commentId) {
           const currentComment = {
             ...comment,
             likes: comment.likes || 0,
-            likedBy: comment.likedBy || [],
+            likedBy: Array.isArray(comment.likedBy) ? comment.likedBy : [],
           };
 
-          const likedBy = currentComment.likedBy;
-          const userIndex = likedBy.indexOf(displayName);
+          const userIndex = currentComment.likedBy.indexOf(displayName);
 
           if (userIndex === -1) {
-            // 좋아요 추가
             return {
               ...currentComment,
               likes: currentComment.likes + 1,
-              likedBy: [...likedBy, displayName],
+              likedBy: [...currentComment.likedBy, displayName],
             };
           } else {
-            // 좋아요 취소
-            const newLikedBy = [...likedBy];
+            const newLikedBy = [...currentComment.likedBy];
             newLikedBy.splice(userIndex, 1);
             return {
               ...currentComment,
@@ -140,21 +127,18 @@ const useLikeManager = () => {
         return comment;
       });
 
-      // Firebase 업데이트
       await update(postRef, {
         comments: updatedComments,
       });
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to toggle comment like"
-      );
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Failed to toggle comment like";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  // 게시글 좋아요 상태 확인
   const isPostLiked = async (postId: string) => {
     const displayName = user?.displayName;
     if (!displayName) return false;
@@ -164,26 +148,19 @@ const useLikeManager = () => {
       const postRef = ref(db, `contents/${postId}`);
 
       const snapshot = await get(postRef);
+      if (!snapshot.exists()) {
+        return false;
+      }
+
       const post = snapshot.val();
-
-      // 기존 데이터가 없는 경우 초기값 설정
-      const currentPost: Post = {
-        ...post,
-        like: post.like || 0,
-        likedBy: post.likedBy || [],
-        comments: post.comments || [],
-      };
-
-      return currentPost.likedBy.includes(displayName) || false;
+      return Array.isArray(post.likedBy) && post.likedBy.includes(displayName);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to check post like status"
-      );
+      const errorMessage = err instanceof Error ? err.message : "Failed to check post like status";
+      setError(errorMessage);
       return false;
     }
   };
 
-  // 댓글 좋아요 상태 확인
   const isCommentLiked = async (postId: string, commentId: string) => {
     const displayName = user?.displayName;
     if (!displayName) return false;
@@ -193,34 +170,24 @@ const useLikeManager = () => {
       const postRef = ref(db, `contents/${postId}`);
 
       const snapshot = await get(postRef);
+      if (!snapshot.exists()) {
+        return false;
+      }
+
       const post = snapshot.val();
+      if (!Array.isArray(post.comments)) {
+        return false;
+      }
 
-      // 기존 데이터가 없는 경우 초기값 설정
-      const currentPost: Post = {
-        ...post,
-        like: post.like || 0,
-        likedBy: post.likedBy || [],
-        comments: post.comments || [],
-      };
+      const comment = post.comments.find((c: Comment) => c.id === commentId);
+      if (!comment) {
+        return false;
+      }
 
-      const comment = currentPost.comments.find(
-        (c: Comment) => c.id === commentId
-      );
-      if (!comment) return false;
-
-      const currentComment = {
-        ...comment,
-        likes: comment.likes || 0,
-        likedBy: comment.likedBy || [],
-      };
-
-      return currentComment.likedBy.includes(displayName) || false;
+      return Array.isArray(comment.likedBy) && comment.likedBy.includes(displayName);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to check comment like status"
-      );
+      const errorMessage = err instanceof Error ? err.message : "Failed to check comment like status";
+      setError(errorMessage);
       return false;
     }
   };

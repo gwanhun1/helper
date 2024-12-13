@@ -56,6 +56,7 @@ const EmotionChart = ({ averageLevel, chartData }: EmotionChartProps) => {
   };
 
   const style = getEmotionStyle(averageLevel);
+console.log(chartData);
 
   const getEmotionEmoji = (level: number) => {
     if (level >= 4) return "😊";

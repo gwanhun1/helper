@@ -14,6 +14,10 @@ const useCommentManager = () => {
       throw new Error("User must be logged in to comment");
     }
 
+    if (!content.trim()) {
+      throw new Error("Comment content cannot be empty");
+    }
+
     setLoading(true);
     setError(null);
 
@@ -21,47 +25,48 @@ const useCommentManager = () => {
       const db = getDatabase(app);
       const postRef = ref(db, `contents/${postId}`);
 
-      // 현재 게시글 데이터 가져오기
       const snapshot = await get(postRef);
-      const post = snapshot.val();
+      if (!snapshot.exists()) {
+        throw new Error("Post not found");
+      }
 
-      // 새 댓글 생성
+      const post = snapshot.val();
+      const currentComments = Array.isArray(post.comments) ? post.comments : [];
+
       const newComment: Comment = {
-        id: Date.now().toString(),
-        content,
+        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        content: content.trim(),
         username: user.displayName,
         date: new Date().toLocaleDateString("en-US", {
           month: "2-digit",
           day: "2-digit",
           year: "numeric",
-        }), // MM/DD/YYYY 형식으로 통일
+        }),
         likes: 0,
         likedBy: [],
       };
 
-      // 기존 댓글 배열에 새 댓글 추가
-      const currentComments = post.comments || [];
       const updatedComments = [...currentComments, newComment];
 
-      // Firebase 업데이트
       await update(postRef, {
         comments: updatedComments,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add comment");
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Failed to add comment";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const updateComment = async (
-    postId: string,
-    commentId: string,
-    newContent: string
-  ) => {
+  const updateComment = async (postId: string, commentId: string, newContent: string) => {
     if (!user?.displayName) {
       throw new Error("User must be logged in to update comment");
+    }
+
+    if (!newContent.trim()) {
+      throw new Error("Comment content cannot be empty");
     }
 
     setLoading(true);
@@ -71,24 +76,33 @@ const useCommentManager = () => {
       const db = getDatabase(app);
       const postRef = ref(db, `contents/${postId}`);
 
-      // 현재 게시글 데이터 가져오기
       const snapshot = await get(postRef);
-      const post = snapshot.val();
+      if (!snapshot.exists()) {
+        throw new Error("Post not found");
+      }
 
-      // 댓글 찾아서 수정
+      const post = snapshot.val();
+      if (!Array.isArray(post.comments)) {
+        throw new Error("No comments found");
+      }
+
       const updatedComments = post.comments.map((comment: Comment) =>
         comment.id === commentId && comment.username === user.displayName
-          ? { ...comment, content: newContent }
+          ? { ...comment, content: newContent.trim() }
           : comment
       );
 
-      // Firebase 업데이트
+      if (updatedComments.length === post.comments.length) {
+        throw new Error("Comment not found or unauthorized");
+      }
+
       await update(postRef, {
         comments: updatedComments,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update comment");
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Failed to update comment";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -106,23 +120,32 @@ const useCommentManager = () => {
       const db = getDatabase(app);
       const postRef = ref(db, `contents/${postId}`);
 
-      // 현재 게시글 데이터 가져오기
       const snapshot = await get(postRef);
-      const post = snapshot.val();
+      if (!snapshot.exists()) {
+        throw new Error("Post not found");
+      }
 
-      // 댓글 필터링
+      const post = snapshot.val();
+      if (!Array.isArray(post.comments)) {
+        throw new Error("No comments found");
+      }
+
       const updatedComments = post.comments.filter(
         (comment: Comment) =>
           !(comment.id === commentId && comment.username === user.displayName)
       );
 
-      // Firebase 업데이트
+      if (updatedComments.length === post.comments.length) {
+        throw new Error("Comment not found or unauthorized");
+      }
+
       await update(postRef, {
         comments: updatedComments,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete comment");
-      throw err;
+      const errorMessage = err instanceof Error ? err.message : "Failed to delete comment";
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }

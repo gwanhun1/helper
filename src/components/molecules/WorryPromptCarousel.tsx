@@ -26,10 +26,10 @@ const WorryPromptCarousel = () => {
 
         {/* Main Content */}
         <div className="space-y-2">
-          <h2 className="text-[26px] font-black text-gray-900 tracking-tight leading-8">
+          <h2 className="font-ibm text-[26px] font-black text-gray-900 tracking-tight leading-8">
             고민이 있으신가요?
           </h2>
-          <p className="text-[15px] text-gray-600 tracking-tight">
+          <p className="font-ibm text-[15px] text-gray-600 tracking-tight">
             AI와 함께 이야기해요
           </p>
         </div>

@@ -1,0 +1,13 @@
+@font-face {
+  font-family: 'BMHANNAPro';
+  src: url('/fonts/BMHANNAPro.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BMHANNAAir';
+  src: url('/fonts/BMHANNAAir.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}

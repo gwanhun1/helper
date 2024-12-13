@@ -6,6 +6,8 @@ module.exports = {
       fontFamily: {
         pretendard: ["Pretendard", "sans-serif"],
         noto: ["Noto Sans KR", "sans-serif"],
+        singleday: ["Single Day", "cursive"],
+        ibm: ["IBM Plex Sans KR", "sans-serif"],
       },
       colors: {
         navy: {

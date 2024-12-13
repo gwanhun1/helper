@@ -1,32 +1,40 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { Item } from "../../hooks/useLogData";
 
 interface AdvicePromptCarouselProps {
-  prompts: string[];
+  prompts: Item[];
   onPrev: () => void;
   onNext: () => void;
+  currentIndex: number;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const AdvicePromptCarousel = ({ prompts,  onPrev, onNext }: AdvicePromptCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const AdvicePromptCarousel = ({
+  prompts,
+  onPrev,
+  onNext,
+  currentIndex,
+  setCurrentIndex,
+}: AdvicePromptCarouselProps) => {
   const [direction, setDirection] = useState(0);
 
   const slideVariants = {
     enter: {
       opacity: 0,
-      scale: 0.95
+      scale: 0.95,
     },
     center: {
       zIndex: 1,
       opacity: 1,
-      scale: 1
+      scale: 1,
     },
     exit: {
       zIndex: 0,
       opacity: 0,
-      scale: 1.05
-    }
+      scale: 1.05,
+    },
   };
 
   const swipeConfidenceThreshold = 10000;
@@ -62,7 +70,7 @@ const AdvicePromptCarousel = ({ prompts,  onPrev, onNext }: AdvicePromptCarousel
           transition={{
             opacity: { duration: 0.3, ease: "easeInOut" },
             scale: { duration: 0.3, ease: "easeInOut" },
-            height: { type: "spring", stiffness: 70, damping: 15, mass: 0.3 }
+            height: { type: "spring", stiffness: 70, damping: 15, mass: 0.3 },
           }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
@@ -81,17 +89,17 @@ const AdvicePromptCarousel = ({ prompts,  onPrev, onNext }: AdvicePromptCarousel
         >
           <motion.div
             layout
-            className="px-4 pt-4 rounded-lg cursor-pointer flex items-center justify-center text-center"
+            className="px-4 pt-4 min-h-20 rounded-lg cursor-pointer flex items-center justify-center text-center"
           >
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{
-                opacity: { duration: 0.2, ease: "easeInOut" }
+                opacity: { duration: 0.2, ease: "easeInOut" },
               }}
             >
-              {prompts[currentIndex]}
+              {prompts[currentIndex]?.content}
             </motion.span>
           </motion.div>
         </motion.div>

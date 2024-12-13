@@ -6,16 +6,14 @@ import { RiKakaoTalkFill } from "react-icons/ri";
 import { FaRobot } from "react-icons/fa";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
-
-const SAMPLE_PROMPTS = [
-  "요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...요즘 취업 준비하면서 자신감이 많이 떨어졌어요...",
-  "친구와 사소한 일로 다퉜는데 먼저 연락하기가 망설여져요.",
-  "일과 공부를 병행하는게 너무 힘들어요. 어떻게 하면 좋을까요?",
-  "연애를 시작하고 싶은데 용気が 나지 않아요.",
-  "부모님과의 세대차이를 어떻게 극복하면 좋을까요?",
-];
+import useLogData from "../../hooks/useLogData";
+import useUserStore from "../../store/userStore";
 
 const Advice = () => {
+  const { data } = useLogData();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const user = useUserStore((state) => state.user);
+
   const [worries, setWorries] = useState([
     {
       id: 1,
@@ -39,8 +37,6 @@ const Advice = () => {
       ],
     },
   ]);
-  const [_, setCurrentIndex] = useState(0);
-
 
   const toggleLike = (worryId: number) => {
     setWorries((prev) =>
@@ -57,14 +53,14 @@ const Advice = () => {
   };
 
   const handlePrev = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + SAMPLE_PROMPTS.length) % SAMPLE_PROMPTS.length
-    );
+    setCurrentIndex((prev) => (prev - 1 + data.length) % data.length);
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % SAMPLE_PROMPTS.length);
+    setCurrentIndex((prev) => (prev + 1) % data.length);
   };
+
+  console.log(data[currentIndex]);
 
   return (
     <PageLayout requireAuth>
@@ -73,7 +69,9 @@ const Advice = () => {
         <div className="bg-white px-5 py-3 border-b relative">
           <div className="flex items-end gap-3">
             <h1 className="text-xl font-bold text-[#333333]">고민나누기</h1>
-            <span className="text-[10px] text-[#666666] mb-1">함께 고민을 나눠요</span>
+            <span className="text-[10px] text-[#666666] mb-1">
+              함께 고민을 나눠요
+            </span>
           </div>
         </div>
 
@@ -97,29 +95,42 @@ const Advice = () => {
           </div>
 
           {/* 고민 폼 */}
-            <div className="bg-white rounded-2xl border border-[#E5E8EB]">
-                <AdvicePromptCarousel
-                  prompts={SAMPLE_PROMPTS}
-                  onPrev={handlePrev}
-                  onNext={handleNext}
-                />
-              <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
-                <div className="flex items-center gap-1">
-                  <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
-                    ME
-                  </span>
-                  <span className="text-xs text-green-600 font-medium">
-                    내가 쓴 글
-                  </span>
+
+          <div className="bg-white rounded-2xl border border-[#E5E8EB]">
+            <AdvicePromptCarousel
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+              prompts={data}
+              onPrev={handlePrev}
+              onNext={handleNext}
+            />
+            {data[currentIndex]?.username &&
+              user?.displayName &&
+              data[currentIndex]?.username?.replace(/\s+/g, "") ===
+                user?.displayName && (
+                <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
+                  <div className="flex items-center gap-1">
+                    <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
+                      ME
+                    </span>
+                    <span className="text-xs text-green-600 font-medium">
+                      내가 쓴 글
+                    </span>
+                  </div>
+                  <button
+                    type="submit"
+                    className={`${
+                      data[currentIndex]?.open
+                        ? "sparkle-effect bg-[#2AC1BC] hover:bg-[#2AC1BC]/90 "
+                        : "bg-gray"
+                    }  text-white px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto`}
+                    disabled={!data[currentIndex]?.open}
+                  >
+                    공유하기
+                  </button>
                 </div>
-                <button
-                  type="submit"
-                  className="sparkle-effect bg-[#2AC1BC] text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-[#2AC1BC]/90 disabled:opacity-50 ml-auto"
-                >
-                  공유하기
-                </button>
-              </div>
-            </div>
+              )}
+          </div>
 
           {/* 고민 목록 */}
           <div className="space-y-4 mt-6">

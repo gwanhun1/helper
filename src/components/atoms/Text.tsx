@@ -5,6 +5,7 @@ interface TextProps {
   variant?: 'h1' | 'h2' | 'h3' | 'body' | 'caption' | 'small';
   color?: 'primary' | 'secondary' | 'tertiary' | 'green';
   weight?: 'normal' | 'medium' | 'bold' | 'extrabold';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onClick?: () => void;
 }
@@ -14,6 +15,7 @@ const Text: React.FC<TextProps> = ({
   variant = 'body',
   color = 'primary',
   weight = 'normal',
+  size,
   className = '',
   onClick,
 }) => {

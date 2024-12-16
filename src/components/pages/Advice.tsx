@@ -43,7 +43,21 @@ const Advice = () => {
     if (!dateStr) return "";
     
     try {
-      const [month, day, year] = dateStr.split('/');
+      // 날짜 형식이 유효한지 먼저 확인
+      if (!dateStr.includes('/')) {
+        return dateStr;
+      }
+
+      const dateParts = dateStr.split('/');
+      if (dateParts.length !== 3) {
+        return dateStr;
+      }
+
+      const [month, day, year] = dateParts;
+      if (!month || !day || !year) {
+        return dateStr;
+      }
+
       const formattedMonth = month.padStart(2, '0');
       const formattedDay = day.padStart(2, '0');
       const date = new Date(`${year}-${formattedMonth}-${formattedDay}`);
@@ -72,7 +86,7 @@ const Advice = () => {
       }
     } catch (error) {
       console.error('Date parsing error:', error);
-      return dateStr;
+      return dateStr || "";
     }
   };
 
@@ -117,6 +131,7 @@ const Advice = () => {
   }, [contentsData.length]);
 
   const handleAddComment = useCallback(async () => {
+    alert("잠시후 다시 시도해주세요.")
     if (!user?.uid || !newComment.trim() || !currentContent?.id) return;
     
     try {

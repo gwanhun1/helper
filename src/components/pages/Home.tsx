@@ -33,7 +33,6 @@ ChartJS.register(
 
 const Home = () => {
   const { userContents: forestData,loading } = useUserContents();
-console.log(forestData);
 
   useEffect(() => {
     if (forestData && forestData.length > 0) {

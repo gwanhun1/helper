@@ -6,6 +6,7 @@ const Loading = ({ textStep }: { textStep: number }) => {
         '조합하는 중 😍',
     ];
 
+    alert("잠시후 다시 시도해주세요.")
     return (
         <div className="flex items-center justify-center h-full bg-white ">
             <p className="text-[#4abd9d] text-2xl font-bold whitespace-pre-line mt-10">

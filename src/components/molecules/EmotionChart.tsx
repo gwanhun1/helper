@@ -72,7 +72,6 @@ if(loading){
     </div>)
 }
 
-console.log(chartData);
 
   if (!chartData || chartData.length === 0) {
     return (

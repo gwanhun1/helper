@@ -184,76 +184,28 @@ const Advice = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="bg-[#F2F4F6] pb-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {/* 상단 헤더 */}
-        <div className="bg-white px-5 py-3 border-b relative">
-          <div className="flex items-end gap-3">
-            <h1 className="text-xl font-bold text-[#333333]">고민나누기</h1>
-            <span className="text-[10px] text-[#666666] mb-1">함께 고민을 나눠요</span>
-          </div>
-        </div>
-
-        {/* 메인 컨테이너 */}
-        <div className="p-4 space-y-4">
-          <AdviceBanner />
-
-          {/* 고민 폼 */}
-          <div className="bg-white rounded-2xl border border-[#E5E8EB]">
-            <AdvicePromptCarousel
-              currentIndex={currentIndex}
-              setCurrentIndex={setCurrentIndex}
-              prompts={contentsData}
-              onPrev={handlePrev}
-              onNext={handleNext}
-            />
-            {currentContent?.username &&
-              user?.displayName &&
-              currentContent.username.replace(/\s+/g, "") === user.displayName && (
-                <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
-                  <div className="flex items-center gap-1">
-                    <span className="sparkle-effect px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
-                      ME
-                    </span>
-                    <span className="text-xs text-green-600 font-medium">내가 쓴 글</span>
-                  </div>
-                  <button
-                    type="submit"
-                    className={`${
-                      currentContent.open
-                        ? "sparkle-effect bg-[#2AC1BC] hover:bg-[#2AC1BC]/90 "
-                        : "bg-gray"
-                    }  text-white px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto`}
-                    disabled={!currentContent.open}
-                  >
-                    공유하기
-                  </button>
-                </div>
-              )}
-          </div>
-
-          {/* 고민 목록 */}
-          <div className="space-y-4 mt-6">
-            <CommentList
-              mainContent={{
-                id: currentContent.id,
-                response: currentContent.response,
-                date: currentContent.date,
-                like: currentContent.like,
-              }}
-              comments={(currentContent.comments || [])
-                .filter((comment): comment is Comment => comment.content !== undefined)}
-              isPostLiked={postLikeStates[currentContent.id]}
-              commentLikeStates={commentLikeStates}
-              onTogglePostLike={() => handleTogglePostLike(currentContent.id)}
-              onToggleCommentLike={(commentId) => handleToggleCommentLike(currentContent.id, commentId)}
-              newComment={newComment}
-              onCommentChange={setNewComment}
-              onCommentSubmit={handleCommentSubmit}
-              isLoading={isLoading}
-              formatDate={formatRelativeDate}
-            />
-          </div>
-        </div>
+      <div className="flex flex-col h-full">
+        {currentContent && (
+          <CommentList
+            mainContent={{
+              id: currentContent.id,
+              response: currentContent.response,
+              date: currentContent.date || new Date().toISOString(),
+              like: currentContent.like || 0
+            }}
+            comments={(currentContent.comments || [])
+              .filter((comment): comment is Comment => comment.content !== undefined)}
+            isPostLiked={postLikeStates[currentContent.id]}
+            commentLikeStates={commentLikeStates}
+            onTogglePostLike={() => handleTogglePostLike(currentContent.id)}
+            onToggleCommentLike={(commentId) => handleToggleCommentLike(currentContent.id, commentId)}
+            newComment={newComment}
+            onCommentChange={setNewComment}
+            onCommentSubmit={handleCommentSubmit}
+            isLoading={isLoading}
+            formatDate={formatRelativeDate}
+          />
+        )}
       </div>
     </PageLayout>
   );

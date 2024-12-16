@@ -19,15 +19,15 @@ const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) =>
 
     if (numLevel >= 6) {
       return {
-        gradient: "from-rose-300 to-rose-200",
-        borderColor: "border-rose-100",
-        textColor: "text-rose-500",
-        message: "마음이 많이 힘드시군요",
-        subMessage: "잠시 휴식을 가지는 건 어떨까요?",
-        messageColor: "text-rose-600",
-        subMessageColor: "text-rose-400",
-        chartColor: "rgb(244, 63, 94)",
-        chartBgColor: "rgba(244, 63, 94, 0.2)",
+        gradient: "from-blue-300 to-blue-200",
+        borderColor: "border-blue-100",
+        textColor: "text-blue-500",
+        message: "마음이 차분하고 안정적입니다",
+        subMessage: "계속 잘 유지하세요!",
+        messageColor: "text-blue-600",
+        subMessageColor: "text-blue-400",
+        chartColor: "rgb(59, 130, 246)",
+        chartBgColor: "rgba(59, 130, 246, 0.2)",
       };
     } else if (numLevel >= 3) {
       return {
@@ -43,15 +43,16 @@ const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) =>
       };
     } else {
       return {
-        gradient: "from-blue-300 to-blue-200",
-        borderColor: "border-blue-100",
-        textColor: "text-blue-500",
-        message: "마음이 차분하고 안정적입니다",
-        subMessage: "계속 잘 유지하세요!",
-        messageColor: "text-blue-600",
-        subMessageColor: "text-blue-400",
-        chartColor: "rgb(59, 130, 246)",
-        chartBgColor: "rgba(59, 130, 246, 0.2)",
+        gradient: "from-rose-300 to-rose-200",
+        borderColor: "border-rose-100",
+        textColor: "text-rose-500",
+        message: "마음이 많이 힘드시군요",
+        subMessage: "잠시 휴식을 가지는 건 어떨까요?",
+        messageColor: "text-rose-600",
+        subMessageColor: "text-rose-400",
+        chartColor: "rgb(244, 63, 94)",
+        chartBgColor: "rgba(244, 63, 94, 0.2)",
+        
       };
     }
   };
@@ -71,6 +72,8 @@ if(loading){
     </div>)
 }
 
+console.log(chartData);
+
   if (!chartData || chartData.length === 0) {
     return (
       <motion.div
@@ -86,7 +89,7 @@ if(loading){
             <h3 className="text-lg font-bold text-[#2E7D32] font-ibm">
               아직 기록이 없어요
             </h3>
-            <p className="font-ibm text-[15px] text-[#666666] leading-relaxed">
+            <p className="font-ibm text-[12px] text-[#666666] leading-relaxed">
               첫 번째 이야기를 들려주시면<br />
               멋진 그래프를 그려드릴게요 ✨
             </p>

@@ -33,6 +33,7 @@ ChartJS.register(
 
 const Home = () => {
   const { userContents: forestData,loading } = useUserContents();
+console.log(forestData);
 
   useEffect(() => {
     if (forestData && forestData.length > 0) {
@@ -43,15 +44,14 @@ const Home = () => {
         if (level >= 6) {
           toast(
             <div className="flex flex-col gap-1">
-              <span className="font-medium">
-                힘든 시간을 보내고 계시네요 😔
-              </span>
+              <span className="font-medium">기분 좋은 하루네요! 💫</span>
               <span className="text-sm">
-                고민을 글로 적어보면 마음이 한결 가벼워질 수 있어요
+                오늘의 긍정적인 순간들을 기록해보세요
               </span>
             </div>,
-            { icon: "🌱", duration: 5000 }
+            { icon: "✨", duration: 5000 }
           );
+          
         } else if (level >= 3) {
           toast(
             <div className="flex flex-col gap-1">
@@ -67,12 +67,14 @@ const Home = () => {
         } else {
           toast(
             <div className="flex flex-col gap-1">
-              <span className="font-medium">기분 좋은 하루네요! 💫</span>
+              <span className="font-medium">
+                힘든 시간을 보내고 계시네요 😔
+              </span>
               <span className="text-sm">
-                오늘의 긍정적인 순간들을 기록해보세요
+                고민을 글로 적어보면 마음이 한결 가벼워질 수 있어요
               </span>
             </div>,
-            { icon: "✨", duration: 5000 }
+            { icon: "🌱", duration: 5000 }
           );
         }
       }

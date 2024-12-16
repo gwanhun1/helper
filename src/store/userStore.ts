@@ -6,10 +6,12 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import { app } from "../firebaseConfig";
+import { getDatabase, ref, get } from "firebase/database";
 
 interface ExtendedUser extends FirebaseUser {
   grade?: string;
   count?: number;
+  contentIds?: string[];
 }
 
 interface UserStore {
@@ -30,13 +32,20 @@ const useUserStore = create<UserStore>()(
 );
 
 const auth = getAuth(app);
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const userStore = useUserStore.getState();
   if (user) {
+    // Firebase에서 사용자 데이터 가져오기
+    const db = getDatabase(app);
+    const userRef = ref(db, `users/${user.uid}`);
+    const snapshot = await get(userRef);
+    const userData = snapshot.val();
+
     userStore.setUser({
       ...user,
-      grade: "A",
-      count: 0,
+      grade: userData?.grade || "A",
+      count: userData?.count || 0,
+      contentIds: userData?.contentIds || [],
     });
   } else {
     userStore.setUser(null);

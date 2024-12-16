@@ -1,51 +1,19 @@
-import { useState } from 'react';
-import useWorryManager from "./useWorryManager";
+import { useState } from "react";
 import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
+import useWorryManager from "./useWorryManager";
 
-interface ChatMessage {
-  role: "system" | "user";
-  content: string;
-}
-
-interface OpenAIResponse {
-  choices?: Array<{
-    message: {
-      content: string;
-    };
-  }>;
-  error?: {
-    message: string;
-  };
-}
-
+// OpenAI API 요청에 필요한 타입 정의
 interface RequestBody {
   model: string;
-  messages: ChatMessage[];
+  messages: { role: string; content: string }[];
   temperature: number;
   max_tokens: number;
 }
 
-interface WorryContent {
-  content: string;
-  date: string;
-  id: string;
-  response: string;
-  level: number;
-  username: string;
-  open: boolean;
-  comments: never[];
-}
-
-const useCounselingPrompt = () => {
-  const { who, how, worry, setResponse, setLevel } = useWorryStore();
-  const { addWorry } = useWorryManager();
-  const user = useUserStore((state) => state.user);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const createSystemPrompt = (who: string, how: string): string => {
-    return `You are a ${who}. You must strictly follow these guidelines when responding in Korean:
+// 시스템 프롬프트 생성 함수
+const createSystemPrompt = (who: string, how: string): string => {
+  return `You are a ${who}. You must strictly follow these guidelines when responding in Korean:
 
 1. Character Identity (${who}):
 - Fully embody the role of a Korean ${who}
@@ -82,20 +50,16 @@ Example Persona Patterns:
 - 헬스트레이너: "자, 제가 보기에는 이렇습니다! 💪 우리 함께 이 문제 해결해보죠! 할 수 있습니다!" (적극적 동기부여)
 
 Remember to maintain the authentic voice of a ${who} while expressing emotions ${how}. Your responses should reflect deep understanding of Korean social dynamics and cultural values.`;
-  };
+};
 
-  const createRequestBody = (systemPrompt: string, userMessage: string) => {
-    return {
-      model: "gpt-3.5-turbo",
-      messages: [
-        { role: "system", content: systemPrompt } as ChatMessage,
-        { role: "user", content: userMessage } as ChatMessage,
-      ],
-      temperature: 0.7,
-      max_tokens: 350,
-    };
-  };
+const useCounselingPrompt = () => {
+  const { who, how, worry, setResponse } = useWorryStore();
+  const { addWorry } = useWorryManager();
+  const user = useUserStore((state) => state.user);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
+  // API 요청 공통 함수
   const makeAPIRequest = async (requestBody: RequestBody) => {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -106,57 +70,49 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
       body: JSON.stringify(requestBody),
     });
 
+    if (!response.ok) {
+      throw new Error("OpenAI API 요청 실패");
+    }
+
     return await response.json();
   };
 
-  const generatePrompt = async () => {
+  // OpenAI 응답 가져오기
+  const fetchResponse = async () => {
     if (!user?.uid) {
-      setError(new Error('로그인이 필요합니다.'));
+      setError(new Error("로그인이 필요합니다."));
       return;
     }
 
     try {
       setLoading(true);
-      const content = `${who}가 ${how} ${worry}`;
-      await addWorry(content);
-      setLoading(false);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
-      setLoading(false);
-    }
-  };
+      const requestBody: RequestBody = {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: createSystemPrompt(who, how) },
+          { role: "user", content: worry },
+        ],
+        temperature: 0.7,
+        max_tokens: 350,
+      };
 
-  const handleResponse = async (response: string) => {
-    try {
-      setLoading(true);
-      setResponse(response);
-      const content = `${who}가 ${how} ${worry}`;
-      await addWorry(content);
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
-    } finally {
-      setLoading(false);
-    }
-  };
+      const response = await makeAPIRequest(requestBody);
 
-  const fetchResponse = async () => {
-    try {
-      setLoading(true);
-      const content = `${who}가 ${how} ${worry}`;
-      await addWorry(content);
+      // OpenAI 응답 처리
+      const messageContent = response.choices?.[0]?.message?.content || "";
+      setResponse(messageContent); // 상태 업데이트
+      await addWorry(messageContent); // 걱정 저장
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
+      setError(err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다."));
     } finally {
       setLoading(false);
     }
   };
 
   return {
-    fetchResponse,
-    generatePrompt,
-    handleResponse,
-    loading,
-    error,
+    fetchResponse, // 응답 가져오기 함수
+    loading, // 로딩 상태
+    error, // 에러 상태
   };
 };
 

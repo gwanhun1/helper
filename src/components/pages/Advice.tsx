@@ -130,8 +130,8 @@ const Advice = () => {
     setCurrentIndex((prev) => (prev + 1) % contentsData.length);
   }, [contentsData.length]);
 
-  const handleAddComment = useCallback(async () => {
-    alert("잠시후 다시 시도해주세요.")
+  const handleAddComment = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!user?.uid || !newComment.trim() || !currentContent?.id) return;
     
     try {

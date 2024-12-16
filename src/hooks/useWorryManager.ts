@@ -1,36 +1,37 @@
-import { useState } from "react";
-import { getDatabase, ref, push, set, get } from "firebase/database";
+import { useState } from 'react';
+import { getDatabase, ref, push, set, get, remove } from "firebase/database";
 import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 import { Item } from "./useContentsData";
 
-interface UseWorryManager {
+export interface UseWorryManager {
+  worries: Item[];
   addWorry: (content: string) => Promise<void>;
+  deleteWorry: (id: string) => Promise<void>;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
 }
 
 const useWorryManager = (): UseWorryManager => {
+  const [worries, setWorries] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
 
   const addWorry = async (content: string) => {
     if (!user?.uid) {
-      setError("로그인이 필요합니다.");
+      setError(new Error("로그인이 필요합니다."));
       return;
     }
 
     if (!content.trim()) {
-      setError("내용을 입력해주세요.");
+      setError(new Error("내용을 입력해주세요."));
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
     try {
+      setLoading(true);
       const newWorryRef = push(ref(db, "contents"));
       const worryId = newWorryRef.key;
       
@@ -38,43 +39,65 @@ const useWorryManager = (): UseWorryManager => {
         throw new Error("컨텐츠 ID를 생성할 수 없습니다.");
       }
 
-      const worryData: Omit<Item, 'id'> = {
+      const newWorry: Omit<Item, 'id'> = {
         content,
-        date: new Date().toLocaleDateString("en-US", {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-        }),
+        date: new Date().toISOString(),
+        response: '',
         username: user.displayName || "Anonymous",
-        response: "",
+        timestamp: Date.now(),
+        userId: user.uid,
         level: 1,
         open: true,
         comments: [],
         like: 0,
         likedBy: []
       };
-
-      // 동일한 ID로 content 저장
-      await set(newWorryRef, { ...worryData, id: worryId });
       
-      // 사용자의 contentIds 업데이트
+      await set(newWorryRef, { ...newWorry, id: worryId });
+      
       const userRef = ref(db, `users/${user.uid}/contentIds`);
       const snapshot = await get(userRef);
       const currentIds = snapshot.exists() ? snapshot.val() : [];
       
-      // 중복 방지를 위해 Set 사용
       const uniqueIds = new Set([...currentIds, worryId]);
       await set(userRef, Array.from(uniqueIds));
 
-    } catch (e) {
-      setError(`걱정을 추가하는 중 오류가 발생했습니다: ${e instanceof Error ? e.message : "알 수 없는 오류"}`);
-      throw e;
-    } finally {
+      setWorries(prev => [...prev, { ...newWorry, id: worryId }]);
+      setLoading(false);
+    } catch (err) {
+      setError(err as Error);
       setLoading(false);
     }
   };
 
-  return { addWorry, loading, error };
+  const deleteWorry = async (id: string) => {
+    try {
+      setLoading(true);
+      const worryRef = ref(db, `contents/${id}`);
+      await remove(worryRef);
+
+      const userRef = ref(db, `users/${user.uid}/contentIds`);
+      const snapshot = await get(userRef);
+      const currentIds = snapshot.exists() ? snapshot.val() : [];
+      
+      const uniqueIds = new Set([...currentIds].filter((itemId) => itemId !== id));
+      await set(userRef, Array.from(uniqueIds));
+
+      setWorries(prev => prev.filter(worry => worry.id !== id));
+      setLoading(false);
+    } catch (err) {
+      setError(err as Error);
+      setLoading(false);
+    }
+  };
+
+  return {
+    worries,
+    addWorry,
+    deleteWorry,
+    loading,
+    error
+  };
 };
 
 export default useWorryManager;

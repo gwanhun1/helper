@@ -5,6 +5,13 @@ export interface Item {
   content: string;
   timestamp: number;
   userId: string;
+  response?: string;
+  date?: string;
+  username?: string;
+  level?: number;
+  comments?: Comment[];
+  like?: number;
+  likedBy?: string[];
 }
 
 export interface Comment {
@@ -13,6 +20,8 @@ export interface Comment {
   timestamp: number;
   userId: string;
   itemId: string;
+  username: string;
+  date: string;
 }
 
 export interface LogData {

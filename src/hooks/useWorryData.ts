@@ -22,7 +22,11 @@ export const useWorryData = (): UseWorryManager => {
 
   const saveWorry = async (worry: Omit<WorryData, 'id'>) => {
     try {
-      // Implement your save logic here
+      const newWorry: WorryData = {
+        ...worry,
+        id: Date.now().toString(), // 임시 ID 생성
+      };
+      setWorries(prev => [...prev, newWorry]);
     } catch (err) {
       setError(err as Error);
     }
@@ -30,15 +34,32 @@ export const useWorryData = (): UseWorryManager => {
 
   const deleteWorry = async (id: string) => {
     try {
-      // Implement your delete logic here
+      setWorries(prev => prev.filter(worry => worry.id !== id));
     } catch (err) {
       setError(err as Error);
     }
   };
 
   useEffect(() => {
-    // Implement your fetch logic here
+    const fetchWorries = async () => {
+      try {
+        setLoading(true);
+        // 여기에 실제 데이터 fetching 로직 구현
+        setLoading(false);
+      } catch (err) {
+        setError(err as Error);
+        setLoading(false);
+      }
+    };
+
+    fetchWorries();
   }, []);
 
-  return { worries, loading, error, saveWorry, deleteWorry };
+  return {
+    worries,
+    loading,
+    error,
+    saveWorry,
+    deleteWorry,
+  };
 };

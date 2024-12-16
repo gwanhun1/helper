@@ -4,14 +4,14 @@ import useSelectTreeStore from "../../store/selectTreeStore";
 import { useRef, useEffect, useState } from "react";
 import useDeleteData from "../../hooks/useDeleteData";
 import { useSwipeable } from "react-swipeable";
-import { Item } from "../../hooks/useLogData";
+import { Item } from "../../hooks/useContentsData";
 
-type LogFormProps = {
+interface LogFormProps {
   data: Item;
-  onDelete: () => Promise<void>;
-};
+  onDelete?: () => void;
+}
 
-const LogForm = ({ data, onDelete }: LogFormProps) => {
+const LogForm: React.FC<LogFormProps> = ({ data, onDelete }) => {
   const { content: selectContent, response: selectResponse } =
     useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);
@@ -28,7 +28,9 @@ const LogForm = ({ data, onDelete }: LogFormProps) => {
       e.stopPropagation();
       if (window.confirm("정말 삭제하시겠습니까?")) {
         await deleteData(data.id);
-        await onDelete();
+        if (onDelete) {
+          await onDelete();
+        }
       }
     } catch (error) {
       console.error("Failed to delete item:", error);

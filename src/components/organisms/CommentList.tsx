@@ -4,30 +4,15 @@ import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
 import LikeButton from "../molecules/LikeButton";
 import { FaRobot } from "react-icons/fa";
-
-export interface Comment {
-  id: string;
-  username: string;
-  content: string;
-  date: string;
-  likes: number;
-  likedBy?: string[];
-}
-
-interface MainContent {
-  id: string;
-  response: string;
-  date: string;
-  like: number;
-}
+import { Comment as CommentType, MainContent } from '../../types/comment';
 
 interface CommentListProps {
   mainContent: MainContent;
-  comments: Comment[];
+  comments: CommentType[];
   isPostLiked: boolean;
   commentLikeStates: { [key: string]: boolean };
   onTogglePostLike: () => void;
-  onToggleCommentLike: (commentId: string) => void;
+  onToggleCommentLike: (postId: string, commentId: string) => Promise<void>;
   newComment: string;
   onCommentChange: (value: string) => void;
   onCommentSubmit: (e: React.FormEvent) => void;
@@ -35,7 +20,7 @@ interface CommentListProps {
   formatDate: (date: string | undefined) => string;
 }
 
-const CommentList = ({
+const CommentList: React.FC<CommentListProps> = ({
   mainContent,
   comments,
   isPostLiked,
@@ -81,7 +66,7 @@ const CommentList = ({
       {/* 댓글 목록 */}
       <div className="space-y-3 mt-4 ml-10">
         {comments
-          .filter((comment): comment is Comment => Boolean(comment && comment.id))
+          .filter((comment): comment is CommentType => Boolean(comment && comment.id))
           // 중복된 ID 제거
           .filter((comment, index, self) => 
             index === self.findIndex((c) => c.id === comment.id)
@@ -94,7 +79,7 @@ const CommentList = ({
             date={comment.date || ''}
             likes={comment.likes || 0}
             isLiked={comment.id ? commentLikeStates[comment.id] : false}
-            onToggleLike={() => comment.id && onToggleCommentLike(comment.id)}
+            onToggleLike={() => comment.id && onToggleCommentLike(mainContent.id, comment.id)}
             disabled={isLoading}
             formatDate={formatDate}
           />

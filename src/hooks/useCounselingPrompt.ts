@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useWorryManager from "../hooks/useWorryManager";
+import useWorryManager from "./useWorryManager";
 import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 
@@ -110,7 +110,11 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
       await addWorry(content);
       setLoading(false);
     } catch (err) {
-      setError(err as Error);
+      if (err instanceof Error) {
+        setError(err);
+      } else {
+        setError(new Error('알 수 없는 오류가 발생했습니다.'));
+      }
       setLoading(false);
     }
   };

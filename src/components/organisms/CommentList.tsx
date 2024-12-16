@@ -1,15 +1,17 @@
+import React from 'react';
 import { motion } from "framer-motion";
 import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
 import LikeButton from "../molecules/LikeButton";
 import { FaRobot } from "react-icons/fa";
 
-interface Comment {
+export interface Comment {
   id: string;
   username: string;
   content: string;
   date: string;
   likes: number;
+  likedBy?: string[];
 }
 
 interface MainContent {
@@ -30,7 +32,7 @@ interface CommentListProps {
   onCommentChange: (value: string) => void;
   onCommentSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
-  formatDate: (date: string) => string;
+  formatDate: (date: string | undefined) => string;
 }
 
 const CommentList = ({

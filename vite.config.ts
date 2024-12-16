@@ -8,16 +8,21 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-    },
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@types': path.resolve(__dirname, './src/types')
+    }
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          utils: ['@/utils'],
-        },
-      },
+          vendor: ['react', 'react-dom', 'firebase', 'zustand'],
+          utils: ['./src/utils/index']
+        }
+      }
     },
-  },
+    sourcemap: true
+  }
 });

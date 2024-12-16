@@ -24,6 +24,45 @@ const Advice = () => {
 
   const currentContent = contentsData[currentIndex] || null;
 
+  const formatRelativeDate = (dateStr: string | undefined) => {
+    if (!dateStr) return "";
+    
+    try {
+      const [month, day, year] = dateStr.split('/');
+      // 월과 일이 한 자리 수인 경우를 처리하기 위해 padStart 사용
+      const formattedMonth = month.padStart(2, '0');
+      const formattedDay = day.padStart(2, '0');
+      const date = new Date(`${year}-${formattedMonth}-${formattedDay}`);
+
+      // 유효하지 않은 날짜인 경우 원본 반환
+      if (isNaN(date.getTime())) {
+        return dateStr;
+      }
+
+      const now = new Date();
+      const diffTime = Math.abs(now.getTime() - date.getTime());
+      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const diffMonths = (now.getMonth() + 12 * now.getFullYear()) - (date.getMonth() + 12 * date.getFullYear());
+
+      if (diffHours < 24) {
+        if (diffHours === 0) return "방금 전";
+        return `${diffHours}시간 전`;
+      } else if (diffDays === 1) {
+        return "어제";
+      } else if (diffDays === 2) {
+        return "그저께";
+      } else if (diffMonths < 1) {
+        return `${diffDays}일 전`;
+      } else {
+        return dateStr;
+      }
+    } catch (error) {
+      console.error('Date parsing error:', error);
+      return dateStr;
+    }
+  };
+
   const updateLikeStates = useCallback(async () => {
     if (!currentContent?.id || isLoading) return;
 
@@ -129,8 +168,8 @@ const Advice = () => {
         {/* 메인 컨테이너 */}
         <div className="p-4 space-y-4">
           {/* 상단 배너 */}
-          <div className="bg-white rounded-2xl p-4 border border-[#E5E8EB]">
-            <div className="flex items-center gap-2 mb-3">
+          <div className=" rounded-2xl p-4 border border-[#E5E8EB] bg-[#def9f8] ">
+            <div className="flex items-center gap-2 mb-3 ">
               <div className="w-10 h-10 bg-[#2AC1BC] rounded-full flex items-center justify-center">
                 <RiKakaoTalkFill className="text-white" size={24} />
               </div>
@@ -160,7 +199,7 @@ const Advice = () => {
                 user.displayName && (
                 <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center">
                   <div className="flex items-center gap-1">
-                    <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
+                    <span className="sparkle-effect px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
                       ME
                     </span>
                     <span className="text-xs text-green-600 font-medium">
@@ -199,7 +238,7 @@ const Advice = () => {
                       </div>
                     </div>
                     <span className="text-xs text-[#999999]">
-                      {currentContent.date}
+                      {formatRelativeDate(currentContent.date)}
                     </span>
                   </div>
                 </div>
@@ -238,7 +277,7 @@ const Advice = () => {
                             <span className="text-xs text-[#666666]">{reply.username || '익명'}</span>
                           </div>
                           <span className="text-xs text-[#999999]">
-                            {reply.date}
+                            {formatRelativeDate(reply.date)}
                           </span>
                         </div>
                       </div>

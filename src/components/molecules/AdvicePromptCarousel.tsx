@@ -109,17 +109,17 @@ const AdvicePromptCarousel = ({
         </motion.div>
       </AnimatePresence>
 
-      <div className="absolute -bottom-2 left-0 right-0 flex justify-between items-center px-8 pb-4 z-10">
+      <div className="absolute -bottom-2 left-0 right-0 flex justify-center items-center px-8 pb-4 z-10 gap-5" >
         <button
           onClick={() => paginate(-1)}
-          className="w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
+          className="animate-border-pulse border-2 hover:bg-[#def9f8] active:bg-[#def9f8] transform transition-all duration-300 w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
           aria-label="Previous prompt"
         >
           <IoIosArrowBack size={18} />
         </button>
         <button
           onClick={() => paginate(1)}
-          className="w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
+          className="animate-border-pulse border-2 hover:bg-[#def9f8] active:bg-[#def9f8] transform transition-all duration-300 w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
           aria-label="Next prompt"
         >
           <IoIosArrowForward size={18} />

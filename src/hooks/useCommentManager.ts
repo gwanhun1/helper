@@ -5,6 +5,7 @@ interface UseCommentManager {
   comments: Comment[];
   addComment: (content: string) => Promise<void>;
   deleteComment: (commentId: string) => Promise<void>;
+  refreshData: () => Promise<void>;
   loading: boolean;
   error: Error | null;
 }
@@ -44,10 +45,28 @@ const useCommentManager = (): UseCommentManager => {
     }
   };
 
+  const refreshData = async () => {
+    try {
+      setLoading(true);
+      // Firebase에서 최신 댓글 데이터를 가져옵니다
+      const response = await fetch('/api/comments');
+      if (!response.ok) {
+        throw new Error('Failed to fetch comments');
+      }
+      const data = await response.json();
+      setComments(data);
+      setLoading(false);
+    } catch (err) {
+      setError(err as Error);
+      setLoading(false);
+    }
+  };
+
   return {
     comments,
     addComment,
     deleteComment,
+    refreshData,
     loading,
     error
   };

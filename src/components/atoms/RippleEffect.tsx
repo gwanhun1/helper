@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { RippleEffectProps } from '../../types/meditation';
 import { getMeditationThemeColor } from '../../utils/meditationTheme';
 
 interface RippleState {
@@ -8,7 +7,7 @@ interface RippleState {
   y: number;
 }
 
-const RippleEffect: React.FC<RippleEffectProps> = ({
+const RippleEffect: React.FC<any> = ({
   duration = 850,
   mode,
   theme,

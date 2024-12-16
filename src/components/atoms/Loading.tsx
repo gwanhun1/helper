@@ -1,5 +1,5 @@
 import React from 'react';
-import loadingAnimation from './loading.json' assert { type: 'json' };
+import loadingAnimation from './loading.json';
 import Lottie from 'lottie-react';
 
 interface LoadingProps {

@@ -1,32 +1,29 @@
-import { useEffect, useState } from "react";
-import useWorryData from "../../hooks/useWorryData";
-import MindCard from "./MindCard";
+import React from 'react';
+import { useWorryData } from '../../hooks/useWorryData';
+import MindCard from './MindCard';
 
-const MindTemplate = () => {
-    const { data: forestData } = useWorryData();
-    const [bgColor, setBgColor] = useState("bg-green-300");
+const MindTemplate: React.FC = () => {
+  const { worries, loading, error, deleteWorry } = useWorryData();
 
-    const averageLevel = forestData && forestData.length > 0
-        ? (forestData.reduce((sum, e) => sum + (e?.level ?? 0), 0) / forestData.length).toFixed(2)
-        : null;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    useEffect(() => {
-        if (averageLevel !== null) {
-            const level = parseFloat(averageLevel);
-            if (level < 3) setBgColor("bg-blue-300");
-            else if (level < 6) setBgColor("bg-green-300");
-            else setBgColor("bg-red-300");
-        }
-    }, [averageLevel]);
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
-    return (
-        <div className="w-full h-full">
-            <MindCard 
-                averageLevel={averageLevel}
-                bgColor={bgColor}
-            />
-        </div>
-    );
-}
+  return (
+    <div className="p-4">
+      {worries.map((worry) => (
+        <MindCard
+          key={worry.id}
+          worry={worry}
+          onDelete={deleteWorry}
+        />
+      ))}
+    </div>
+  );
+};
 
 export default MindTemplate;

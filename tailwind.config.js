@@ -115,6 +115,20 @@ module.exports = {
           "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
           "50%": { opacity: "1", transform: "scale(1.05)" },
         },
+        'pulse-soft': {
+          '0%, 100%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.05)' },
+        },
+        'border-pulse': {
+          '0%, 100%': { 
+            borderColor: '#def9f8',
+            transform: 'scale(1)'
+          },
+          '50%': { 
+            borderColor: '#def9f8',
+            transform: 'scale(1.05)'
+          },
+        },
       },
       animation: {
         "ping-slow": "ping 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -133,6 +147,8 @@ module.exports = {
         "wave-slowest": "wave-slowest 4s ease-in-out infinite",
         "float-slow": "float-slow 20s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
+        'border-pulse': 'border-pulse 2s ease-in-out infinite',
       },
       transitionDelay: {
         100: "100ms",

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
@@ -129,6 +129,10 @@ module.exports = {
             transform: 'scale(1.05)'
           },
         },
+        ripple: {
+          '0%': { transform: 'scale(0)', opacity: 0.35 },
+          '100%': { transform: 'scale(4)', opacity: 0 },
+        },
       },
       animation: {
         "ping-slow": "ping 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
@@ -149,6 +153,7 @@ module.exports = {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         'pulse-soft': 'pulse-soft 2s ease-in-out infinite',
         'border-pulse': 'border-pulse 2s ease-in-out infinite',
+        ripple: 'ripple 1s cubic-bezier(0, 0, 0.2, 1)',
       },
       transitionDelay: {
         100: "100ms",

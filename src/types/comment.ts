@@ -11,5 +11,5 @@ export interface MainContent {
   id: string;
   response: string;
   date: string;
-  like: number;
+  like?: number;
 }

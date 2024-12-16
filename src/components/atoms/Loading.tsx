@@ -43,14 +43,47 @@ const Loading: React.FC<LoadingProps> = ({ size = 40, className = '' }) => {
           p: { a: 0, k: [200, 200] },
           a: { a: 0, k: [0, 0] },
           s: { a: 0, k: [100, 100] }
-        }
+        },
+        shapes: [
+          {
+            ty: "el",
+            p: { a: 0, k: [0, 0] },
+            s: { a: 0, k: [80, 80] },
+            d: 1,
+            nm: "Circle Path"
+          },
+          {
+            ty: "st",
+            c: { a: 0, k: [0.2, 0.4, 1, 1] },
+            o: { a: 0, k: 100 },
+            w: { a: 0, k: 20 },
+            lc: 2,
+            lj: 1,
+            nm: "Stroke"
+          },
+          {
+            ty: "tr",
+            p: { a: 0, k: [0, 0] },
+            a: { a: 0, k: [0, 0] },
+            s: { a: 0, k: [100, 100] },
+            r: { a: 0, k: 0 },
+            o: { a: 0, k: 100 },
+            sk: { a: 0, k: 0 },
+            sa: { a: 0, k: 0 }
+          }
+        ]
       }
     ]
   };
 
   return (
     <div style={{ width: size, height: size }} className={className}>
-      <Lottie animationData={defaultAnimation} loop={true} />
+      <Lottie
+        animationData={defaultAnimation}
+        loop={true}
+        autoplay={true}
+        style={{ width: '100%', height: '100%' }}
+      />
     </div>
   );
 };

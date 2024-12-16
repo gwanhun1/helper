@@ -2,8 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Item } from "../../hooks/useContentsData";
-// import useLikeManager from "../../hooks/useLikeManager";
-// import useCommentManager from "../../hooks/useCommentManager";
 
 interface AdvicePromptCarouselProps {
   prompts: Item[];
@@ -21,29 +19,22 @@ const AdvicePromptCarousel = ({
   setCurrentIndex,
 }: AdvicePromptCarouselProps) => {
   const [direction, setDirection] = useState(0);
-  // const { togglePostLike, isPostLiked } = useLikeManager();
-  // const { addComment } = useCommentManager();
 
-  const slideVariants = {
-    enter: {
-      opacity: 0,
-      scale: 0.95,
-    },
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
     center: {
       zIndex: 1,
-      opacity: 1,
-      scale: 1,
+      x: 0,
+      opacity: 1
     },
-    exit: {
+    exit: (direction: number) => ({
       zIndex: 0,
-      opacity: 0,
-      scale: 1.05,
-    },
-  };
-
-  const swipeConfidenceThreshold = 10000;
-  const swipePower = (offset: number, velocity: number) => {
-    return Math.abs(offset) * velocity;
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
   };
 
   const paginate = (newDirection: number) => {
@@ -54,7 +45,7 @@ const AdvicePromptCarousel = ({
       if (nextIndex >= prompts.length) return 0;
       return nextIndex;
     });
-    if (newDirection > 0) {
+    if (newDirection === 1) {
       onNext();
     } else {
       onPrev();
@@ -62,68 +53,47 @@ const AdvicePromptCarousel = ({
   };
 
   return (
-    <div className="relative flex flex-col">
-      <AnimatePresence initial={false} custom={direction} mode="wait">
-        <motion.div
-          key={currentIndex}
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            opacity: { duration: 0.3, ease: "easeInOut" },
-            scale: { duration: 0.3, ease: "easeInOut" },
-            height: { type: "spring", stiffness: 70, damping: 15, mass: 0.3 },
-          }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={1}
-          onDragEnd={(e, { offset, velocity }) => {
-            const swipe = swipePower(offset.x, velocity.x);
-
-            if (swipe < -swipeConfidenceThreshold) {
-              paginate(1);
-            } else if (swipe > swipeConfidenceThreshold) {
-              paginate(-1);
-            }
-          }}
-          className="w-full px-4 mb-12"
-          layout
-        >
+    <div className="relative h-12">
+      <div className="absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
-            layout
-            className="px-4 pt-4 min-h-20 rounded-lg cursor-pointer flex items-center justify-center text-center"
+            key={currentIndex}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.2 }
+            }}
+            className="absolute inset-0 flex items-center justify-center"
           >
-            <motion.span
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{
-                opacity: { duration: 0.2, ease: "easeInOut" },
-              }}
-            >
-              {prompts[currentIndex]?.content}
-            </motion.span>
+            <div className="text-sm text-[#333333] px-12">
+              {prompts[currentIndex]?.content || "Loading..."}
+            </div>
           </motion.div>
-        </motion.div>
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
 
-      <div className="absolute -bottom-2 left-0 right-0 flex justify-center items-center px-8 pb-4 z-10 gap-5" >
-        <button
-          onClick={() => paginate(-1)}
-          className="animate-border-pulse border-2 hover:bg-[#def9f8] active:bg-[#def9f8] transform transition-all duration-300 w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
-          aria-label="Previous prompt"
-        >
-          <IoIosArrowBack size={18} />
-        </button>
-        <button
-          onClick={() => paginate(1)}
-          className="animate-border-pulse border-2 hover:bg-[#def9f8] active:bg-[#def9f8] transform transition-all duration-300 w-9 h-9 flex items-center justify-center bg-white rounded-full shadow-md"
-          aria-label="Next prompt"
-        >
-          <IoIosArrowForward size={18} />
-        </button>
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="relative w-full h-full">
+          <button
+            onClick={() => paginate(-1)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors z-10 pointer-events-auto"
+            aria-label="Previous prompt"
+          >
+            <IoIosArrowBack size={20} />
+          </button>
+
+          <button
+            onClick={() => paginate(1)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-gray-100 rounded-full transition-colors z-10 pointer-events-auto"
+            aria-label="Next prompt"
+          >
+            <IoIosArrowForward size={20} />
+          </button>
+        </div>
       </div>
     </div>
   );

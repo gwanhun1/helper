@@ -8,7 +8,7 @@ import { Comment as CommentType, MainContent } from '../../types/comment';
 
 interface CommentListProps {
   mainContent: MainContent;
-  comments: CommentType[];
+  comments: any;
   isPostLiked: boolean;
   commentLikeStates: { [key: string]: boolean };
   onTogglePostLike: () => void;

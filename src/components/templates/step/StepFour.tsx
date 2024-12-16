@@ -59,8 +59,8 @@ const StepFour = () => {
     if (user?.uid && user?.count) {
       try {
         await fetchResponse();
-        increase();
-        updateUserCount({ uId: user.uid, count: user.count });
+        // increase();
+        // updateUserCount({ uId: user.uid, count: user.count });
       } catch {
         alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
       } finally {

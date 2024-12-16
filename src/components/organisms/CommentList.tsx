@@ -78,15 +78,21 @@ const CommentList = ({
 
       {/* 댓글 목록 */}
       <div className="space-y-3 mt-4 ml-10">
-        {comments.map((comment) => comment.id && (
+        {comments
+          .filter((comment): comment is Comment => Boolean(comment && comment.id))
+          // 중복된 ID 제거
+          .filter((comment, index, self) => 
+            index === self.findIndex((c) => c.id === comment.id)
+          )
+          .map((comment) => (
           <Comment
             key={comment.id}
             username={comment.username || '익명'}
             content={comment.content}
             date={comment.date || ''}
             likes={comment.likes || 0}
-            isLiked={commentLikeStates[comment.id]}
-            onToggleLike={() => comment.id ? onToggleCommentLike(comment.id) : undefined}
+            isLiked={comment.id ? commentLikeStates[comment.id] : false}
+            onToggleLike={() => comment.id && onToggleCommentLike(comment.id)}
             disabled={isLoading}
             formatDate={formatDate}
           />

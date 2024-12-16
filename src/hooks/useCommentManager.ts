@@ -34,7 +34,7 @@ const useCommentManager = () => {
       const currentComments = Array.isArray(post.comments) ? post.comments : [];
 
       const newComment: Comment = {
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `${postId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${user.uid?.slice(0, 8)}`,
         content: content.trim(),
         username: user.displayName,
         date: new Date().toLocaleDateString("en-US", {

@@ -26,7 +26,7 @@ const CommentInput = ({
       />
       <button 
         onClick={onSubmit}
-        disabled={disabled}
+        // disabled={disabled}
         className="text-[#2AC1BC] hover:text-[#2AC1BC]/80 p-2"
       >
         <FiSend size={20} />

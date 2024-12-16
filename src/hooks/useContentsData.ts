@@ -10,6 +10,9 @@ export interface Comment {
   date?: string;
   likes?: number;
   likedBy?: string[];
+  timestamp?: number;
+  userId?: string;
+  itemId?: string;
 }
 
 export interface Item {
@@ -18,6 +21,8 @@ export interface Item {
   id: string;
   response: string;
   username: string;
+  timestamp: number;
+  userId: string;
   open?: boolean;
   level?: number;
   comments?: Comment[];

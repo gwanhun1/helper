@@ -1,16 +1,17 @@
-import Lottie from "lottie-react";
-import loading from "./loading.json";
+import React from 'react';
+import loadingAnimation from './loading.json' assert { type: 'json' };
+import Lottie from 'lottie-react';
 
 interface LoadingProps {
+  size?: number;
   className?: string;
 }
 
-const Loading = ({ className }: LoadingProps) => {
+const Loading: React.FC<LoadingProps> = ({ size = 40, className = '' }) => {
   return (
-    <Lottie
-      animationData={loading}
-      className={className}
-    />
+    <div style={{ width: size, height: size }} className={className}>
+      <Lottie animationData={loadingAnimation} loop={true} />
+    </div>
   );
 };
 

@@ -54,12 +54,17 @@ const useWorryManager = (): UseWorryManager => {
         likedBy: []
       };
 
-      await set(newWorryRef, worryData);
+      // 동일한 ID로 content 저장
+      await set(newWorryRef, { ...worryData, id: worryId });
       
+      // 사용자의 contentIds 업데이트
       const userRef = ref(db, `users/${user.uid}/contentIds`);
       const snapshot = await get(userRef);
       const currentIds = snapshot.exists() ? snapshot.val() : [];
-      await set(userRef, [...currentIds, worryId]);
+      
+      // 중복 방지를 위해 Set 사용
+      const uniqueIds = new Set([...currentIds, worryId]);
+      await set(userRef, Array.from(uniqueIds));
 
     } catch (e) {
       setError(`걱정을 추가하는 중 오류가 발생했습니다: ${e instanceof Error ? e.message : "알 수 없는 오류"}`);

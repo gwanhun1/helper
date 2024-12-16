@@ -17,10 +17,9 @@ const useUserContents = (): UseUserContents => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const processUserContents = async (contentIds: string[]) => {
+  const processUserContents = async (contentIds: string[]): Promise<Item[]> => {
     const db = getDatabase(app);
     
-    // If no content IDs, return empty array
     if (!contentIds.length) {
       return [];
     }
@@ -34,20 +33,14 @@ const useUserContents = (): UseUserContents => {
 
     const allContents = contentsSnapshot.val();
     
-    // Filter contents by the provided contentIds
-    const userContents = Object.entries(allContents as Record<string, Record<string, any>>)
-      .filter(([id]) => contentIds.includes(id))
-      .map(([id, content]) => ({
-        content: content?.content || "",
-        date: content?.date || "",
-        response: content?.response || "",
-        username: content?.username || "",
-        id,
-        ...content // spread remaining properties after setting required ones
-      }));
-
-    return userContents;
-  };
+    return Object.values(allContents).filter((content): content is Item => 
+      typeof content === 'object' && 
+      content !== null && 
+      'id' in content && 
+      typeof content.id === 'string' &&
+      contentIds.includes(content.id)
+    );
+};
 
   const fetchUserContents = async () => {
     if (!user?.uid) {      

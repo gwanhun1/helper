@@ -31,7 +31,7 @@ const Advice = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const user = useUserStore((state) => state.user);
   const { togglePostLike, toggleCommentLike, isPostLiked, isCommentLiked } = useLikeManager();
-  const { addComment } = useCommentManager();
+  const { addComment, refreshData } = useCommentManager();
   const [newComment, setNewComment] = useState("");
   const [postLikeStates, setPostLikeStates] = useState<{ [key: string]: boolean }>({});
   const [commentLikeStates, setCommentLikeStates] = useState<{ [key: string]: boolean }>({});
@@ -130,18 +130,23 @@ const Advice = () => {
     setCurrentIndex((prev) => (prev + 1) % contentsData.length);
   }, [contentsData.length]);
 
-  const handleAddComment = useCallback(async (e: React.FormEvent) => {
+  const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user?.uid || !newComment.trim() || !currentContent?.id) return;
     
     try {
-      await addComment(currentContent.id, newComment.trim());
-      setNewComment("");
-      updateLikeStates();
+      await addComment(newComment);
+      setNewComment('');
+      await refreshData();
     } catch (error) {
-      console.error("Failed to add comment:", error);
+      console.error('Failed to add comment:', error);
     }
-  }, [user?.uid, newComment, currentContent?.id, addComment, updateLikeStates]);
+  };
+
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleAddComment(e);
+  };
 
   const handleTogglePostLike = useCallback(async (postId: string) => {
     if (!postId) return;
@@ -243,7 +248,7 @@ const Advice = () => {
               onToggleCommentLike={(commentId) => handleToggleCommentLike(currentContent.id, commentId)}
               newComment={newComment}
               onCommentChange={setNewComment}
-              onCommentSubmit={handleAddComment}
+              onCommentSubmit={handleCommentSubmit}
               isLoading={isLoading}
               formatDate={formatRelativeDate}
             />

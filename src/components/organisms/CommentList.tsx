@@ -5,18 +5,18 @@ import LikeButton from "../molecules/LikeButton";
 import { FaRobot } from "react-icons/fa";
 
 interface Comment {
-  id?: string;
-  username?: string;
+  id: string;
+  username: string;
   content: string;
-  date?: string;
-  likes?: number;
+  date: string;
+  likes: number;
 }
 
 interface MainContent {
   id: string;
   response: string;
-  date?: string;
-  like?: number;
+  date: string;
+  like: number;
 }
 
 interface CommentListProps {
@@ -28,9 +28,9 @@ interface CommentListProps {
   onToggleCommentLike: (commentId: string) => void;
   newComment: string;
   onCommentChange: (value: string) => void;
-  onCommentSubmit: () => void;
+  onCommentSubmit: (e: React.FormEvent) => void;
   isLoading: boolean;
-  formatDate: (date: string | undefined) => string;
+  formatDate: (date: string) => string;
 }
 
 const CommentList = ({

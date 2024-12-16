@@ -1,6 +1,6 @@
-import { useState } from "react";
-import useWorryStore from "../store/worryStore";
+import { useState } from 'react';
 import useWorryManager from "../hooks/useWorryManager";
+import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 
 interface ChatMessage {
@@ -28,10 +28,10 @@ interface RequestBody {
 
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse, setLevel } = useWorryStore();
-  const { saveWorry } = useWorryManager();
+  const { addWorry } = useWorryManager();
   const user = useUserStore((state) => state.user);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const createSystemPrompt = (who: string, how: string): string => {
     return `You are a ${who}. You must strictly follow these guidelines when responding in Korean:
@@ -98,6 +98,23 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
     return await response.json();
   };
 
+  const generatePrompt = async () => {
+    if (!user?.uid) {
+      setError(new Error('로그인이 필요합니다.'));
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const content = `${who}가 ${how} ${worry}`;
+      await addWorry(content);
+      setLoading(false);
+    } catch (err) {
+      setError(err as Error);
+      setLoading(false);
+    }
+  };
+
   const fetchResponse = async () => {
     setLoading(true);
     setError(null);
@@ -123,7 +140,7 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
           open: false,
           comments: [],
         };
-        await saveWorry(item);
+        await addWorry(item);
       } else {
         throw new Error(data.error?.message || "API 요청 실패");
       }
@@ -140,6 +157,7 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
 
   return {
     fetchResponse,
+    generatePrompt,
     loading,
     error,
   };

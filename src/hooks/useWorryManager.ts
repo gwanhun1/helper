@@ -55,12 +55,14 @@ const useWorryManager = (): UseWorryManager => {
       
       await set(newWorryRef, { ...newWorry, id: worryId });
       
-      const userRef = ref(db, `users/${user.uid}/contentIds`);
-      const snapshot = await get(userRef);
-      const currentIds = snapshot.exists() ? snapshot.val() : [];
-      
-      const uniqueIds = new Set([...currentIds, worryId]);
-      await set(userRef, Array.from(uniqueIds));
+      if (user?.uid) {
+        const userRef = ref(db, `users/${user.uid}/contentIds`);
+        const snapshot = await get(userRef);
+        const currentIds = snapshot.exists() ? snapshot.val() : [];
+        
+        const uniqueIds = new Set([...currentIds, worryId]);
+        await set(userRef, Array.from(uniqueIds));
+      }
 
       setWorries(prev => [...prev, { ...newWorry, id: worryId }]);
       setLoading(false);
@@ -71,6 +73,11 @@ const useWorryManager = (): UseWorryManager => {
   };
 
   const deleteWorry = async (id: string) => {
+    if (!user?.uid) {
+      setError(new Error("로그인이 필요합니다."));
+      return;
+    }
+
     try {
       setLoading(true);
       const worryRef = ref(db, `contents/${id}`);

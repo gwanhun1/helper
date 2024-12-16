@@ -1,7 +1,6 @@
 import KakaoLogin from "../molecules/KakaoLogin";
 
 const Auth = () => {
-console.log("Auth");
 
   return (
     <div className="h-full bg-green">

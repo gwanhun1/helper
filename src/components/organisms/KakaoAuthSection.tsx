@@ -4,7 +4,6 @@ import Loading from "../atoms/Loading";
 
 const KakaoAuthSection = () => {
   const { handleKakaoLogin } = useKakaoAuth();
-console.log("KakaoAuthSection");
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");

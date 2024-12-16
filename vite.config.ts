@@ -12,17 +12,27 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@types': path.resolve(__dirname, './src/types')
-    }
+    },
+    dedupe: ['react', 'react-dom'],
+    mainFields: ['module', 'main', 'browser']
+  },
+  optimizeDeps: {
+    include: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage']
   },
   build: {
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom', 'firebase', 'zustand'],
+          vendor: ['react', 'react-dom', 'zustand'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
           utils: ['./src/utils/index']
         }
       }
     },
-    sourcemap: true
+    sourcemap: true,
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    }
   }
 });

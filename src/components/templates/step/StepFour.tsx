@@ -55,12 +55,19 @@ const StepFour = () => {
 
   const handleAsk = async () => {
     const interval = startLoading(setLoadingState);
-
+  
+    if (!worry || worry.length === 0) {
+      alert("고민을 적어주세요!");
+      resetLoadingState(setLoadingState); 
+      clearInterval(interval); 
+      return; }
+  
     if (user?.uid && user?.count) {
       try {
-        await fetchResponse();
+        alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
+        // await fetchResponse();
         // increase();
-        // updateUserCount({ uId: user.uid, count: user.count });
+        // updateUserCount({ uId: user.uid, count: user.count - 1 });
       } catch {
         alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
       } finally {
@@ -68,9 +75,7 @@ const StepFour = () => {
         clearInterval(interval);
       }
     } else {
-      alert(
-        "오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!"
-      );
+      alert("오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!");
       navigate("/credit");
     }
   };

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from "framer-motion";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
@@ -8,23 +8,7 @@ import useUserStore from "../../store/userStore";
 import useContentsData from "../../hooks/useContentsData";
 import useLikeManager from "../../hooks/useLikeManager";
 import useCommentManager from "../../hooks/useCommentManager";
-
-interface Comment {
-  id?: string;
-  username?: string;
-  content: string;
-  date?: string;
-  likes?: number;
-}
-
-interface Content {
-  id: string;
-  prompt: string;
-  response: string;
-  date?: string;
-  like?: number;
-  comments?: Comment[];
-}
+import { Comment, MainContent } from '../../types/comment';
 
 const Advice = () => {
   const { data: contentsData = [] } = useContentsData();
@@ -193,12 +177,18 @@ const Advice = () => {
               date: currentContent.date || new Date().toISOString(),
               like: currentContent.like || 0
             }}
-            comments={(currentContent.comments || [])
-              .filter((comment): comment is Comment => comment.content !== undefined)}
-            isPostLiked={postLikeStates[currentContent.id]}
+            comments={currentContent.comments?.map(comment => ({
+              id: comment.id || String(Date.now()),
+              username: comment.username || 'Anonymous',
+              content: comment.content,
+              date: comment.date || new Date().toISOString(),
+              likes: comment.likes || 0,
+              likedBy: comment.likedBy || []
+            } as Comment)) || []}
+            isPostLiked={postLikeStates[currentContent.id] || false}
             commentLikeStates={commentLikeStates}
             onTogglePostLike={() => handleTogglePostLike(currentContent.id)}
-            onToggleCommentLike={(commentId) => handleToggleCommentLike(currentContent.id, commentId)}
+            onToggleCommentLike={handleToggleCommentLike}
             newComment={newComment}
             onCommentChange={setNewComment}
             onCommentSubmit={handleCommentSubmit}

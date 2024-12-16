@@ -26,6 +26,17 @@ interface RequestBody {
   max_tokens: number;
 }
 
+interface WorryContent {
+  content: string;
+  date: string;
+  id: string;
+  response: string;
+  level: number;
+  username: string;
+  open: boolean;
+  comments: never[];
+}
+
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse, setLevel } = useWorryStore();
   const { addWorry } = useWorryManager();
@@ -110,50 +121,31 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
       await addWorry(content);
       setLoading(false);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err);
-      } else {
-        setError(new Error('알 수 없는 오류가 발생했습니다.'));
-      }
+      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
+      setLoading(false);
+    }
+  };
+
+  const handleResponse = async (response: string) => {
+    try {
+      setLoading(true);
+      setResponse(response);
+      const content = `${who}가 ${how} ${worry}`;
+      await addWorry(content);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
+    } finally {
       setLoading(false);
     }
   };
 
   const fetchResponse = async () => {
-    setLoading(true);
-    setError(null);
-
     try {
-      const systemPrompt = createSystemPrompt(who, how);
-      const requestBody = createRequestBody(systemPrompt, worry);
-      const data: OpenAIResponse = await makeAPIRequest(requestBody);
-
-      if (data.choices?.[0]?.message?.content) {
-        const responseContent = data.choices[0].message.content;
-        const [responseMessage, riskLevel] = responseContent.split("level:");
-        setResponse(responseMessage.trim());
-        setLevel(parseInt(riskLevel.trim()));
-
-        const item = {
-          content: worry,
-          date: new Date().toISOString(),
-          id: "unique-id",
-          response: responseMessage.trim(),
-          level: parseInt(riskLevel.trim()),
-          username: user?.displayName ?? "Unknown User",
-          open: false,
-          comments: [],
-        };
-        await addWorry(item);
-      } else {
-        throw new Error(data.error?.message || "API 요청 실패");
-      }
+      setLoading(true);
+      const content = `${who}가 ${how} ${worry}`;
+      await addWorry(content);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("알 수 없는 오류가 발생했습니다.");
-      }
+      setError(err instanceof Error ? err : new Error('알 수 없는 오류가 발생했습니다.'));
     } finally {
       setLoading(false);
     }
@@ -162,6 +154,7 @@ Remember to maintain the authentic voice of a ${who} while expressing emotions $
   return {
     fetchResponse,
     generatePrompt,
+    handleResponse,
     loading,
     error,
   };

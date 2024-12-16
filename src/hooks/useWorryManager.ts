@@ -6,10 +6,21 @@ import { Item } from "./useContentsData";
 
 export interface UseWorryManager {
   worries: Item[];
-  addWorry: (content: string) => Promise<void>;
+  addWorry: (content: string | WorryContent) => Promise<void>;
   deleteWorry: (id: string) => Promise<void>;
   loading: boolean;
   error: Error | null;
+}
+
+interface WorryContent {
+  content: string;
+  date: string;
+  id: string;
+  response: string;
+  level: number;
+  username: string;
+  open: boolean;
+  comments: never[];
 }
 
 const useWorryManager = (): UseWorryManager => {
@@ -19,19 +30,32 @@ const useWorryManager = (): UseWorryManager => {
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
 
-  const addWorry = async (content: string) => {
+  const addWorry = async (content: string | WorryContent) => {
     if (!user?.uid) {
       setError(new Error("로그인이 필요합니다."));
       return;
     }
 
-    if (!content.trim()) {
+    if (typeof content === 'string' && !content.trim()) {
       setError(new Error("내용을 입력해주세요."));
       return;
     }
 
     try {
       setLoading(true);
+      const worryData = typeof content === 'string'
+        ? {
+            content,
+            date: new Date().toISOString(),
+            id: String(Date.now()),
+            response: '',
+            level: 0,
+            username: user.displayName || "Anonymous",
+            open: true,
+            comments: []
+          }
+        : content;
+
       const newWorryRef = push(ref(db, "contents"));
       const worryId = newWorryRef.key;
       
@@ -39,32 +63,17 @@ const useWorryManager = (): UseWorryManager => {
         throw new Error("컨텐츠 ID를 생성할 수 없습니다.");
       }
 
-      const newWorry: Omit<Item, 'id'> = {
-        content,
-        date: new Date().toISOString(),
-        response: '',
-        username: user.displayName || "Anonymous",
-        timestamp: Date.now(),
-        userId: user.uid,
-        level: 1,
-        open: true,
-        comments: [],
-        like: 0,
-        likedBy: []
-      };
-      
-      await set(newWorryRef, { ...newWorry, id: worryId });
+      await set(newWorryRef, { ...worryData, id: worryId });
       
       if (user?.uid) {
         const userRef = ref(db, `users/${user.uid}/contentIds`);
         const snapshot = await get(userRef);
-        const currentIds = snapshot.exists() ? snapshot.val() : [];
-        
-        const uniqueIds = new Set([...currentIds, worryId]);
+        const existingIds = snapshot.val() || [];
+        const uniqueIds = new Set([...existingIds, worryId]);
         await set(userRef, Array.from(uniqueIds));
       }
 
-      setWorries(prev => [...prev, { ...newWorry, id: worryId }]);
+      setWorries(prev => [...prev, { ...worryData, id: worryId } as any]);
       setLoading(false);
     } catch (err) {
       setError(err as Error);

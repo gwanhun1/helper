@@ -240,6 +240,7 @@ const Advice = () => {
                         : "bg-gray"
                     }  text-white px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto`}
                     disabled={!currentContent.open}
+                    onClick={()=>alert("잠시후 다시 시도해주세요.")}
                   >
                     공유하기
                   </button>

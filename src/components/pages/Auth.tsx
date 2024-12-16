@@ -1,6 +1,8 @@
 import KakaoLogin from "../molecules/KakaoLogin";
 
 const Auth = () => {
+console.log("Auth");
+
   return (
     <div className="h-full bg-green">
       <div className="flex items-center justify-center h-5/6">

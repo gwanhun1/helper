@@ -2,6 +2,7 @@ import { useState } from "react";
 import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
+import OpenAI from 'openai';
 
 // OpenAI API 요청에 필요한 타입 정의
 interface RequestBody {
@@ -59,28 +60,21 @@ const useCounselingPrompt = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // API 요청 공통 함수
-  const makeAPIRequest = async (requestBody: RequestBody) => {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_AI_KEY}`,
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      throw new Error("OpenAI API 요청 실패");
-    }
-
-    return await response.json();
-  };
+  const openai = new OpenAI({
+    dangerouslyAllowBrowser: true,
+    apiKey: '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',  // 여기에 OpenAI API 키를 넣으세요.
+  });
 
   // OpenAI 응답 가져오기
   const fetchResponse = async () => {
     if (!user?.uid) {
       setError(new Error("로그인이 필요합니다."));
+      return;
+    }
+
+    // 이미 요청 중이라면 추가 요청을 보내지 않음
+    if (loading) {
+      setError(new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요."));
       return;
     }
 
@@ -96,13 +90,23 @@ const useCounselingPrompt = () => {
         max_tokens: 350,
       };
 
-      const response = await makeAPIRequest(requestBody);
+      // 새로운 OpenAI API 호출 방식
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: createSystemPrompt(who, how) },
+          { role: 'user', content: worry },
+        ],
+      });
 
-      // OpenAI 응답 처리
-      const messageContent = response.choices?.[0]?.message?.content || "";
-      setResponse(messageContent); 
-      await addWorry(messageContent); 
+      // 응답 처리
+      const messageContent = completion.choices?.[0]?.message?.content || "";
+      setResponse(messageContent);
+      await addWorry(messageContent);
+      console.log(messageContent);
+
     } catch (err) {
+      console.error(err);
       setError(err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다."));
     } finally {
       setLoading(false);
@@ -110,9 +114,9 @@ const useCounselingPrompt = () => {
   };
 
   return {
-    fetchResponse, 
-    loading, 
-    error, 
+    fetchResponse,
+    loading,
+    error,
   };
 };
 

@@ -5,7 +5,7 @@ import Title from "../../atoms/Title";
 
 const StepFive = () => {
   const { reset, decrease } = useStepStore();
-  const { worry, reset: resetWorry } = useWorryStore();
+  const { response, reset: resetWorry } = useWorryStore();
 
   const handleReset = () => {
     resetWorry();
@@ -20,8 +20,8 @@ const StepFive = () => {
 
       <div className="flex flex-col">
 
-        <div className="bg-gray-300" style={{ height: "60vh" }}>
-          {worry}
+        <div className="bg-gray-100" style={{ height: "60vh" }}>
+          {response}
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-3 " style={{ height: "5vh" }}>

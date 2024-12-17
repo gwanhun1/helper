@@ -3,6 +3,7 @@ import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
 import OpenAI from 'openai';
+import useStepStore from "../store/stepStore";
 
 // OpenAI API 요청에 필요한 타입 정의
 interface RequestBody {
@@ -40,10 +41,6 @@ const createSystemPrompt = (who: string, how: string): string => {
 - Provide practical advice from your character's perspective
 - End with encouraging or supportive closing remarks
 
-5. Depression Index Evaluation:
-- Evaluate the depression index or risk level based on the user's message
-- Provide a risk level from 1 to 5, with 5 being the highest risk
-
 Example Persona Patterns:
 - 동네 아저씨: "에이고~ 그런 걸로 걱정하고 있었어? 내가 살아온 경험을 좀 들려줄게..." (경험에 기반한 조언)
 - 엄마: "우리 아가~ 그런 일이 있었구나 ㅠㅠ 엄마가 잘 들어줄게. 엄마 말 좀 들어볼래?" (따뜻한 이해와 보살핌)
@@ -59,6 +56,7 @@ const useCounselingPrompt = () => {
   const user = useUserStore((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const { increase } = useStepStore();
 
   const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
@@ -104,6 +102,7 @@ const useCounselingPrompt = () => {
       setResponse(messageContent);
       await addWorry(messageContent);
       console.log(messageContent);
+      increase();
 
     } catch (err) {
       console.error(err);

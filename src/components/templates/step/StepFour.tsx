@@ -40,7 +40,7 @@ const startLoading = (
 };
 
 const StepFour = () => {
-  const { increase, decrease } = useStepStore();
+  const { decrease } = useStepStore();
   const { setWorry, worry, how, who } = useWorryStore();
   const { fetchResponse } = useCounselingPrompt();
   const [loadingState, setLoadingState] = useState<LoadingState>({

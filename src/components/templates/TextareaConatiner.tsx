@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import Textarea from "../molecules/Textarea";
 import { AiFillHeart } from "react-icons/ai";
 import Button from "../atoms/Button";
 
 type TextareaContainerProps = {
-  setSelect: React.Dispatch<React.SetStateAction<number>>;
+  setSelect: Dispatch<SetStateAction<number>>;
 };
 
 const TextareaContainer = ({ setSelect }: TextareaContainerProps) => {
@@ -12,7 +12,7 @@ const TextareaContainer = ({ setSelect }: TextareaContainerProps) => {
   const [isRed, setIsRed] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value);
   };
 

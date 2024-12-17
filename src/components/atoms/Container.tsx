@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface ContainerProps {
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
 }
 
-const Container: React.FC<ContainerProps> = ({
+const Container= ({
     children,
     className = '',
-}) => {
+}:ContainerProps) => {
     return (
         <div className={`h-full overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${className}`}>
             {children}

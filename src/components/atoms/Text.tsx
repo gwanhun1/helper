@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface TextProps {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'h1' | 'h2' | 'h3' | 'body' | 'caption' | 'small';
   color?: 'primary' | 'secondary' | 'tertiary' | 'green';
   weight?: 'normal' | 'medium' | 'bold' | 'extrabold';
@@ -10,7 +10,7 @@ interface TextProps {
   onClick?: () => void;
 }
 
-const Text: React.FC<TextProps> = ({
+const Text = ({
   children,
   variant = 'body',
   color = 'primary',
@@ -18,7 +18,7 @@ const Text: React.FC<TextProps> = ({
   size,
   className = '',
   onClick,
-}) => {
+}:TextProps) => {
   const variantClasses = {
     h1: 'text-[22px] leading-tight',
     h2: 'text-[18px] leading-tight',

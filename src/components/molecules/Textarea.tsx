@@ -1,16 +1,16 @@
-import React, { useMemo } from "react";
+import React, { ChangeEvent, useMemo } from "react";
 
 interface TextareaProps {
   id: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
   maxRows?: number; // 최대 줄 수
   minHeight?: string; // 최소 높이
   className?: string;
 }
 
-const Textarea: React.FC<TextareaProps> = ({
+const Textarea = ({
   id,
   value,
   onChange,
@@ -18,12 +18,13 @@ const Textarea: React.FC<TextareaProps> = ({
   maxRows = 13,
   minHeight = "120px",
   className = "",
-}) => {
+}:TextareaProps) => {
   const calculateRows = (text: string) => {
     const lineCount = text.split("\n").length;
     return Math.min(lineCount, maxRows);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const rows = useMemo(() => calculateRows(value), [value]);
 
   return (

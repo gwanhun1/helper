@@ -12,14 +12,14 @@ interface UserProfileProps {
   className?: string;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({
+const UserProfile = ({
   photoURL,
   email,
   displayName,
   grade = "일반회원",
   onLogout,
   className = "",
-}) => {
+}:UserProfileProps) => {
   return (
     <div className={`p-5 ${className}`}>
       <div className="flex items-start gap-4">

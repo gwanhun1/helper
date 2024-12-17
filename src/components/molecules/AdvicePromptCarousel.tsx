@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Item } from "../../hooks/useContentsData";
@@ -8,7 +8,7 @@ interface AdvicePromptCarouselProps {
   onPrev: () => void;
   onNext: () => void;
   currentIndex: number;
-  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentIndex: Dispatch<SetStateAction<number>>;
 }
 
 const AdvicePromptCarousel = ({

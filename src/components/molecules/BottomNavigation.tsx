@@ -16,7 +16,7 @@ import {
 } from "react-icons/ai";
 import TabButton from "../atoms/TabButton";
 
-const BottomNavigation: React.FC = () => {
+const BottomNavigation= () => {
   const location = useLocation();
 
   return (

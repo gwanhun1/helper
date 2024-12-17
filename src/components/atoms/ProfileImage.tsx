@@ -8,12 +8,12 @@ interface ProfileImageProps {
   className?: string;
 }
 
-const ProfileImage: React.FC<ProfileImageProps> = ({
+const ProfileImage = ({
   src,
   size = 50,
   alt = "Profile Image",
   className = "",
-}) => {
+}:ProfileImageProps) => {
   return (
     <div
       className={className}

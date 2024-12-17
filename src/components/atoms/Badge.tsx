@@ -6,11 +6,11 @@ interface BadgeProps {
   variant?: 'default' | 'outline' | 'filled';
 }
 
-const Badge: React.FC<BadgeProps> = ({
+const Badge= ({
   children,
   className = '',
   variant = 'default'
-}) => {
+}:BadgeProps) => {
   const baseStyle = 'inline-flex items-center justify-center px-2 py-1 rounded-full text-[11px] font-bold';
   
   const variantStyles = {

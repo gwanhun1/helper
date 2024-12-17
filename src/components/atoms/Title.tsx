@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 interface TitleProps {
-    children: React.ReactNode;
+    children: ReactNode;
     color?: string;
     className?: string;
 }
 
-const Title: React.FC<TitleProps> = ({
+const Title = ({
     children,
     color = 'text-green-600',
     className = '',
-}) => {
+}:TitleProps) => {
     return (
         <h1
             className={`font-semibold tracking-tightest ${color} md:text-base ${className}`}

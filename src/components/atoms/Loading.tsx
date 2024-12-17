@@ -6,7 +6,7 @@ interface LoadingProps {
   className?: string;
 }
 
-const Loading: React.FC<LoadingProps> = ({ size = 40, className = '' }) => {
+const Loading = ({ size = 40, className = '' }:LoadingProps) => {
   const defaultAnimation = {
     v: "5.5.7",
     fr: 60,

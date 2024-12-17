@@ -1,22 +1,22 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { FiSend } from "react-icons/fi";
 
 interface CommentInputProps {
   value: string;
   onChange: (value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: FormEvent) => void;
   disabled?: boolean;
   placeholder?: string;
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({
+const CommentInput = ({
   value,
   onChange,
   onSubmit,
   disabled = false,
   placeholder = "따뜻한 답변을 남겨주세요"
-}) => {
-  const handleSubmit = (e: React.FormEvent) => {
+}:CommentInputProps) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit(e);
   };

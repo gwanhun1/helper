@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, CSSProperties } from "react";
 import useUserContents from "../../hooks/useUserContents";
 import { Item } from "../../hooks/useContentsData";
 import useSelectTreeStore from "../../store/selectTreeStore";
@@ -177,7 +177,7 @@ const Forest = () => {
                          }s infinite ease-in-out`,
                 animationDelay: `${position.waveDelay}s`,
                 "--sway-amount": `${position.swayAmount}deg`,
-              } as React.CSSProperties}
+              } as CSSProperties}
             >
               <img
                 src={selectedTreeIndex === index ? selectTreeImage : treeImage}

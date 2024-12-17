@@ -3,6 +3,7 @@ import { getDatabase, ref, push, set, get, remove } from "firebase/database";
 import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 import { Item } from "./useContentsData";
+import useWorryStore from '../store/worryStore';
 
 export interface UseWorryManager {
   worries: Item[];
@@ -29,6 +30,8 @@ const useWorryManager = (): UseWorryManager => {
   const [error, setError] = useState<Error | null>(null);
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
+const {worry} =useWorryStore()
+
 
   const addWorry = async (content: string | WorryContent) => {
     if (!user?.uid) {
@@ -45,10 +48,10 @@ const useWorryManager = (): UseWorryManager => {
       setLoading(true);
       const worryData = typeof content === 'string'
         ? {
-            content,
+            content:worry,
             date: new Date().toISOString(),
             id: String(Date.now()),
-            response: '',
+            response: content,
             level: Math.floor(Math.random() * 5) + 1,  
             username: user.displayName || "Anonymous",
             open: true,

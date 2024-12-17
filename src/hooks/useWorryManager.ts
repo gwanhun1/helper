@@ -49,7 +49,7 @@ const useWorryManager = (): UseWorryManager => {
             date: new Date().toISOString(),
             id: String(Date.now()),
             response: '',
-            level: 0,
+            level: Math.floor(Math.random() * 5) + 1,  
             username: user.displayName || "Anonymous",
             open: true,
             comments: []

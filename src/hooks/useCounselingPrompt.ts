@@ -85,7 +85,7 @@ const useCounselingPrompt = () => {
           { role: "user", content: worry },
         ],
         temperature: 0.7,
-        max_tokens: 350,
+        max_tokens: 150,
       };
 
       // 새로운 OpenAI API 호출 방식

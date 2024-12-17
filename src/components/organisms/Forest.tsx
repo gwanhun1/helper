@@ -67,7 +67,6 @@ const Forest = () => {
       let attempts = 0;
       let newX, newY;
 
-      // 적절한 위치를 찾을 때까지 반복
       do {
         newX = Math.random() * (90 - horizontalMargin) + 5;
         newY = Math.random() * (100 - verticalMargin * 2) + verticalMargin;
@@ -119,13 +118,11 @@ const Forest = () => {
     return (
       <div className="flex flex-col items-center justify-center h-full bg-gradient-to-b from-emerald-50/50 to-white">
         <div className="relative w-full max-w-sm mx-auto px-6 py-8">
-          {/* 배경 장식 */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-4 left-4 w-20 h-20 rounded-full bg-emerald-400 blur-2xl"></div>
             <div className="absolute bottom-4 right-4 w-24 h-24 rounded-full bg-emerald-300 blur-2xl"></div>
           </div>
 
-          {/* 메인 컨텐츠 */}
           <div className="relative space-y-6 text-center">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-50 shadow-inner">
               <span className="text-3xl">🌱</span>

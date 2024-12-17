@@ -1,10 +1,8 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useWorryPrompt } from "../../hooks/useWorryPrompt";
-// import useWorryManager from "../../hooks/useWorryManager";
 
 const WorryPromptCarousel = () => {
   const { currentPrompts, isTransitioning, handleSelection } = useWorryPrompt();
-  // const { saveWorry } = useWorryManager();
 
   return (
     <motion.div
@@ -12,19 +10,16 @@ const WorryPromptCarousel = () => {
       animate={{ opacity: 1, y: 0 }}
       className="mt-4 mx-4 bg-white rounded-[28px] p-7 shadow-[0_2px_16px_rgb(0,0,0,0.04)] relative overflow-hidden"
     >
-      {/* Background Decorations */}
       <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-green-50 to-transparent rounded-full -mr-16 -mt-16 opacity-40" />
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-blue-50 to-transparent rounded-full -ml-10 -mb-10 opacity-30" />
 
       <div className="relative">
-        {/* Label */}
         <div className="inline-flex items-center space-x-2 bg-[#40C057] rounded-full px-3 py-1 mb-4">
           <span className="text-white text-sm font-extrabold tracking-tight">
             AI 멘토
           </span>
         </div>
 
-        {/* Main Content */}
         <div className="space-y-2">
           <h2 className="font-ibm text-[26px] font-black text-gray-900 tracking-tight leading-8">
             고민이 있으신가요?
@@ -34,7 +29,6 @@ const WorryPromptCarousel = () => {
           </p>
         </div>
 
-        {/* Carousel Content */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`${currentPrompts.who.who}-${currentPrompts.how.how}`}
@@ -73,7 +67,6 @@ const WorryPromptCarousel = () => {
           바로 시작하기
         </motion.button>
 
-        {/* Decorations */}
         <Decorations />
       </div>
     </motion.div>

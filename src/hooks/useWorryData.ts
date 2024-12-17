@@ -24,7 +24,7 @@ export const useWorryData = (): UseWorryManager => {
     try {
       const newWorry: WorryData = {
         ...worry,
-        id: Date.now().toString(), // 임시 ID 생성
+        id: Date.now().toString(),
       };
       setWorries(prev => [...prev, newWorry]);
     } catch (err) {
@@ -44,7 +44,6 @@ export const useWorryData = (): UseWorryManager => {
     const fetchWorries = async () => {
       try {
         setLoading(true);
-        // 여기에 실제 데이터 fetching 로직 구현
         setLoading(false);
       } catch (err) {
         setError(err as Error);

@@ -2,9 +2,9 @@ import React from "react";
 import { AiOutlineUser } from "react-icons/ai";
 
 interface ProfileImageProps {
-  src?: string; // 이미지 URL (선택적)
-  size?: number; // 이미지 크기 (픽셀 단위)
-  alt?: string; // 대체 텍스트
+  src?: string; 
+  size?: number; 
+  alt?: string; 
   className?: string;
 }
 

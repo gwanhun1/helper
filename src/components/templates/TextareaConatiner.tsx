@@ -36,7 +36,6 @@ const TextareaContainer = ({ setSelect }: TextareaContainerProps) => {
         />
       </div>
 
-      {/* Textarea에 애니메이션 추가 */}
       <Textarea
         id="input"
         value={value}

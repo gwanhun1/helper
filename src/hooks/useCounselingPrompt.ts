@@ -100,8 +100,8 @@ const useCounselingPrompt = () => {
 
       // OpenAI 응답 처리
       const messageContent = response.choices?.[0]?.message?.content || "";
-      setResponse(messageContent); // 상태 업데이트
-      await addWorry(messageContent); // 걱정 저장
+      setResponse(messageContent); 
+      await addWorry(messageContent); 
     } catch (err) {
       setError(err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다."));
     } finally {
@@ -110,9 +110,9 @@ const useCounselingPrompt = () => {
   };
 
   return {
-    fetchResponse, // 응답 가져오기 함수
-    loading, // 로딩 상태
-    error, // 에러 상태
+    fetchResponse, 
+    loading, 
+    error, 
   };
 };
 

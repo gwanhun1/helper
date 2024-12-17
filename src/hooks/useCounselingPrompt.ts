@@ -60,7 +60,7 @@ const useCounselingPrompt = () => {
 
   const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
-    apiKey: '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',  // 여기에 OpenAI API 키를 넣으세요.
+    apiKey: import.meta.env.VITE_AI_KEY
   });
 
   // OpenAI 응답 가져오기

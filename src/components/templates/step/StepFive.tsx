@@ -20,17 +20,17 @@ const StepFive = () => {
 
       <div className="flex flex-col">
 
-        <div className="bg-gray-100" style={{ height: "60vh" }}>
+        <div className="bg-gray-100 px-3" >
           {response}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-3 " style={{ height: "5vh" }}>
+        <div className="grid grid-cols-2 gap-4 mt-5 " style={{ height: "5vh" }}>
           <Button
             text="Back"
             bgColor="bg-green"
             onPress={() => decrease()}
           />
-          <Button text="retry" bgColor="bg-gray-400" onPress={handleReset} />
+          <Button className="sparkle-effect" text="retry" bgColor="bg-gray-400" onPress={handleReset} />
         </div>
       </div>
     </div>

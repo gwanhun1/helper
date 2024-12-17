@@ -3,7 +3,7 @@ import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
 import Text from "../../atoms/Text";
 import Textarea from "../../molecules/Textarea";
-import { useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import Loading from "./Loading";
 import useWorryStore from "../../../store/worryStore";
 import useCounselingPrompt from "../../../hooks/useCounselingPrompt";
@@ -20,13 +20,13 @@ interface LoadingState {
 }
 
 const resetLoadingState = (
-  setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>
+  setLoadingState: Dispatch<SetStateAction<LoadingState>>
 ) => {
   setLoadingState({ isLoading: false, step: 0 });
 };
 
 const startLoading = (
-  setLoadingState: React.Dispatch<React.SetStateAction<LoadingState>>
+  setLoadingState: Dispatch<SetStateAction<LoadingState>>
 ) => {
   setLoadingState({ isLoading: true, step: 0 });
   return setInterval(() => {
@@ -49,7 +49,7 @@ const StepFour = () => {
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setWorry(e.target.value);
   };
 

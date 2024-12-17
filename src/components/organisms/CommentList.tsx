@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { motion } from "framer-motion";
 import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
@@ -15,12 +15,12 @@ interface CommentListProps {
   onToggleCommentLike: (postId: string, commentId: string) => Promise<void>;
   newComment: string;
   onCommentChange: (value: string) => void;
-  onCommentSubmit: (e: React.FormEvent) => void;
+  onCommentSubmit: (e: FormEvent) => void;
   isLoading: boolean;
   formatDate: (date: string | undefined) => string;
 }
 
-const CommentList: React.FC<CommentListProps> = ({
+const CommentList = ({
   mainContent,
   comments,
   isPostLiked,

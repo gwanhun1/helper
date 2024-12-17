@@ -9,13 +9,13 @@ interface IconRowProps {
   className?: string;
 }
 
-const IconRow: React.FC<IconRowProps> = ({
+const IconRow = ({
   icon,
   mainText,
   subText,
   onClick,
   className = "",
-}) => {
+}:IconRowProps) => {
   return (
     <div
       className={`flex items-center gap-4 py-2 ${

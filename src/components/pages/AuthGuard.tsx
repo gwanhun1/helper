@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 
-const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthGuard = ({ children }: { children: React.ReactNode }) => {
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user) {
       navigate("/auth");
     }

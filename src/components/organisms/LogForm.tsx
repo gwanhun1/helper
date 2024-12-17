@@ -11,7 +11,7 @@ interface LogFormProps {
   onDelete?: () => void;
 }
 
-const LogForm: React.FC<LogFormProps> = ({ data, onDelete }) => {
+const LogForm = ({ data, onDelete }:LogFormProps) => {
   const { content: selectContent, response: selectResponse } =
     useSelectTreeStore();
   const elementRef = useRef<HTMLDivElement>(null);

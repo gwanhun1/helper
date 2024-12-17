@@ -9,12 +9,12 @@ interface TitleSectionProps {
     className?: string;
 }
 
-const TitleSection: React.FC<TitleSectionProps> = ({
+const TitleSection = ({
     title,
     subtitle,
     titleColor,
     className = '',
-}) => {
+}:TitleSectionProps) => {
     return (
         <div className={`px-2 pb-2 mb-4 border-b border-gray-300 ${className}`}>
             <Title color={titleColor}>{title}</Title>

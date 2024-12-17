@@ -1,9 +1,10 @@
+import { useState } from "react";
 import useStepStore from "../../../store/stepStore";
 import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
 import Text from "../../atoms/Text";
 import Textarea from "../../molecules/Textarea";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Loading from "./Loading";
 import useWorryStore from "../../../store/worryStore";
 import useCounselingPrompt from "../../../hooks/useCounselingPrompt";
@@ -11,6 +12,7 @@ import useUpdateUserCount from "../../../hooks/useUpdateUserCount";
 import useUserStore from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 
+// 로딩 관련 상수들
 const LOADING_INTERVAL = 1000;
 const MAX_LOADING_STEPS = 5;
 
@@ -48,37 +50,46 @@ const StepFour = () => {
   const { updateUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
+  const [isRequesting, setIsRequesting] = useState(false); // 요청 중 상태 추가
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setWorry(e.target.value);
   };
 
   const handleAsk = async () => {
+    if (isRequesting) {
+      console.log("이미 요청 중입니다.");  // 디버깅을 위한 로그
+      return; // 요청 중이면 함수 종료
+    }
+  
+    setIsRequesting(true); // 요청 시작 상태로 설정
     const interval = startLoading(setLoadingState);
   
     if (!worry || worry.length === 0) {
       alert("고민을 적어주세요!");
-      resetLoadingState(setLoadingState); 
-      clearInterval(interval); 
-      return; }
+      resetLoadingState(setLoadingState);
+      clearInterval(interval);
+      setIsRequesting(false); // 요청 종료 상태로 설정
+      return;
+    }
   
     if (user?.uid && user?.count) {
       try {
-        alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
-        // await fetchResponse();
-        // increase();
-        // updateUserCount({ uId: user.uid, count: user.count - 1 });
+        await fetchResponse();
       } catch {
         alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
       } finally {
         resetLoadingState(setLoadingState);
         clearInterval(interval);
+        setIsRequesting(false); // 요청 종료 상태로 설정
       }
     } else {
       alert("오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!");
       navigate("/credit");
+      setIsRequesting(false); // 요청 종료 상태로 설정
     }
   };
+  
 
   const renderContent = () => {
     if (loadingState.isLoading) {

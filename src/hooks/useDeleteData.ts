@@ -37,7 +37,6 @@ const useDeleteData = (): UseDeleteData => {
         await remove(contentsRef);
       }
 
-      // Update user's contentIds
       const userRef = ref(db, `users/${user.uid}/contentIds`);
       const userSnapshot = await get(userRef);
       

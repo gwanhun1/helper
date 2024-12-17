@@ -188,7 +188,6 @@ const Advice = () => {
       <div 
         className="bg-[#F2F4F6] pb-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
-        {/* 상단 헤더 */}
         <div 
           className="bg-white px-5 py-3 border-b relative"
         >
@@ -198,13 +197,11 @@ const Advice = () => {
           </div>
         </div>
 
-        {/* 메인 컨테이너 */}
         <div className="p-4 space-y-4">
           <div>
             <AdviceBanner />
           </div>
 
-          {/* 고민 폼 */}
           <div
             className="bg-white rounded-2xl border border-[#E5E8EB]"
           >
@@ -248,7 +245,6 @@ const Advice = () => {
               )}
           </div>
 
-          {/* 고민 목록 */}
           <div 
             className="space-y-4 mt-6"
           >

@@ -59,7 +59,7 @@ const useContentsData = (): UseContentsData => {
         setData([]);
       }
     } catch (e) {
-      console.error("Error fetching data:", e); // 디버깅용
+      console.error("Error fetching data:", e);
       setError(
         `데이터를 가져오는 중 오류가 발생했습니다: ${
           e instanceof Error ? e.message : "알 수 없는 오류"
@@ -98,7 +98,7 @@ const useContentsData = (): UseContentsData => {
         }
       },
       (error) => {
-        console.error("Real-time data error:", error); // 디버깅용
+        console.error("Real-time data error:", error);
         if (mounted) {
           setError(`데이터를 가져오는 중 오류가 발생했습니다: ${error.message}`);
           setLoading(false);

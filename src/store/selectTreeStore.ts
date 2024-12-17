@@ -1,13 +1,13 @@
 import { create } from "zustand";
 
 interface SelectTreeStore {
-  content: string; // 콘텐츠 내용
-  date: string; // 날짜
-  response: string; // 응답
-  username: string; // 사용자 이름
+  content: string; 
+  date: string; 
+  response: string;
+  username: string; 
   level?: number;
   select: (data: Partial<SelectTreeStore>) => void;
-  reset: () => void; // 상태 초기화
+  reset: () => void; 
 }
 
 const initialState = {

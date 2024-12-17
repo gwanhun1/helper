@@ -39,7 +39,6 @@ const CommentList = ({
       animate={{ opacity: 1, y: 0 }}
       className="bg-white p-4 rounded-2xl border border-[#E5E8EB]"
     >
-      {/* 메인 컨텐츠 */}
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
@@ -63,7 +62,6 @@ const CommentList = ({
         />
       </div>
 
-      {/* 댓글 목록 */}
       <div className="space-y-3 mt-4 ml-10">
         {comments
           .filter((comment): comment is CommentType => Boolean(comment && comment.id))
@@ -86,7 +84,6 @@ const CommentList = ({
         ))}
       </div>
 
-      {/* 댓글 입력 */}
       <div className="mt-4">
         <CommentInput
           value={newComment}

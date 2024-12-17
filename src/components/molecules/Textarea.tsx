@@ -5,8 +5,8 @@ interface TextareaProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
-  maxRows?: number; // 최대 줄 수
-  minHeight?: string; // 최소 높이
+  maxRows?: number; 
+  minHeight?: string;
   className?: string;
 }
 

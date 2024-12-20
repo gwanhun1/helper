@@ -47,7 +47,7 @@ const StepFour = () => {
     isLoading: false,
     step: 0,
   });
-  const { updateUserCount } = useUpdateUserCount();
+  const { decreaseUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
   const [isRequesting, setIsRequesting] = useState(false); // 요청 중 상태 추가
@@ -76,7 +76,7 @@ const StepFour = () => {
     if (user?.uid && user?.count) {
       try {
         await fetchResponse();
-        await updateUserCount({ uId: user.uid, count: user.count });
+        await decreaseUserCount({ uId: user.uid, count: user.count });
       } catch {
         alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
       } finally {

@@ -8,6 +8,9 @@ const useUpdateUserCount = () => {
     if (!user || typeof user.count !== "number" || !user.uId) {
       throw new Error("Invalid user object");
     }
+    console.log(user.count);
+    console.log(user.uId);
+
     const dataUserRef = ref(db, `users/${user.uId}`);
     await update(dataUserRef, { count: user.count - 1 });
   };

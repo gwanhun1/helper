@@ -36,8 +36,6 @@ export const useKakaoAuth = () => {
   const updateUserDatabase = async (user: User) => {
     const db = getDatabase(app);
     const dataRef = ref(db, `users/${user.uid}`);
-    console.log(dataRef);
-
     await update(dataRef, {
       uid: user.uid,
       email: user.email,

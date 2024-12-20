@@ -58,13 +58,13 @@ const StepFour = () => {
 
   const handleAsk = async () => {
     if (isRequesting) {
-      console.log("이미 요청 중입니다.");  // 디버깅을 위한 로그
+      console.log("이미 요청 중입니다."); // 디버깅을 위한 로그
       return; // 요청 중이면 함수 종료
     }
-  
+
     setIsRequesting(true); // 요청 시작 상태로 설정
     const interval = startLoading(setLoadingState);
-  
+
     if (!worry || worry.length === 0) {
       alert("고민을 적어주세요!");
       resetLoadingState(setLoadingState);
@@ -72,10 +72,11 @@ const StepFour = () => {
       setIsRequesting(false); // 요청 종료 상태로 설정
       return;
     }
-  
+
     if (user?.uid && user?.count) {
       try {
         await fetchResponse();
+        await updateUserCount({ uId: user.uid, count: user.count });
       } catch {
         alert("gpt가 아파요 \n 잠시후에 다시 해주세요!!");
       } finally {
@@ -84,12 +85,13 @@ const StepFour = () => {
         setIsRequesting(false); // 요청 종료 상태로 설정
       }
     } else {
-      alert("오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!");
+      alert(
+        "오늘 하루 힘드셨나요?? 🥲 \n 추가 답변을 원하면 결제가 필요해요!!"
+      );
       navigate("/credit");
       setIsRequesting(false); // 요청 종료 상태로 설정
     }
   };
-  
 
   const renderContent = () => {
     if (loadingState.isLoading) {

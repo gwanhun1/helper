@@ -4,6 +4,7 @@ import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
 import OpenAI from "openai";
 import useStepStore from "../store/stepStore";
+import Filter from "badwords-ko";
 
 // OpenAI API 요청에 필요한 타입 정의
 interface RequestBody {
@@ -57,6 +58,7 @@ const useCounselingPrompt = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const { increase } = useStepStore();
+  const filter = new Filter();
 
   const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
@@ -101,7 +103,7 @@ const useCounselingPrompt = () => {
 
       // 응답 처리
       const messageContent = completion.choices?.[0]?.message?.content || "";
-      setResponse(messageContent);
+      setResponse(filter.clean(messageContent));
       await addWorry(messageContent);
       increase();
     } catch (err) {

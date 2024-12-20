@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { getDatabase, ref, push, set, get, remove } from "firebase/database";
 import { app } from "../firebaseConfig";
 import useUserStore from "../store/userStore";
 import { Item } from "./useContentsData";
-import useWorryStore from '../store/worryStore';
+import useWorryStore from "../store/worryStore";
 
 export interface UseWorryManager {
   worries: Item[];
   addWorry: (content: string | WorryContent) => Promise<void>;
-  deleteWorry: (id: string) => Promise<void>;
   loading: boolean;
   error: Error | null;
 }
@@ -30,8 +29,7 @@ const useWorryManager = (): UseWorryManager => {
   const [error, setError] = useState<Error | null>(null);
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
-const {worry} =useWorryStore()
-
+  const { worry } = useWorryStore();
 
   const addWorry = async (content: string | WorryContent) => {
     if (!user?.uid) {
@@ -39,35 +37,36 @@ const {worry} =useWorryStore()
       return;
     }
 
-    if (typeof content === 'string' && !content.trim()) {
+    if (typeof content === "string" && !content.trim()) {
       setError(new Error("내용을 입력해주세요."));
       return;
     }
 
     try {
       setLoading(true);
-      const worryData = typeof content === 'string'
-        ? {
-            content:worry,
-            date: new Date().toISOString(),
-            id: String(Date.now()),
-            response: content,
-            level: Math.floor(Math.random() * 5) + 1,  
-            username: user.displayName || "Anonymous",
-            open: true,
-            comments: []
-          }
-        : content;
+      const worryData =
+        typeof content === "string"
+          ? {
+              content: worry,
+              date: new Date().toISOString(),
+              id: String(Date.now()),
+              response: content,
+              level: Math.floor(Math.random() * 5) + 1,
+              username: user.displayName || "Anonymous",
+              open: true,
+              comments: [],
+            }
+          : content;
 
       const newWorryRef = push(ref(db, "contents"));
       const worryId = newWorryRef.key;
-      
+
       if (!worryId) {
         throw new Error("컨텐츠 ID를 생성할 수 없습니다.");
       }
 
       await set(newWorryRef, { ...worryData, id: worryId });
-      
+
       if (user?.uid) {
         const userRef = ref(db, `users/${user.uid}/contentIds`);
         const snapshot = await get(userRef);
@@ -76,33 +75,7 @@ const {worry} =useWorryStore()
         await set(userRef, Array.from(uniqueIds));
       }
 
-      setWorries(prev => [...prev, { ...worryData, id: worryId } as any]);
-      setLoading(false);
-    } catch (err) {
-      setError(err as Error);
-      setLoading(false);
-    }
-  };
-
-  const deleteWorry = async (id: string) => {
-    if (!user?.uid) {
-      setError(new Error("로그인이 필요합니다."));
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const worryRef = ref(db, `contents/${id}`);
-      await remove(worryRef);
-
-      const userRef = ref(db, `users/${user.uid}/contentIds`);
-      const snapshot = await get(userRef);
-      const currentIds = snapshot.exists() ? snapshot.val() : [];
-      
-      const uniqueIds = new Set([...currentIds].filter((itemId) => itemId !== id));
-      await set(userRef, Array.from(uniqueIds));
-
-      setWorries(prev => prev.filter(worry => worry.id !== id));
+      setWorries((prev) => [...prev, { ...worryData, id: worryId } as any]);
       setLoading(false);
     } catch (err) {
       setError(err as Error);
@@ -113,9 +86,8 @@ const {worry} =useWorryStore()
   return {
     worries,
     addWorry,
-    deleteWorry,
     loading,
-    error
+    error,
   };
 };
 

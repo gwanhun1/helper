@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import Home from "../components/pages/Home";
-import Chatbot from "../components/pages/Chatbot";
 import User from "../components/pages/User";
 import Worry from "../components/pages/Worry";
 import Credit from "../components/pages/Credit";
@@ -43,10 +42,6 @@ const router = createBrowserRouter([
       {
         path: "/auth",
         element: <Auth />,
-      },
-      {
-        path: "/test",
-        element: <Chatbot />,
       },
       {
         path: "/advice",

@@ -2,7 +2,7 @@ import { useState } from "react";
 import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
-import OpenAI from 'openai';
+import OpenAI from "openai";
 import useStepStore from "../store/stepStore";
 
 // OpenAI API 요청에 필요한 타입 정의
@@ -60,7 +60,7 @@ const useCounselingPrompt = () => {
 
   const openai = new OpenAI({
     dangerouslyAllowBrowser: true,
-    apiKey: import.meta.env.VITE_AI_KEY
+    apiKey: import.meta.env.VITE_AI_KEY,
   });
 
   // OpenAI 응답 가져오기
@@ -72,7 +72,9 @@ const useCounselingPrompt = () => {
 
     // 이미 요청 중이라면 추가 요청을 보내지 않음
     if (loading) {
-      setError(new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요."));
+      setError(
+        new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요.")
+      );
       return;
     }
 
@@ -90,10 +92,10 @@ const useCounselingPrompt = () => {
 
       // 새로운 OpenAI API 호출 방식
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: "gpt-3.5-turbo",
         messages: [
-          { role: 'system', content: createSystemPrompt(who, how) },
-          { role: 'user', content: worry },
+          { role: "system", content: createSystemPrompt(who, how) },
+          { role: "user", content: worry },
         ],
       });
 
@@ -101,12 +103,14 @@ const useCounselingPrompt = () => {
       const messageContent = completion.choices?.[0]?.message?.content || "";
       setResponse(messageContent);
       await addWorry(messageContent);
-      console.log(messageContent);
       increase();
-
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다."));
+      setError(
+        err instanceof Error
+          ? err
+          : new Error("알 수 없는 오류가 발생했습니다.")
+      );
     } finally {
       setLoading(false);
     }

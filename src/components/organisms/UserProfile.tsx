@@ -19,7 +19,7 @@ const UserProfile = ({
   grade = "일반회원",
   onLogout,
   className = "",
-}:UserProfileProps) => {
+}: UserProfileProps) => {
   return (
     <div className={`p-5 ${className}`}>
       <div className="flex items-start gap-4">

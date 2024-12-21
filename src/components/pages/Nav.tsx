@@ -43,7 +43,7 @@ const Nav = () => {
             </p>
             <div className="relative group z-20">
               <div className="p-2 bg-green-200 backdrop-blur-sm rounded-full">
-                <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors" />
+                <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors cursor-pointer" />
               </div>
               <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <div className="bg-white rounded-[14px] shadow-[0_2px_16px_rgb(0,0,0,0.08)] p-4 relative animate-fadeIn hover:shadow-[0_4px_20px_rgb(0,0,0,0.12)] transition-shadow duration-300">

@@ -10,10 +10,15 @@ ChartJS.register(ChartDataLabels);
 
 interface EmotionChartProps {
   averageLevel: number | string;
-  chartData: Array<{ date: string; level?: number }>;loading:boolean;
+  chartData: Array<{ date: string; level?: number }>;
+  loading: boolean;
 }
 
-const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) => {
+const EmotionChart = ({
+  averageLevel,
+  loading,
+  chartData,
+}: EmotionChartProps) => {
   const getEmotionStyle = (level: number | string) => {
     const numLevel = typeof level === "string" ? parseFloat(level) : level;
 
@@ -52,7 +57,6 @@ const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) =>
         subMessageColor: "text-rose-400",
         chartColor: "rgb(244, 63, 94)",
         chartBgColor: "rgba(244, 63, 94, 0.2)",
-        
       };
     }
   };
@@ -65,13 +69,13 @@ const EmotionChart = ({ averageLevel,loading, chartData }: EmotionChartProps) =>
     return "😔";
   };
 
-if(loading){
-  return (
-    <div className="bg-gradient-to-br from-[#F0F7EA] to-white flex flex-col items-center justify-center px-4 py-2 space-y-4 h-40">
-      <Loading className="h-32" />
-    </div>)
-}
-
+  if (loading) {
+    return (
+      <div className="bg-gradient-to-br from-[#F0F7EA] to-white flex flex-col items-center justify-center px-4 py-2 space-y-4 h-52">
+        <Loading />
+      </div>
+    );
+  }
 
   if (!chartData || chartData.length === 0) {
     return (
@@ -89,7 +93,8 @@ if(loading){
               아직 기록이 없어요
             </h3>
             <p className="font-ibm text-[12px] text-[#666666] leading-relaxed">
-              첫 번째 이야기를 들려주시면<br />
+              첫 번째 이야기를 들려주시면
+              <br />
               멋진 그래프를 그려드릴게요 ✨
             </p>
           </div>
@@ -108,7 +113,9 @@ if(loading){
         <div className={`font-ibm font-medium ${style.messageColor}`}>
           {style.message} |
         </div>
-        <p className={`font-ibm font-bold ${style.messageColor} ml-2`}>{averageLevel}</p>
+        <p className={`font-ibm font-bold ${style.messageColor} ml-2`}>
+          {averageLevel}
+        </p>
       </div>
       <div className={` text-sm font-medium ${style.subMessageColor}`}>
         {style.subMessage}

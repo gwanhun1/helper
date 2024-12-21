@@ -32,7 +32,7 @@ ChartJS.register(
 );
 
 const Home = () => {
-  const { userContents: forestData,loading } = useUserContents();
+  const { userContents: forestData, loading } = useUserContents();
 
   useEffect(() => {
     if (forestData && forestData.length > 0) {
@@ -50,7 +50,6 @@ const Home = () => {
             </div>,
             { icon: "✨", duration: 5000 }
           );
-          
         } else if (level >= 3) {
           toast(
             <div className="flex flex-col gap-1">
@@ -120,7 +119,11 @@ const Home = () => {
     <PageLayout requireAuth>
       <div className="flex flex-col space-y-4  pb-4">
         <WorryPromptCarousel />
-        <EmotionChart averageLevel={getAverageLevel()} loading={loading} chartData={chartData} />
+        <EmotionChart
+          averageLevel={getAverageLevel()}
+          loading={loading}
+          chartData={chartData}
+        />
 
         <div className="grid grid-cols-2 gap-4 px-4 mt-2">
           <StatCard

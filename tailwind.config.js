@@ -161,5 +161,15 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase }) {
+      addBase({
+        '@font-face': {
+          fontFamily: 'IBM Plex Sans KR',
+          src: 'url(https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;700&display=swap)',
+          fontDisplay: 'swap',  // font-display: swap 설정
+        },
+      });
+    },
+  ],
 };

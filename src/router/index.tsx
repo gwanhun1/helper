@@ -3,14 +3,16 @@ import App from "../App";
 import KakaoAuthSection from "../components/organisms/KakaoAuthSection";
 import AuthGuard from "../components/pages/AuthGuard";
 import Error from "../components/pages/Error";
+import { lazy, Suspense } from "react";
 import ErrorBoundary from "../hooks/useErrorBoundary";
 import Loading from "../components/atoms/Loading";
-import HomePage from "../components/pages/Home";
-import UserPage from "../components/pages/User";
-import WorryPage from "../components/pages/Worry";
-import CreditPage from "../components/pages/Credit";
-import AuthPage from "../components/pages/Auth";
-import AdvicePage from "../components/pages/Advice";
+
+const HomePage = lazy(() => import("../components/pages/Home"));
+const UserPage = lazy(() => import("../components/pages/User"));
+const WorryPage = lazy(() => import("../components/pages/Worry"));
+const CreditPage = lazy(() => import("../components/pages/Credit"));
+const AuthPage = lazy(() => import("../components/pages/Auth"));
+const AdvicePage = lazy(() => import("../components/pages/Advice"));
 
 const LoadingSection = () => {
   return (
@@ -28,47 +30,63 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: (
-          <ErrorBoundary>
-            <HomePage />
-          </ErrorBoundary>
+          <Suspense fallback={<LoadingSection />}>
+            <ErrorBoundary>
+              <HomePage />
+            </ErrorBoundary>
+          </Suspense>
         ),
       },
       {
         path: "/user",
         element: (
-          <AuthGuard>
-            <ErrorBoundary>
-              <UserPage />
-            </ErrorBoundary>
-          </AuthGuard>
+          <Suspense fallback={<LoadingSection />}>
+            <AuthGuard>
+              <ErrorBoundary>
+                <UserPage />
+              </ErrorBoundary>
+            </AuthGuard>
+          </Suspense>
         ),
       },
       {
         path: "/worry",
         element: (
-          <AuthGuard>
-            <ErrorBoundary>
-              <WorryPage />
-            </ErrorBoundary>
-          </AuthGuard>
+          <Suspense fallback={<LoadingSection />}>
+            <AuthGuard>
+              <ErrorBoundary>
+                <WorryPage />
+              </ErrorBoundary>
+            </AuthGuard>
+          </Suspense>
         ),
       },
       {
         path: "/credit",
-        element: <CreditPage />,
+        element: (
+          <Suspense fallback={<LoadingSection />}>
+            <CreditPage />
+          </Suspense>
+        ),
       },
       {
         path: "/auth",
-        element: <AuthPage />,
+        element: (
+          <Suspense fallback={<LoadingSection />}>
+            <AuthPage />
+          </Suspense>
+        ),
       },
       {
         path: "/advice",
         element: (
-          <AuthGuard>
-            <ErrorBoundary>
-              <AdvicePage />
-            </ErrorBoundary>
-          </AuthGuard>
+          <Suspense fallback={<LoadingSection />}>
+            <AuthGuard>
+              <ErrorBoundary>
+                <AdvicePage />
+              </ErrorBoundary>
+            </AuthGuard>
+          </Suspense>
         ),
       },
       {

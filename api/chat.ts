@@ -8,13 +8,13 @@ export const config = {
   runtime: "edge",
 };
 
-export default async function handler(request: Request) {
-  if (request.method !== "POST") {
+export default async function handler(req: Request) {
+  if (req.method !== "POST") {
     return new Response("Method not allowed", { status: 405 });
   }
 
   try {
-    const { who, how, worry } = await request.json();
+    const { who, how, worry } = await req.json();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -32,7 +32,12 @@ export default async function handler(request: Request) {
         message: completion.choices[0].message.content,
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
         status: 200,
       }
     );
@@ -41,7 +46,10 @@ export default async function handler(request: Request) {
     return new Response(
       JSON.stringify({ error: "Internal server error" }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
         status: 500,
       }
     );

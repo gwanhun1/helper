@@ -2,7 +2,7 @@
   "buildCommand": "vite build",
   "functions": {
     "api/*.ts": {
-      "runtime": "edge"
+      "runtime": "@vercel/edge@1.1.0"
     }
   },
   "rewrites": [

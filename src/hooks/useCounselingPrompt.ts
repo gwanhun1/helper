@@ -2,7 +2,6 @@ import { useState } from "react";
 import useWorryStore from "../store/worryStore";
 import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
-import OpenAI from "openai";
 import useStepStore from "../store/stepStore";
 import Filter from "badwords-ko";
 
@@ -60,49 +59,38 @@ const useCounselingPrompt = () => {
   const { increase } = useStepStore();
   const filter = new Filter();
 
-  const openai = new OpenAI({
-    dangerouslyAllowBrowser: true,
-    apiKey: import.meta.env.VITE_AI_KEY,
-  });
-
-  // OpenAI 응답 가져오기
   const fetchResponse = async () => {
     if (!user?.uid) {
       setError(new Error("로그인이 필요합니다."));
       return;
     }
 
-    // 이미 요청 중이라면 추가 요청을 보내지 않음
     if (loading) {
-      setError(
-        new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요.")
-      );
+      setError(new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요."));
       return;
     }
 
     try {
       setLoading(true);
-      const requestBody: RequestBody = {
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: createSystemPrompt(who, how) },
-          { role: "user", content: worry },
-        ],
-        temperature: 0.7,
-        max_tokens: 150,
-      };
 
-      // 새로운 OpenAI API 호출 방식
-      const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: createSystemPrompt(who, how) },
-          { role: "user", content: worry },
-        ],
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          who,
+          how,
+          worry,
+        }),
       });
 
-      // 응답 처리
-      const messageContent = completion.choices?.[0]?.message?.content || "";
+      if (!response.ok) {
+        throw new Error('API 요청에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      const messageContent = data.message || "";
       setResponse(filter.clean(messageContent));
       await addWorry(messageContent);
       increase();

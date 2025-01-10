@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "lib": ["ES2022", "DOM"],
+    "types": ["@types/node"],
+    "skipLibCheck": true,
+    "composite": true,
+    "declaration": true
+  },
+  "include": ["api/**/*"]
+}

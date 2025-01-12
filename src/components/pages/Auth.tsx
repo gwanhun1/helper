@@ -8,7 +8,7 @@ const Auth = () => {
         <div className="text-5xl font-bold text-white helper-text absolute top-1/2 transform -translate-y-1/2">
           MindLift
         </div>
-        <div className="absolute bottom-1">
+        <div className="absolute bottom-1 w-5/6 ">
           <NewsContents />
         </div>
       </div>

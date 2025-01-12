@@ -31,15 +31,15 @@ const Nav = () => {
               className="opacity-60 text-xl font-extrabold text-green helper-text cursor-pointer select-none"
               onClick={() => navigate("/")}
             >
-              Help
+              Mind
               <span
                 className={`inline-block ${
                   isAnimating ? "animate-sequence" : ""
                 }`}
               >
-                e
+                L
               </span>
-              r
+              ift
             </p>
             <div className="relative group z-20">
               <div className="p-2 bg-green-200 backdrop-blur-sm rounded-full">

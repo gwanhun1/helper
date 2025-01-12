@@ -10,7 +10,7 @@ function KakaoLogin() {
   return (
     <a
       href={KAKAO_AUTH_URL}
-      className="flex items-center justify-center w-5/6 p-3 bg-yellow-300 rounded-lg"
+      className="flex items-center justify-center w-5/6 p-3 bg-yellow-300 shadow-xl rounded-[15px]"
     >
       <span className="text-sm font-bold text-gray-900">카카오로 시작하기</span>
       <RiKakaoTalkFill size={30} className="ml-2" />

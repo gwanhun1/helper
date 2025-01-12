@@ -12,10 +12,10 @@ interface IconRowProps {
 const IconRow = ({
   icon,
   mainText,
-  subText,
+  subText: children,
   onClick,
   className = "",
-}:IconRowProps) => {
+}: IconRowProps) => {
   return (
     <div
       className={`flex items-center gap-4 py-2 ${
@@ -23,9 +23,7 @@ const IconRow = ({
       } ${className}`}
       onClick={onClick}
     >
-      <div className="flex-shrink-0">
-        {icon}
-      </div>
+      <div className="flex-shrink-0">{icon}</div>
       <div className="flex-grow min-w-0">
         <div className="flex items-center justify-between">
           <div>
@@ -36,14 +34,14 @@ const IconRow = ({
             ) : (
               mainText
             )}
-            {subText && (
+            {children && (
               <div className="mt-0.5">
-                {typeof subText === "string" ? (
+                {typeof children === "string" ? (
                   <Text variant="small" color="secondary">
-                    {subText}
+                    {children}
                   </Text>
                 ) : (
-                  subText
+                  children
                 )}
               </div>
             )}

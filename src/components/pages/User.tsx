@@ -5,8 +5,10 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import UserAccount from "../organisms/UserAccount";
 import UserNotice from "../organisms/UserNotice";
+import RemainingQuotaCard from "../organisms/RemainingQuotaCard";
 import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
+import Text from "../atoms/Text";
 
 const User = () => {
   const user = useUserStore((state) => state.user);
@@ -25,7 +27,7 @@ const User = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="bg-white pb-6">
+      <div className="pb-6 bg-white">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,13 +42,25 @@ const User = () => {
         </motion.div>
       </div>
 
-      <div className="px-4 space-y-4 -mt-4 mb-4">
+      <div className="px-4 -mt-4 mb-4 space-y-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <UserAccount email={user?.email} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          <RemainingQuotaCard
+            count={user?.count}
+            total={7}
+            lastResetDate={user?.lastResetDate}
+          />
         </motion.div>
 
         <motion.div

@@ -7,7 +7,7 @@ import {
   User,
   onAuthStateChanged,
 } from "firebase/auth";
-import { getDatabase, ref, update } from "firebase/database";
+import { getDatabase, ref, update, get } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import { app } from "../firebaseConfig";
@@ -36,12 +36,22 @@ export const useKakaoAuth = () => {
   const updateUserDatabase = async (user: User) => {
     const db = getDatabase(app);
     const dataRef = ref(db, `users/${user.uid}`);
+    const snapshot = await get(dataRef);
+    const existing = snapshot.val();
+    const today = new Date().toISOString().slice(0, 10);
+    const hasValidCount = typeof existing?.count === "number";
+    const lastResetDate = existing?.lastResetDate as string | undefined;
+    const needsReset = lastResetDate !== today;
+    const nextCount = needsReset ? 7 : hasValidCount ? existing.count : 7;
+
     await update(dataRef, {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,
       grade: "",
+      lastResetDate: today,
+      count: nextCount,
     });
   };
 

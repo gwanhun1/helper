@@ -1,7 +1,7 @@
 import news1 from "/news1.png";
 
 const NewsImage = () => {
-  return <img src={news1} alt="news" className="w-68 h-36 bg-red-200" />;
+  return <img src={news1} alt="news" className="h-36 bg-red-200 w-68" />;
 };
 
 export default NewsImage;

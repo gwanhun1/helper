@@ -11,6 +11,7 @@ import { getDatabase, ref, get } from "firebase/database";
 interface ExtendedUser extends FirebaseUser {
   grade?: string;
   count?: number;
+  lastResetDate?: string;
   contentIds?: string[];
 }
 
@@ -45,6 +46,7 @@ onAuthStateChanged(auth, async (user) => {
       ...user,
       grade: userData?.grade || "A",
       count: userData?.count || 0,
+      lastResetDate: userData?.lastResetDate || "",
       contentIds: userData?.contentIds || [],
     });
   } else {

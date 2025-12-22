@@ -13,6 +13,7 @@ const WorryPage = lazy(() => import("../components/pages/Worry"));
 const CreditPage = lazy(() => import("../components/pages/Credit"));
 const AuthPage = lazy(() => import("../components/pages/Auth"));
 const AdvicePage = lazy(() => import("../components/pages/Advice"));
+const InsightPage = lazy(() => import("../components/pages/Insight"));
 
 const LoadingSection = () => {
   return (
@@ -44,6 +45,18 @@ const router = createBrowserRouter([
             <AuthGuard>
               <ErrorBoundary>
                 <UserPage />
+              </ErrorBoundary>
+            </AuthGuard>
+          </Suspense>
+        ),
+      },
+      {
+        path: "/insight",
+        element: (
+          <Suspense fallback={<LoadingSection />}>
+            <AuthGuard>
+              <ErrorBoundary>
+                <InsightPage />
               </ErrorBoundary>
             </AuthGuard>
           </Suspense>

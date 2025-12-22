@@ -53,3 +53,22 @@
     left: 100%;
   }
 }
+
+/* Seasonal Animations */
+@keyframes snow-fall {
+  0% { transform: translateY(-10px) translateX(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(300px) translateX(20px); opacity: 0; }
+}
+
+@keyframes petal-fall {
+  0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(300px) translateX(-40px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes leaf-fall {
+  0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.8; }
+  100% { transform: translateY(300px) translateX(30px) rotate(180deg); opacity: 0; }
+}

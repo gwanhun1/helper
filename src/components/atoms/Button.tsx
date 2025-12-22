@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 type ButtonType = {
   text: string;
   color?: string;
@@ -7,6 +9,7 @@ type ButtonType = {
   outline?: boolean;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
   className?: string;
+  disabled?: boolean;
 };
 
 const Button = ({
@@ -18,62 +21,38 @@ const Button = ({
   outline,
   size = "md",
   className,
+  disabled
 }: ButtonType) => {
   const sizeClasses = {
-    xs: "px-1.5 py-0.5 text-xs",
-    sm: "px-2 py-1 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
-    xl: "px-8 py-4 text-xl",
-    "2xl": "px-10 py-5 text-2xl",
-    "3xl": "px-12 py-6 text-3xl",
+    xs: "px-2 py-1 text-[10px]",
+    sm: "px-3 py-1.5 text-xs",
+    md: "px-5 py-2.5 text-sm",
+    lg: "px-7 py-3.5 text-base",
+    xl: "px-9 py-4 text-lg",
+    "2xl": "px-11 py-5 text-xl",
+    "3xl": "px-13 py-6 text-2xl",
   };
 
   return (
-    <button
+    <motion.button
       onClick={onPress}
-      className={`flex items-center justify-center rounded-lg shadow-lg 
-            ${bgColor || "bg-green-500"} 
-            ${color || "text-white"} 
-            ${outline ? "border border-gray-300" : ""} 
+      whileHover={disabled ? {} : { scale: 1.02, translateY: -1 }}
+      whileTap={disabled ? {} : { scale: 0.98 }}
+      disabled={disabled}
+      className={`flex items-center justify-center rounded-2xl transition-all duration-300
+            ${bgColor || (outline ? "bg-white/20" : "bg-green")} 
+            ${color || (outline ? "text-gray-500" : "text-white")} 
+            ${outline ? "border border-white/40 backdrop-blur-md shadow-sm" : "shadow-md shadow-green/10"} 
             ${sizeClasses[size]} 
-            hover:bg-opacity-80 active:bg-opacity-60 focus:outline-none 
-            transition-all duration-300
+            ${disabled ? "opacity-50 cursor-not-allowed grayscale" : "hover:brightness-105"}
             ${className || ""}`}
       style={{
         fontSize: fontSize || undefined,
-        minWidth:
-          size === "xs"
-            ? "40px"
-            : size === "sm"
-            ? "50px"
-            : size === "md"
-            ? "60px"
-            : size === "lg"
-            ? "70px"
-            : size === "xl"
-            ? "80px"
-            : size === "2xl"
-            ? "90px"
-            : "100px",
-        maxWidth:
-          size === "xs"
-            ? "200px"
-            : size === "sm"
-            ? "250px"
-            : size === "md"
-            ? "300px"
-            : size === "lg"
-            ? "350px"
-            : size === "xl"
-            ? "400px"
-            : size === "2xl"
-            ? "450px"
-            : "500px",
+        fontWeight: 600
       }}
     >
-      <span className="truncate">{text}</span>
-    </button>
+      <span className="truncate relative z-10">{text}</span>
+    </motion.button>
   );
 };
 

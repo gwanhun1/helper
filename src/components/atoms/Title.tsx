@@ -8,15 +8,12 @@ interface TitleProps {
 
 const Title = ({
     children,
-    color = 'text-green-600',
+    color = 'text-slate-800',
     className = '',
 }:TitleProps) => {
     return (
         <h1
-            className={`font-semibold tracking-tightest ${color} md:text-base ${className}`}
-            style={{
-                fontStretch: 'ultra-condensed',
-            }}
+            className={`font-bold tracking-tight ${color} text-[20px] sm:text-[22px] leading-snug ${className}`}
         >
             {children}
         </h1>

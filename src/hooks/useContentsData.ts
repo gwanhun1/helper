@@ -28,6 +28,8 @@ export interface Item {
   comments?: Comment[];
   like?: number;
   likedBy?: string[];
+  who?: string;
+  how?: string;
 }
 
 interface UseContentsData {

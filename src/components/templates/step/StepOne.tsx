@@ -1,4 +1,5 @@
 import useStepStore from "../../../store/stepStore";
+import useUIStore from "../../../store/uiStore";
 import Text from "../../atoms/Text";
 import Title from "../../atoms/Title";
 import Forest from "../../organisms/Forest";
@@ -7,47 +8,57 @@ import { motion } from "framer-motion";
 
 const StepOne = () => {
   const { increase } = useStepStore();
+  const { showWeatherEffect, toggleWeatherEffect } = useUIStore();
 
   return (
-    <div className="py-2 h-full  flex flex-col">
-      <div className="flex-grow-[7]  flex flex-col">
-        <div className="px-4 pb-2 border-b border-gray-300">
-          <Title>당신의 이야기를 나무로 심어보세요</Title>
-          <Text className="px-2 mt-1 sm:mt-2 md:mt-3 ml-0 sm:ml-1 md:ml-2 text-[10px] sm:text-xs md:text-sm text-gray-600">
-            고민을 나누면 작은 나무가 자라날 거예요
-          </Text>
-        </div>
-        <div className="flex-1 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-0 pb-2">
+    <div className="h-full flex flex-col bg-transparent overflow-hidden">
+      <div className="flex-grow flex flex-col min-h-0">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="px-6 pt-6 pb-4"
+        >
+          <Title>마음의 숲에 오신 것을 환영해요</Title>
+          <div className="flex items-center justify-between mt-2">
+            <Text variant="caption" color="secondary" className="font-medium">
+              고민을 나누면 예쁜 나무가 자라날 거예요
+            </Text>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={toggleWeatherEffect}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all duration-300 ${
+                showWeatherEffect 
+                ? "bg-indigo-50 text-indigo-500 shadow-sm border border-indigo-100" 
+                : "bg-gray-100 text-gray-400 border border-gray-200"
+              }`}
+            >
+              <span>{showWeatherEffect ? "✨ 비주얼 On" : "✨ 비주얼 Off"}</span>
+            </motion.button>
+          </div>
+        </motion.div>
+
+        <div className="flex-1 relative min-h-0">
           <Forest />
+        </div>
+
+        <div className="h-[200px] overflow-y-auto px-4 pb-4">
           <ForestLog />
         </div>
       </div>
 
       <motion.div
-        className="flex items-center justify-center backdrop-blur-sm z-20 flex-grow-[1] "
+        className="px-6 py-4 bg-transparent mt-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
       >
         <motion.button
-          className="sparkle-effect flex items-center justify-center w-60 p-5 bg-green-600 shadow-lg rounded-xl relative overflow-hidden group mb-2"
+          className="sparkle-effect w-full py-4 bg-green shadow-xl shadow-green/10 rounded-2xl relative overflow-hidden group transition-all active:scale-95"
           onClick={() => increase()}
           whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.3,
-            ease: "easeOut",
-          }}
         >
-          <motion.div
-            className="inset-0 bg-white opacity-0"
-            initial={{ opacity: 0 }}
-            whileTap={{ opacity: 0.2 }}
-          />
-          <span className="text-white truncate relative z-10">
-            새로운 고민 시작하기
+          <span className="text-white font-bold text-base relative z-10 transition-transform group-hover:scale-110 block">
+            나의 고민 심어보기
           </span>
         </motion.button>
       </motion.div>

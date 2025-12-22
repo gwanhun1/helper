@@ -21,6 +21,8 @@ interface WorryContent {
   username: string;
   open: boolean;
   comments: never[];
+  who: string;
+  how: string;
 }
 
 const useWorryManager = (): UseWorryManager => {
@@ -29,7 +31,7 @@ const useWorryManager = (): UseWorryManager => {
   const [error, setError] = useState<Error | null>(null);
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
-  const { worry } = useWorryStore();
+  const { worry, who, how } = useWorryStore();
 
   const addWorry = async (content: string | WorryContent) => {
     if (!user?.uid) {
@@ -55,6 +57,8 @@ const useWorryManager = (): UseWorryManager => {
               username: user.displayName || "Anonymous",
               open: true,
               comments: [],
+              who: who,
+              how: how,
             }
           : content;
 

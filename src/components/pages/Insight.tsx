@@ -17,7 +17,7 @@ import {
   Legend,
   ArcElement
 } from "chart.js";
-import { Radar, Pie } from "react-chartjs-2";
+import { Pie } from "react-chartjs-2";
 
 ChartJS.register(
   RadialLinearScale,
@@ -43,12 +43,10 @@ const Insight = () => {
     );
   }
 
-  // 데이터 분석 로직
   const totalCount = userContents.length;
   const moodLevels = userContents.map(item => item.level || 0);
   const avgMood = totalCount > 0 ? (moodLevels.reduce((a, b) => a + b, 0) / totalCount).toFixed(1) : 0;
 
-  // 감정 분포 (Pie Chart용)
   const moodCounts = {
     good: moodLevels.filter(l => l >= 6).length,
     neutral: moodLevels.filter(l => l >= 3 && l < 6).length,
@@ -61,127 +59,195 @@ const Insight = () => {
       {
         data: [moodCounts.good, moodCounts.neutral, moodCounts.bad],
         backgroundColor: [
-          "rgba(139, 195, 74, 0.7)",
-          "rgba(255, 193, 7, 0.7)",
-          "rgba(244, 67, 54, 0.7)",
+          "rgba(122, 196, 167, 0.8)",
+          "rgba(240, 249, 245, 0.8)",
+          "rgba(255, 107, 107, 0.8)",
         ],
         borderColor: [
-          "#8BC34A",
-          "#FFC107",
-          "#F44336",
+          "#7ac4a7",
+          "#d4efe3",
+          "#ff6b6b",
         ],
-        borderWidth: 1,
+        borderWidth: 2,
+        hoverOffset: 15,
       },
     ],
   };
 
-  // 키워드 분석 (임시 로직: 간단한 단어 추출)
   const allText = userContents.map(item => item.content).join(" ");
   const keywords = ["사랑", "회사", "공부", "미래", "친구", "가족", "휴식"]
     .map(key => ({ text: key, count: (allText.match(new RegExp(key, "g")) || []).length }))
     .filter(k => k.count > 0)
     .sort((a, b) => b.count - a.count);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
   return (
     <PageLayout requireAuth>
-      <div className="px-4 pb-10 space-y-6">
+      <div className="min-h-screen bg-[#FDFDFD] px-6 pb-24 space-y-8 overflow-x-hidden pt-4">
         {/* Header */}
-        <div className="flex items-center space-x-2 py-4">
-          <button onClick={() => navigate(-1)} className="p-2 -ml-2 text-gray-600">
-            <FiArrowLeft size={24} />
+        <div className="flex items-center gap-4 py-4">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 text-gray-400 hover:text-green transition-colors"
+          >
+            <FiArrowLeft size={20} />
           </button>
           <Title>마음 상세 리포트</Title>
         </div>
 
-        {/* AI Insight Summary Card */}
+        {/* Brand AI Summary Card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-6 text-white shadow-xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden bg-green rounded-[40px] p-8 text-white shadow-2xl shadow-green/20"
         >
-          <div className="absolute top-0 right-0 p-4 opacity-20">
-            <FiAward size={80} />
+          <div className="absolute top-0 right-0 p-6 opacity-20 transform rotate-12">
+            <FiAward size={120} />
           </div>
+          <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-white/20 rounded-full blur-3xl" />
+          
           <div className="relative z-10">
-            <div className="flex items-center space-x-2 mb-2">
-              <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-bold backdrop-blur-md">AI 분석</span>
-              <span className="text-white/80 text-xs">최근 30일 데이터 기준</span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="bg-white/30 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase backdrop-blur-md">
+                AI Deep Insight
+              </span>
             </div>
-            <h2 className="text-2xl font-bold mb-2">당신은 회복 탄력성이<br />뛰어난 사람입니다! ✨</h2>
-            <p className="text-white/90 text-sm leading-relaxed">
-              최근 {totalCount}번의 기록을 분석한 결과, 힘든 순간이 와도 스스로 답을 찾아내려 노력하는 경향이 보여요. 평균 감정 지수는 {avgMood}점으로 나타났습니다.
+            <h2 className="text-2xl font-bold mb-4 leading-tight">
+              회복 탄력성이 <br />참 아름다운 당신이에요 ✨
+            </h2>
+            <p className="text-white/90 text-sm leading-relaxed max-w-[90%]">
+              기록된 {totalCount}개의 마음을 분석해보니, 힘든 일이 있어도 스스로 다시 서는 힘이 느껴져요. 
+              당신의 평균 마음 온도는 <span className="font-extrabold">{avgMood}점</span>입니다.
             </p>
           </div>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
-            <div className="text-orange-500 bg-orange-50 p-3 rounded-xl mb-2">
-              <FiTrendingUp size={24} />
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-2 gap-4"
+        >
+          <motion.div variants={itemVariants} className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col justify-between h-40">
+            <div className="w-10 h-10 bg-orange-50 text-orange-400 rounded-2xl flex items-center justify-center">
+              <FiTrendingUp size={20} />
             </div>
-            <Text className="text-xs text-gray-500">평균 감정 점수</Text>
-            <div className="text-xl font-bold">{avgMood}점</div>
-          </div>
-          <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center">
-            <div className="text-blue-500 bg-blue-50 p-3 rounded-xl mb-2">
-              <FiPieChart size={24} />
+            <div>
+              <Text variant="caption" color="secondary" weight="bold" className="mb-1 uppercase tracking-wider text-[10px]">평균 감정 온도</Text>
+              <div className="text-2xl font-black text-slate-800 tracking-tight">{avgMood} <span className="text-sm font-normal text-gray-400">/ 10</span></div>
             </div>
-            <Text className="text-xs text-gray-500">누적 마음 기록</Text>
-            <div className="text-xl font-bold">{totalCount}회</div>
-          </div>
-        </div>
+          </motion.div>
+          <motion.div variants={itemVariants} className="bg-white p-6 rounded-[32px] shadow-sm border border-gray-100 flex flex-col justify-between h-40">
+            <div className="w-10 h-10 bg-blue-50 text-blue-400 rounded-2xl flex items-center justify-center">
+              <FiPieChart size={20} />
+            </div>
+            <div>
+              <Text variant="caption" color="secondary" weight="bold" className="mb-1 uppercase tracking-wider text-[10px]">누적 마음 조각</Text>
+              <div className="text-2xl font-black text-slate-800 tracking-tight">{totalCount} <span className="text-sm font-normal text-gray-400">개</span></div>
+            </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Mood Distribution */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-          <div className="flex items-center space-x-2 mb-6">
-            <FiBarChart2 className="text-purple-500" />
-            <h3 className="font-bold text-gray-800">감정 분포도</h3>
+        {/* Mood Distribution Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100"
+        >
+          <div className="flex items-center gap-3 mb-8">
+            <div className="px-3 py-1 bg-green/10 rounded-lg text-green font-bold text-xs uppercase tracking-widest">
+              Mood Map
+            </div>
+            <h3 className="font-bold text-slate-800 text-lg tracking-tight">마음 분포</h3>
           </div>
-          <div className="h-48 flex justify-center">
+          <div className="h-56 relative">
             {totalCount > 0 ? (
-              <Pie data={pieData} options={{ maintainAspectRatio: false }} />
+              <Pie 
+                data={pieData} 
+                options={{ 
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: { size: 12, weight: 'bold' }
+                      }
+                    }
+                  }
+                }} 
+              />
             ) : (
-              <div className="flex flex-col items-center justify-center text-gray-400">
-                <p className="text-sm">기록을 시작하면 분포도가 나타나요</p>
+              <div className="h-full flex flex-col items-center justify-center bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+                <Text variant="body" color="tertiary" className="italic italic">기록을 채우면 마음 지도가 완성됩니다.</Text>
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Keyword Cloud */}
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-          <h3 className="font-bold text-gray-800 mb-4">가장 많이 쓴 단어</h3>
-          <div className="flex flex-wrap gap-2">
+        {/* Keyword Cloud Card */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white p-8 rounded-[40px] shadow-sm border border-gray-100 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-full blur-3xl -mr-16 -mt-16" />
+          <h3 className="font-bold text-slate-800 text-lg mb-6 relative z-10">생각의 조각들</h3>
+          <div className="flex flex-wrap gap-3 relative z-10">
             {keywords.length > 0 ? (
               keywords.map((k, idx) => (
-                <span 
+                <motion.span 
+                  whileHover={{ scale: 1.05 }}
                   key={idx}
-                  className={`px-4 py-2 rounded-2xl font-medium ${
-                    idx === 0 ? "bg-indigo-100 text-indigo-600 text-lg" : 
-                    idx < 3 ? "bg-purple-100 text-purple-600 text-sm" : 
+                  className={`px-5 py-2.5 rounded-full font-bold transition-all ${
+                    idx === 0 ? "bg-green text-white shadow-lg shadow-green/20 text-sm" : 
+                    idx < 3 ? "bg-green-100 text-green-700 text-sm" : 
                     "bg-gray-100 text-gray-500 text-xs"
                   }`}
                 >
                   #{k.text}
-                </span>
+                </motion.span>
               ))
             ) : (
-              <Text className="text-gray-400 text-sm italic w-full text-center py-4">
-                기록이 쌓이면 나만의 키워드가 나타납니다.
-              </Text>
+              <div className="w-full py-10 text-center">
+                <Text variant="body" color="tertiary">아직 모인 언어가 없습니다.</Text>
+              </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Footer Advice */}
-        <div className="bg-[#f8f9fa] p-6 rounded-3xl border border-dashed border-gray-300">
-          <h4 className="font-bold text-gray-700 mb-2">오늘의 마음 제안 💌</h4>
-          <p className="text-sm text-gray-600 leading-relaxed">
-            분석에 따르면 당신은 밤 9시 이후에 고민 기록이 많은 편이에요. 
-            자기 전 10분만 명상을 하거나 따뜻한 차를 마셔보는 건 어떨까요?
-          </p>
-        </div>
+        {/* Action Suggestion */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5 }}
+          className="bg-slate-900 rounded-[40px] p-8 text-white relative overflow-hidden"
+        >
+           <div className="absolute top-0 right-0 w-40 h-40 bg-green/20 rounded-full blur-3xl" />
+           <div className="relative z-10">
+            <h4 className="font-bold text-xl mb-3 flex items-center gap-2">오늘의 제안 💌</h4>
+            <p className="text-white/70 text-sm leading-relaxed">
+              최근 밤 9시 이후의 기록이 늘었어요. 자기 전 스마트폰보다는 <br />
+              <span className="text-green font-bold">따뜻한 차 한 잔</span>과 함께 오늘을 마무리해보는 건 어떨까요?
+            </p>
+           </div>
+        </motion.div>
       </div>
     </PageLayout>
   );

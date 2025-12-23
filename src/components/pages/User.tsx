@@ -47,27 +47,31 @@ const User = () => {
       <div className="px-4 -mt-4 mb-4 space-y-4">
         {/* Insight Report Button */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.05 }}
         >
           <Link
             to="/insight"
-            className="flex items-center justify-between p-5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl shadow-lg shadow-green-100 text-white group overflow-hidden relative"
+            className="flex items-center justify-between p-7 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[35px] shadow-2xl shadow-green/10 text-slate-800 group overflow-hidden relative active:scale-95 transition-all"
           >
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-              <FiPieChart size={60} />
+            <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500">
+              <FiPieChart size={100} className="text-green" />
             </div>
-            <div className="relative z-10 flex items-center space-x-4">
-              <div className="bg-white/20 p-3 rounded-2xl">
-                <FiPieChart size={24} />
+            
+            <div className="relative z-10 flex items-center space-x-5">
+              <div className="w-14 h-14 bg-green/10 rounded-2xl flex items-center justify-center text-green group-hover:bg-green group-hover:text-white transition-all duration-300">
+                <FiPieChart size={28} />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold text-lg">나의 마음 리포트</span>
-                <span className="text-white/80 text-xs">AI가 분석한 내 감정 통계 보기</span>
+                <span className="font-extrabold text-xl tracking-tight">나의 마음 리포트</span>
+                <span className="text-gray-500 text-xs font-medium">AI가 심층 분석한 감정 통계</span>
               </div>
             </div>
-            <FiArrowRight size={24} className="relative z-10 opacity-60 group-hover:translate-x-1 transition-transform" />
+            
+            <div className="relative z-10 w-10 h-10 rounded-full bg-slate-900/5 flex items-center justify-center group-hover:bg-green group-hover:text-white transition-all">
+              <FiArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </div>
           </Link>
         </motion.div>
 

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Filter from "badwords-ko";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChangeEvent } from "react";
+import { toast } from "react-hot-toast";
 
 const StepFour = () => {
   const { decrease } = useStepStore();
@@ -40,15 +41,17 @@ const StepFour = () => {
     if (user?.uid && user?.count) {
       try {
         await fetchResponse();
+        // Only decrease count if fetchResponse succeeds
         await decreaseUserCount({ uId: user.uid, count: user.count });
-      } catch {
-        alert("잠시 후 다시 시도해주세요.");
+      } catch (error) {
+        console.error("Counseling request failed:", error);
+        toast.error(error instanceof Error ? error.message : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
       } finally {
         setLoadingState({ isLoading: false, step: 0 });
         setIsRequesting(false);
       }
     } else {
-      alert("추가 상담을 위해서는 결제가 필요합니다.");
+      toast.error("추가 상담을 위해서는 결제가 필요합니다.");
       navigate("/credit");
       setIsRequesting(false);
     }

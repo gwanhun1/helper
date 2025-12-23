@@ -32,8 +32,21 @@ export default async function handler(req: Request) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Dify API error: ${JSON.stringify(errorData)}`);
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Dify API Error:", errorData);
+      return new Response(
+        JSON.stringify({ 
+          error: "Dify API request failed", 
+          details: errorData 
+        }),
+        { 
+          status: response.status,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
     }
 
     const data = await response.json();
@@ -53,9 +66,12 @@ export default async function handler(req: Request) {
       }
     );
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Handler Error:", error);
     return new Response(
-      JSON.stringify({ error: "Internal server error" }),
+      JSON.stringify({ 
+        error: "Internal server error", 
+        message: error instanceof Error ? error.message : "Unknown error" 
+      }),
       {
         headers: {
           "Content-Type": "application/json",

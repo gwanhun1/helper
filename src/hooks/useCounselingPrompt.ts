@@ -18,19 +18,22 @@ const useCounselingPrompt = () => {
 
   const fetchResponse = async () => {
     if (!user?.uid) {
-      setError(new Error("로그인이 필요합니다."));
-      return;
+      const err = new Error("로그인이 필요합니다.");
+      setError(err);
+      throw err;
     }
 
     if (loading) {
-      setError(new Error("현재 요청이 진행 중입니다. 잠시 후 다시 시도해주세요."));
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
+    setError(null);
 
+    try {
       const isDev = import.meta.env.DEV;
+      // Dev environment: Try communicating with Dify directly (Note: May fail due to CORS)
+      // Prod environment: Use the Next.js/Vercel API route
       const API_URL = isDev 
         ? `${import.meta.env.VITE_DIFY_BASE_URL}/chat-messages` 
         : '/api/chat';
@@ -57,21 +60,32 @@ const useCounselingPrompt = () => {
       });
 
       if (!response.ok) {
-        throw new Error('API 요청에 실패했습니다.');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'API 요청에 실패했습니다.');
       }
 
       const data = await response.json();
       const messageContent = data.message || data.answer || "";
+      
+      if (!messageContent) {
+        throw new Error("응답 내용이 비어있습니다.");
+      }
+
       setResponse(filter.clean(messageContent));
-      await addWorry(messageContent);
-      increase();
+      
+      try {
+        await addWorry(messageContent);
+      } catch (saveError) {
+        console.error("Failed to save worry history:", saveError);
+        // Continue flow so user can see the advice even if save fails
+      }
+      
+      increase(); // Move to the next step
     } catch (err) {
       console.error(err);
-      setError(
-        err instanceof Error
-          ? err
-          : new Error("알 수 없는 오류가 발생했습니다.")
-      );
+      const errorObj = err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다.");
+      setError(errorObj);
+      throw errorObj; // Re-throw to let the component know the request failed
     } finally {
       setLoading(false);
     }

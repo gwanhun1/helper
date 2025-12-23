@@ -103,7 +103,6 @@ const LogForm = ({ data, onDelete }:LogFormProps) => {
         relative 
         transition-all 
         duration-300
-        flex-1 flex flex-col min-h-0
         ${
           swipedItemId === data.id
             ? "translate-x-[-80px] bg-rose-50"
@@ -112,8 +111,8 @@ const LogForm = ({ data, onDelete }:LogFormProps) => {
       `}
       onClick={() => handleSelectTree(data)}
     >
-      <div className="flex-1 flex flex-col pt-2 pb-4 px-5 overflow-hidden">
-        <div className="flex-1 flex flex-col gap-4 overflow-hidden">
+      <div className="pt-1 pb-2 px-3">
+        <div className="flex flex-col gap-1.5">
           <div className="shrink-0 flex items-center gap-3">
             <div
               className={`
@@ -132,7 +131,7 @@ const LogForm = ({ data, onDelete }:LogFormProps) => {
             </div>
             <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Thought Fragment</span>
           </div>
-          <div className="flex-1 min-h-0">
+          <div>
             <Accordion
               title={data.content}
               content={data.response}

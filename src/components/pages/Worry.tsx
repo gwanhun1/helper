@@ -56,7 +56,7 @@ const Worry = () => {
       {/* 단계 표시기 */}
       <StepIndicator currentStep={step} />
 
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 min-h-0 relative overflow-hidden flex flex-col">
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
@@ -64,7 +64,7 @@ const Worry = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            className="h-full flex flex-col"
           >
             {stepFrom[step]}
           </motion.div>

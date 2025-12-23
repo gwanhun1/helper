@@ -4,6 +4,7 @@ import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
 import LikeButton from "../molecules/LikeButton";
 import { FaRobot } from "react-icons/fa";
+import { getPersonaIcon, getPersonaColor } from '../../utils/personaIcons';
 import { Comment as CommentType, MainContent } from '../../types/comment';
 
 interface CommentListProps {
@@ -45,11 +46,11 @@ const CommentList = ({
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
-            <FaRobot className="text-blue-500 text-sm" />
+          <div className={`w-8 h-8 bg-gradient-to-br ${getPersonaColor(mainContent.who)} rounded-full flex items-center justify-center`}>
+            {getPersonaIcon(mainContent.who, "text-white text-sm")}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-[#333333]">AI 상담사</span>
+            <span className="text-sm font-medium text-[#333333]">{mainContent.who || "AI 상담사"}</span>
             <span className="text-xs text-[#999999]">
               {formatDate(mainContent.date)}
             </span>

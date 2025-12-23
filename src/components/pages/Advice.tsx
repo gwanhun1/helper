@@ -273,6 +273,7 @@ const Advice = () => {
                 response: currentContent.response,
                 date: currentContent.date,
                 like: currentContent.like,
+                who: currentContent.who,
               }}
               comments={(currentContent.comments || [])
                 .filter((comment): comment is Comment => comment.content !== undefined)}

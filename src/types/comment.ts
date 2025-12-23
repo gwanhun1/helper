@@ -12,4 +12,5 @@ export interface MainContent {
   response: string;
   date: string;
   like?: number;
+  who?: string;
 }

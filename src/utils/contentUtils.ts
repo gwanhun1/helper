@@ -31,7 +31,9 @@ export const processContentData = (rawContent: any, id: string): Item => {
     like: typeof rawContent.like === 'number' ? rawContent.like : 0,
     likedBy: Array.isArray(rawContent.likedBy) ? rawContent.likedBy : [],
     level: typeof rawContent.level === 'number' ? rawContent.level : 1,
-    open: typeof rawContent.open === 'boolean' ? rawContent.open : true
+    open: typeof rawContent.open === 'boolean' ? rawContent.open : true,
+    who: rawContent.who || "",
+    how: rawContent.how || ""
   };
 };
 

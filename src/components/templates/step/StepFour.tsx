@@ -103,7 +103,7 @@ const StepFour = () => {
           />
         </div>
 
-        <div className="px-6 py-4 bg-transparent mt-6 -mx-6 mb-[-24px] z-20">
+        <div className="px-6 py-4 bg-transparent mt-6 -mx-6 z-20">
           <div className="grid grid-cols-2 gap-4">
             <Button 
               text="이전으로" 

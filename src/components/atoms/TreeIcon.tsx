@@ -10,13 +10,20 @@ interface TreeIconProps {
 
 const TreeIcon = ({ level = 3, season = "spring", variety = 1, className, style }: TreeIconProps) => {
   const renderTree = () => {
-    // 공통 새싹 단계 (Level 1)
+    // 공통 새싹 단계 (Level 1) - 계절별 색상
     if (level <= 1) {
+      const sproutColors = {
+        spring: { left: "#FFB7C5", right: "#F8BBD0" }, // 연분홍
+        summer: { left: "#AED581", right: "#8BC34A" }, // 연두색
+        autumn: { left: "#FFCC80", right: "#FFB74D" }, // 주황빛
+        winter: { left: "#E1F5FE", right: "#B3E5FC" }  // 하얀/연한 파란색
+      };
+      const colors = sproutColors[season];
       return (
         <svg viewBox="0 0 100 100" className={className} style={style}>
           <path d="M50 95 L50 75" stroke="#5D4037" strokeWidth="5" strokeLinecap="round" />
-          <path d="M50 75 C40 65 35 75 42 82 C45 85 50 80 50 75" fill="#AED581" />
-          <path d="M50 75 C60 65 65 75 58 82 C55 85 50 80 50 75" fill="#8BC34A" />
+          <path d="M50 75 C40 65 35 75 42 82 C45 85 50 80 50 75" fill={colors.left} />
+          <path d="M50 75 C60 65 65 75 58 82 C55 85 50 80 50 75" fill={colors.right} />
         </svg>
       );
     }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useStepStore from "../../../store/stepStore";
 import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
@@ -53,6 +53,19 @@ const StepFour = () => {
       setIsRequesting(false);
     }
   };
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (loadingState.isLoading) {
+      interval = setInterval(() => {
+        setLoadingState((prev) => ({
+          ...prev,
+          step: (prev.step + 1) % 4, // Infinite loop: 0 -> 1 -> 2 -> 3 -> 0 ...
+        }));
+      }, 2500); // Change text every 2.5 seconds
+    }
+    return () => clearInterval(interval);
+  }, [loadingState.isLoading]);
 
   if (loadingState.isLoading) {
     return <Loading textStep={loadingState.step} />;

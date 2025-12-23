@@ -1,9 +1,3 @@
-import OpenAI from "openai";
-
-const openai = new OpenAI({
-  apiKey: process.env.VITE_AI_KEY,
-});
-
 export const config = {
   runtime: "edge",
 };
@@ -16,20 +10,37 @@ export default async function handler(req: Request) {
   try {
     const { who, how, worry } = await req.json();
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: `You are a ${who}. You must strictly follow these guidelines when responding in Korean:...`,
+    const difyApiKey = process.env.VITE_DIFY_API_KEY || process.env.DIFY_API_KEY;
+    const difyBaseUrl = process.env.VITE_DIFY_BASE_URL || "https://api.dify.ai/v1";
+
+    const response = await fetch(`${difyBaseUrl}/chat-messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${difyApiKey}`,
+      },
+      body: JSON.stringify({
+        inputs: {
+          who,
+          how,
+          worry,
         },
-        { role: "user", content: worry },
-      ],
+        query: "상담을 진행해줘.", // System prompt has everything, query is just a trigger
+        response_mode: "blocking",
+        user: "helper-user",
+      }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Dify API error: ${JSON.stringify(errorData)}`);
+    }
+
+    const data = await response.json();
+    
     return new Response(
       JSON.stringify({
-        message: completion.choices[0].message.content,
+        message: data.answer,
       }),
       {
         headers: {

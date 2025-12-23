@@ -1,3 +1,6 @@
+import Lottie from "lottie-react";
+import loadingAnimation from "../../../assets/loading.json";
+
 const Loading = ({ textStep }: { textStep: number }) => {
     const TextArea = [
         '조언자 구하는 중 😌',
@@ -7,8 +10,11 @@ const Loading = ({ textStep }: { textStep: number }) => {
     ];
 
     return (
-        <div className="flex items-center justify-center h-full bg-white ">
-            <p className="text-[#4abd9d] text-2xl font-bold whitespace-pre-line mt-10">
+        <div className="flex flex-col items-center justify-center h-full bg-white">
+            <div className="w-48 h-48">
+                <Lottie animationData={loadingAnimation} loop={true} />
+            </div>
+            <p className="text-[#4abd9d] text-xl font-bold whitespace-pre-line mt-4 animate-pulse">
                 {TextArea[textStep]}
             </p>
         </div>

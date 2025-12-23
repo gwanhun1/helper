@@ -19,11 +19,11 @@ const ForestLog = () => {
   );
 
   return (
-    <>
+    <div className="flex-1 flex flex-col min-h-0">
       {forestData && forestData.length > 0 ? (
         <>
           {selectedItem ? (
-            <div className="divide-y divide-gray-100 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+            <div className="flex-1 min-h-0 overflow-hidden">
               <LogForm
                 key={selectedItem.id}
                 data={selectedItem}
@@ -32,10 +32,10 @@ const ForestLog = () => {
             </div>
           ) : (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex flex-col items-center justify-center text-slate-500 select-none pt-8 sm:pt-12 "
+              className="flex-1 flex flex-col items-center justify-center text-slate-500 select-none pb-12"
             >
               <motion.div
                 animate={{
@@ -47,7 +47,7 @@ const ForestLog = () => {
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="mb-2 sm:mb-6 relative"
+                className="mb-4 relative"
               >
                 <motion.div
                   animate={{ opacity: [0.3, 0.6, 0.3] }}
@@ -58,20 +58,19 @@ const ForestLog = () => {
                   }}
                   className="absolute inset-0 rounded-full bg-emerald-200 blur-lg"
                 />
-                <BsArrowUpCircle className="w-10 h-10 sm:w-14 sm:h-14 text-emerald-500 relative z-10" />
+                <BsArrowUpCircle className="w-12 h-12 text-emerald-500 relative z-10" />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="bg-gradient-to-b from-slate-50 to-white px-6 sm:px-8 py-4 sm:py-5 rounded-xl sm:rounded-2xl shadow-md max-w-[85%] sm:max-w-none"
+                className="bg-white/40 backdrop-blur-sm px-8 py-5 rounded-[24px] border border-white/60 shadow-lg"
               >
-                <p className="text-base sm:text-lg font-medium text-slate-700 text-center">
+                <p className="text-base font-bold text-slate-700 text-center">
                   위의 나무를 선택해주세요
                 </p>
-                <p className="text-xs sm:text-sm text-slate-400 text-center mt-1.5 sm:mt-2 leading-relaxed">
-                  당신의 소중한 생각이 기록된
-                  <br />
+                <p className="text-xs text-slate-400 text-center mt-2 leading-relaxed font-medium">
+                  당신의 소중한 생각이 기록된 <br />
                   나무를 확인할 수 있어요
                 </p>
               </motion.div>
@@ -79,7 +78,7 @@ const ForestLog = () => {
           )}
         </>
       ) : null}
-    </>
+    </div>
   );
 };
 

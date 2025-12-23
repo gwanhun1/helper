@@ -195,7 +195,7 @@ const Forest = () => {
 
   return (
     <div
-      className={`relative w-full h-72 overflow-hidden transition-colors duration-1000 
+      className={`relative w-full h-full overflow-hidden transition-colors duration-1000 
       bg-gradient-to-br ${theme.bg}
       shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)]`}
     >

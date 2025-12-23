@@ -38,11 +38,11 @@ const StepOne = () => {
           </div>
         </motion.div>
 
-        <div className="flex-1 relative min-h-0">
+        <div className="flex-[1.4] relative min-h-0">
           <Forest />
         </div>
 
-        <div className="h-[200px] overflow-y-auto px-4 pb-4">
+        <div className="flex-1 flex flex-col px-4 pb-2 min-h-0">
           <ForestLog />
         </div>
       </div>

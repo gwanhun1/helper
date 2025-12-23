@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AnimatePresence } from "framer-motion";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
@@ -9,6 +9,7 @@ import useUserStore from "../../store/userStore";
 import useContentsData from "../../hooks/useContentsData";
 import useLikeManager from "../../hooks/useLikeManager";
 import useCommentManager from "../../hooks/useCommentManager";
+import { toast } from "react-hot-toast";
 
 interface Comment {
   id?: string;
@@ -33,59 +34,59 @@ const Advice = () => {
   const { data: contentsData = [] } = useContentsData();
   const [currentIndex, setCurrentIndex] = useState(0);
   const user = useUserStore((state) => state.user);
-  const { togglePostLike, toggleCommentLike, isPostLiked, isCommentLiked } = useLikeManager();
-  const { addComment } = useCommentManager();
+  const { togglePostLike, toggleCommentLike, isPostLiked, isCommentLiked, loading: likeLoading } = useLikeManager();
+  const { addComment, deleteComment, loading: commentLoading } = useCommentManager();
   const [newComment, setNewComment] = useState("");
   const [postLikeStates, setPostLikeStates] = useState<{ [key: string]: boolean }>({});
   const [commentLikeStates, setCommentLikeStates] = useState<{ [key: string]: boolean }>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isUpdatingLikes, setIsUpdatingLikes] = useState(false);
   const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null);
 
   const currentContent = contentsData[currentIndex] || null;
+  const isUpdatingRef = useRef(false);
 
   const formatRelativeDate = (dateStr: string | undefined) => {
     if (!dateStr) return "";
     
     try {
-      if (!dateStr.includes('/')) {
-        return dateStr;
+      let date: Date;
+      
+      // ISO String 또는 표준 날짜 형식 우선 시도
+      date = new Date(dateStr);
+      
+      // 만약 파싱 실패(Invalid Date)하고 슬래시가 포함된 경우 (기존 형식: MM/DD/YYYY)
+      if (isNaN(date.getTime()) && dateStr.includes('/')) {
+        const dateParts = dateStr.split('/');
+        if (dateParts.length === 3) {
+          const [month, day, year] = dateParts;
+          date = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+        }
       }
 
-      const dateParts = dateStr.split('/');
-      if (dateParts.length !== 3) {
-        return dateStr;
-      }
-
-      const [month, day, year] = dateParts;
-      if (!month || !day || !year) {
-        return dateStr;
-      }
-
-      const formattedMonth = month.padStart(2, '0');
-      const formattedDay = day.padStart(2, '0');
-      const date = new Date(`${year}-${formattedMonth}-${formattedDay}`);
-
+      // 여전히 유효하지 않으면 원본 반환
       if (isNaN(date.getTime())) {
         return dateStr;
       }
 
       const now = new Date();
       const diffTime = Math.abs(now.getTime() - date.getTime());
+      const diffMinutes = Math.floor(diffTime / (1000 * 60));
       const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      const diffMonths = (now.getMonth() + 12 * now.getFullYear()) - (date.getMonth() + 12 * date.getFullYear());
-
-      if (diffHours < 24) {
-        if (diffHours === 0) return "방금 전";
+      
+      if (diffMinutes < 1) {
+        return "방금 전";
+      } else if (diffMinutes < 60) {
+        return `${diffMinutes}분 전`;
+      } else if (diffHours < 24) {
         return `${diffHours}시간 전`;
       } else if (diffDays === 1) {
         return "어제";
-      } else if (diffDays === 2) {
-        return "그저께";
-      } else if (diffMonths < 1) {
+      } else if (diffDays < 7) {
         return `${diffDays}일 전`;
       } else {
-        return dateStr;
+        // 일주일 이상된 경우 원래 날짜 표시 (YYYY-MM-DD 형식)
+        return date.toISOString().split('T')[0];
       }
     } catch (error) {
       console.error('Date parsing error:', error);
@@ -94,9 +95,10 @@ const Advice = () => {
   };
 
   const updateLikeStates = useCallback(async () => {
-    if (!currentContent?.id || isLoading) return;
+    if (!currentContent?.id || isUpdatingRef.current) return;
 
-    setIsLoading(true);
+    isUpdatingRef.current = true;
+    setIsUpdatingLikes(true);
     try {
       const isLiked = await isPostLiked(currentContent.id);
       setPostLikeStates(prev => ({ ...prev, [currentContent.id]: isLiked }));
@@ -116,13 +118,14 @@ const Advice = () => {
     } catch (error) {
       console.error('Error updating like states:', error);
     } finally {
-      setIsLoading(false);
+      setIsUpdatingLikes(false);
+      isUpdatingRef.current = false;
     }
-  }, [currentContent?.id, isPostLiked, isCommentLiked, isLoading]);
+  }, [currentContent?.id, currentContent?.comments, isPostLiked, isCommentLiked]);
 
   useEffect(() => {
     updateLikeStates();
-  }, [updateLikeStates]);
+  }, [currentContent?.id]);
 
   const handlePrev = useCallback(() => {
     setSwipeDirection("right");
@@ -135,15 +138,26 @@ const Advice = () => {
   }, [contentsData.length]);
 
   const handleAddComment = useCallback(async () => {
-    alert("잠시후 다시 시도해주세요.")
-    if (!user?.uid || !newComment.trim() || !currentContent?.id) return;
+    if (!user?.uid) {
+      toast.error("로그인이 필요합니다.");
+      return;
+    }
+    if (!newComment.trim()) {
+      toast.error("댓글 내용을 입력해주세요.");
+      return;
+    }
+    if (!currentContent?.id) return;
     
     try {
-      // await addComment(currentContent.id, newComment.trim());
-      setNewComment("");
-      updateLikeStates();
+      const success = await addComment(currentContent.id, newComment.trim());
+      if (success) {
+        setNewComment("");
+        toast.success("댓글이 작성되었습니다.");
+        updateLikeStates();
+      }
     } catch (error) {
       console.error("Failed to add comment:", error);
+      toast.error("댓글 작성에 실패했습니다.");
     }
   }, [user?.uid, newComment, currentContent?.id, addComment, updateLikeStates]);
 
@@ -170,6 +184,20 @@ const Advice = () => {
       console.error('Error toggling comment like:', error);
     }
   }, [toggleCommentLike, isCommentLiked]);
+
+  const handleDeleteComment = useCallback(async (commentId: string) => {
+    if (!currentContent?.id || !commentId) return;
+
+    try {
+      const success = await deleteComment(currentContent.id, commentId);
+      if (success) {
+        toast.success("댓글이 삭제되었습니다.");
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast.error("댓글 삭제에 실패했습니다.");
+    }
+  }, [currentContent?.id, deleteComment]);
 
   if (!currentContent) {
     return (
@@ -229,18 +257,9 @@ const Advice = () => {
                     </span>
                     <span className="text-xs text-green-600 font-medium">내가 쓴 글</span>
                   </div>
-                  <button
-                    type="submit"
-                    className={`${
-                      currentContent.open
-                        ? "sparkle-effect bg-[#2AC1BC] hover:bg-[#2AC1BC]/90 "
-                        : "bg-gray"
-                    }  text-white px-5 py-2.5 rounded-lg text-sm font-medium disabled:opacity-50 ml-auto`}
-                    disabled={!currentContent.open}
-                    onClick={()=>alert("잠시후 다시 시도해주세요.")}
-                  >
-                    공유하기
-                  </button>
+                  <span className="text-xs text-green-600 bg-green-50 px-3 py-1.5 rounded-lg">
+                    ✓ 공유됨
+                  </span>
                 </div>
               )}
           </div>
@@ -259,12 +278,14 @@ const Advice = () => {
                 .filter((comment): comment is Comment => comment.content !== undefined)}
               isPostLiked={postLikeStates[currentContent.id]}
               commentLikeStates={commentLikeStates}
+              currentUsername={user?.displayName || undefined}
               onTogglePostLike={() => handleTogglePostLike(currentContent.id)}
               onToggleCommentLike={(commentId) => handleToggleCommentLike(currentContent.id, commentId)}
+              onDeleteComment={handleDeleteComment}
               newComment={newComment}
               onCommentChange={setNewComment}
               onCommentSubmit={handleAddComment}
-              isLoading={isLoading}
+              isLoading={likeLoading || commentLoading}
               formatDate={formatRelativeDate}
             />
           </div>

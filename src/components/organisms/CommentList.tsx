@@ -11,8 +11,10 @@ interface CommentListProps {
   comments: any;
   isPostLiked: boolean;
   commentLikeStates: { [key: string]: boolean };
+  currentUsername?: string;
   onTogglePostLike: () => void;
-  onToggleCommentLike: (postId: string, commentId: string) => Promise<void>;
+  onToggleCommentLike: (commentId: string) => void;
+  onDeleteComment?: (commentId: string) => void;
   newComment: string;
   onCommentChange: (value: string) => void;
   onCommentSubmit: (e: FormEvent) => void;
@@ -25,8 +27,10 @@ const CommentList = ({
   comments,
   isPostLiked,
   commentLikeStates,
+  currentUsername,
   onTogglePostLike,
   onToggleCommentLike,
+  onDeleteComment,
   newComment,
   onCommentChange,
   onCommentSubmit,
@@ -41,12 +45,15 @@ const CommentList = ({
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
-            <FaRobot className="text-[#666666] text-sm" />
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+            <FaRobot className="text-blue-500 text-sm" />
           </div>
-          <span className="text-xs text-[#999999]">
-            {formatDate(mainContent.date)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-[#333333]">AI 상담사</span>
+            <span className="text-xs text-[#999999]">
+              {formatDate(mainContent.date)}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -62,29 +69,42 @@ const CommentList = ({
         />
       </div>
 
-      <div className="space-y-3 mt-4 ml-10">
-        {comments
-          .filter((comment): comment is CommentType => Boolean(comment && comment.id))
-          // 중복된 ID 제거
-          .filter((comment, index, self) => 
-            index === self.findIndex((c) => c.id === comment.id)
-          )
-          .map((comment) => (
-          <Comment
-            key={comment.id}
-            username={comment.username || '익명'}
-            content={comment.content}
-            date={comment.date || ''}
-            likes={comment.likes || 0}
-            isLiked={comment.id ? commentLikeStates[comment.id] : false}
-            onToggleLike={() => comment.id && onToggleCommentLike(mainContent.id, comment.id)}
-            disabled={isLoading}
-            formatDate={formatDate}
-          />
-        ))}
-      </div>
+      {/* 댓글 목록 */}
+      {comments.length > 0 && (
+        <div className="mt-4 pt-4 border-t border-gray-100">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-medium text-[#333333]">댓글</span>
+            <span className="text-xs text-[#999999]">{comments.length}개</span>
+          </div>
+          <div className="space-y-3">
+            {comments
+              .filter((comment: CommentType): comment is CommentType => Boolean(comment && comment.id))
+              .filter((comment: CommentType, index: number, self: CommentType[]) => 
+                index === self.findIndex((c) => c.id === comment.id)
+              )
+              .map((comment: CommentType) => {
+                const isMyComment = currentUsername ? comment.username === currentUsername : false;
+                return (
+                  <Comment
+                    key={comment.id}
+                    username={comment.username || '익명'}
+                    content={comment.content}
+                    date={comment.date || ''}
+                    likes={comment.likes || 0}
+                    isLiked={comment.id ? commentLikeStates[comment.id] : false}
+                    onToggleLike={() => comment.id && onToggleCommentLike(comment.id)}
+                    onDelete={isMyComment && onDeleteComment ? () => onDeleteComment(comment.id) : undefined}
+                    isMyComment={isMyComment}
+                    disabled={isLoading}
+                    formatDate={formatDate}
+                  />
+                );
+              })}
+          </div>
+        </div>
+      )}
 
-      <div className="mt-4">
+      <div className="mt-4 pt-4 border-t border-gray-100">
         <CommentInput
           value={newComment}
           onChange={onCommentChange}

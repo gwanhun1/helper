@@ -18,8 +18,12 @@ const CommentInput = ({
 }:CommentInputProps) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSubmit(e);
+    if (value.trim()) {
+      onSubmit(e);
+    }
   };
+
+  const isSubmitDisabled = disabled || !value.trim();
 
   return (
     <form onSubmit={handleSubmit} className="flex gap-2">
@@ -33,9 +37,8 @@ const CommentInput = ({
       />
       <button 
         type="submit"
-        onClick={handleSubmit}
-        className="text-[#2AC1BC] hover:text-[#2AC1BC]/80 p-2"
-        disabled={disabled}
+        className={`p-2 transition-colors ${isSubmitDisabled ? 'text-gray-300 cursor-not-allowed' : 'text-[#2AC1BC] hover:text-[#2AC1BC]/80'}`}
+        disabled={isSubmitDisabled}
       >
         <FiSend size={20} />
       </button>
@@ -44,3 +47,4 @@ const CommentInput = ({
 };
 
 export default CommentInput;
+

@@ -4,14 +4,25 @@ import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
 import Text from "../../atoms/Text";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { FiShare2 } from "react-icons/fi";
+import { toast } from "react-hot-toast";
 
 const StepFive = () => {
   const { reset, decrease } = useStepStore();
   const { response, reset: resetWorry } = useWorryStore();
+  const navigate = useNavigate();
 
   const handleReset = () => {
     resetWorry();
     reset();
+  };
+
+  const handleViewInCommunity = () => {
+    resetWorry();
+    reset();
+    toast.success("커뮤니티에서 다른 사람들의 이야기도 들어보세요!");
+    navigate("/advice");
   };
 
   return (
@@ -41,6 +52,22 @@ const StepFive = () => {
             {response}
           </div>
         </motion.div>
+
+        {/* 커뮤니티 공유 안내 */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-4 p-4 bg-green-50/50 rounded-2xl border border-green-100/50"
+        >
+          <div className="flex items-center gap-2 text-green-700 mb-1">
+            <FiShare2 size={16} />
+            <span className="text-sm font-semibold">커뮤니티에 자동 공유됨</span>
+          </div>
+          <p className="text-xs text-green-600/80">
+            당신의 고민이 익명으로 커뮤니티에 공유되었어요. 다른 분들의 따뜻한 응원을 받아보세요!
+          </p>
+        </motion.div>
       </div>
 
       <div className="px-6 py-4 bg-transparent -mx-6 -mb-8 mt-8 z-20">
@@ -60,6 +87,18 @@ const StepFive = () => {
             onPress={handleReset} 
           />
         </div>
+        
+        {/* 커뮤니티에서 보기 버튼 */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          onClick={handleViewInCommunity}
+          className="w-full mt-3 py-3 text-sm text-green-600 font-medium hover:bg-green-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+        >
+          <FiShare2 size={16} />
+          커뮤니티에서 보기
+        </motion.button>
       </div>
     </motion.div>
   );

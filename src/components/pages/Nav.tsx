@@ -53,7 +53,7 @@ const Nav = () => {
                       {user?.displayName}님 안녕하세요!
                     </div>
                     <div className="text-[14px] font-medium text-gray-800 whitespace-nowrap flex items-center gap-1">
-                      🎉<span className="text-blue-500">버전 1.0.0</span> 이
+                      🎉<span className="text-blue-500">버전 1.0.2</span> 이
                       출시되었습니다! 🎊
                     </div>
                   </div>

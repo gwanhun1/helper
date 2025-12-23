@@ -53,15 +53,22 @@ const useCounselingPrompt = () => {
         headers['Authorization'] = `Bearer ${import.meta.env.VITE_DIFY_API_KEY}`;
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+
       const response = await fetch(API_URL, {
         method: 'POST',
         headers,
         body: JSON.stringify(requestBody),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
-      if (!response.ok) {
+        if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'API 요청에 실패했습니다.');
+        // Try to find the most detailed error message
+        const detailedMessage = errorData.details?.message || errorData.error || errorData.message || 'API 요청에 실패했습니다.';
+        throw new Error(detailedMessage);
       }
 
       const data = await response.json();
@@ -83,9 +90,25 @@ const useCounselingPrompt = () => {
       increase(); // Move to the next step
     } catch (err) {
       console.error(err);
-      const errorObj = err instanceof Error ? err : new Error("알 수 없는 오류가 발생했습니다.");
-      setError(errorObj);
-      throw errorObj; // Re-throw to let the component know the request failed
+      
+      let errorMessage = "알 수 없는 오류가 발생했습니다.";
+      
+      if (err instanceof Error) {
+        // Handle specific Dify/Gemini error patterns
+        if (err.message.includes("429") || err.message.includes("RESOURCE_EXHAUSTED")) {
+          errorMessage = "현재 상담 요청이 많아 연결이 지연되고 있습니다. 약 1분 후에 다시 시도해주세요.";
+        } else if (err.message.includes("504") || err.message.includes("timeout")) {
+          errorMessage = "응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.";
+        } else if (err.message.includes("Safety")) {
+          errorMessage = "입력하신 내용에 부적절한 표현이 포함되어 있어 상담이 어렵습니다.";
+        } else {
+          errorMessage = err.message; // Fallback to original message if specific pattern not found
+        }
+      }
+
+      const userFriendlyError = new Error(errorMessage);
+      setError(userFriendlyError);
+      throw userFriendlyError; // Re-throw with friendly message
     } finally {
       setLoading(false);
     }

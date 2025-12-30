@@ -31,7 +31,7 @@ const useWorryManager = (): UseWorryManager => {
   const [error, setError] = useState<Error | null>(null);
   const user = useUserStore((state) => state.user);
   const db = getDatabase(app);
-  const { worry, who, how } = useWorryStore();
+  const { worry, who, how, isOpen } = useWorryStore();
 
   const addWorry = async (content: string | WorryContent) => {
     if (!user?.uid) {
@@ -55,7 +55,7 @@ const useWorryManager = (): UseWorryManager => {
               response: content,
               level: Math.floor(Math.random() * 5) + 1,
               username: user.displayName || "Anonymous",
-              open: true,
+              open: isOpen,
               comments: [],
               who: who,
               how: how,

@@ -1,11 +1,11 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent } from "react";
 import { motion } from "framer-motion";
 import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
 import LikeButton from "../molecules/LikeButton";
 import { FaRobot } from "react-icons/fa";
-import { getPersonaIcon, getPersonaColor } from '../../utils/personaIcons';
-import { Comment as CommentType, MainContent } from '../../types/comment';
+import { getPersonaIcon, getPersonaColor } from "../../utils/personaIcons";
+import { Comment as CommentType, MainContent } from "../../types/comment";
 
 interface CommentListProps {
   mainContent: MainContent;
@@ -36,7 +36,7 @@ const CommentList = ({
   onCommentChange,
   onCommentSubmit,
   isLoading,
-  formatDate
+  formatDate,
 }: CommentListProps) => {
   return (
     <motion.div
@@ -46,11 +46,19 @@ const CommentList = ({
     >
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <div className={`w-8 h-8 bg-gradient-to-br ${getPersonaColor(mainContent.who)} rounded-full flex items-center justify-center`}>
+          <div
+            className={`w-8 h-8 bg-gradient-to-br ${getPersonaColor(
+              mainContent.who
+            )} rounded-full flex items-center justify-center`}
+          >
             {getPersonaIcon(mainContent.who, "text-white text-sm")}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-[#333333]">{mainContent.who || "AI 상담사"}</span>
+            <span className="text-sm font-medium text-[#333333]">
+              {mainContent.username
+                ? "익명의 숲지기"
+                : mainContent.who || "AI 상담사"}
+            </span>
             <span className="text-xs text-[#999999]">
               {formatDate(mainContent.date)}
             </span>
@@ -79,22 +87,33 @@ const CommentList = ({
           </div>
           <div className="space-y-3">
             {comments
-              .filter((comment: CommentType): comment is CommentType => Boolean(comment && comment.id))
-              .filter((comment: CommentType, index: number, self: CommentType[]) => 
-                index === self.findIndex((c) => c.id === comment.id)
+              .filter((comment: CommentType): comment is CommentType =>
+                Boolean(comment && comment.id)
+              )
+              .filter(
+                (comment: CommentType, index: number, self: CommentType[]) =>
+                  index === self.findIndex((c) => c.id === comment.id)
               )
               .map((comment: CommentType) => {
-                const isMyComment = currentUsername ? comment.username === currentUsername : false;
+                const isMyComment = currentUsername
+                  ? comment.username === currentUsername
+                  : false;
                 return (
                   <Comment
                     key={comment.id}
-                    username={comment.username || '익명'}
+                    username={comment.username || "익명"}
                     content={comment.content}
-                    date={comment.date || ''}
+                    date={comment.date || ""}
                     likes={comment.likes || 0}
                     isLiked={comment.id ? commentLikeStates[comment.id] : false}
-                    onToggleLike={() => comment.id && onToggleCommentLike(comment.id)}
-                    onDelete={isMyComment && onDeleteComment ? () => onDeleteComment(comment.id) : undefined}
+                    onToggleLike={() =>
+                      comment.id && onToggleCommentLike(comment.id)
+                    }
+                    onDelete={
+                      isMyComment && onDeleteComment
+                        ? () => onDeleteComment(comment.id)
+                        : undefined
+                    }
                     isMyComment={isMyComment}
                     disabled={isLoading}
                     formatDate={formatDate}

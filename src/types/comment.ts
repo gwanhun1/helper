@@ -13,4 +13,5 @@ export interface MainContent {
   date: string;
   like?: number;
   who?: string;
+  username?: string;
 }

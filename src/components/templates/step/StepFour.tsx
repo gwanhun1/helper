@@ -19,7 +19,10 @@ const StepFour = () => {
   const { decrease } = useStepStore();
   const { setWorry, worry, how, who } = useWorryStore();
   const { fetchResponse } = useCounselingPrompt();
-  const [loadingState, setLoadingState] = useState({ isLoading: false, step: 0 });
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+    step: 0,
+  });
   const { decreaseUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
@@ -45,7 +48,11 @@ const StepFour = () => {
         await decreaseUserCount({ uId: user.uid, count: user.count });
       } catch (error) {
         console.error("Counseling request failed:", error);
-        toast.error(error instanceof Error ? error.message : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+        );
       } finally {
         setLoadingState({ isLoading: false, step: 0 });
         setIsRequesting(false);
@@ -75,44 +82,46 @@ const StepFour = () => {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="flex flex-col h-full bg-transparent px-6 pt-6"
+      className="flex flex-col px-6 pt-6 h-full bg-transparent"
     >
       <div className="pb-6">
         <Title>당신의 마음을 적어주세요</Title>
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex justify-between items-center mt-2">
           <Text variant="body" color="secondary" className="font-medium">
-            비밀은 지켜질 거예요. 편안하게 작성해 주세요.
+            편안하게 작성해 주세요.
           </Text>
-          <div className="px-2 py-0.5 bg-gray-100 rounded-md">
-            <Text className="!text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+          <div className="flex-shrink-0 px-2 py-1 ml-2 bg-gray-100 rounded-md">
+            <Text className="!text-[10px] text-gray-400 font-bold uppercase tracking-wider whitespace-nowrap">
               {who} · {how}
             </Text>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0">
-        <div className="relative flex-1 bg-gray-50 rounded-3xl p-4 overflow-hidden border border-gray-100 shadow-inner">
+      <div className="flex flex-col flex-1 min-h-0">
+        <div className="overflow-hidden relative flex-1 p-4 bg-gray-50 rounded-3xl border border-gray-100 shadow-inner">
           <Textarea
             id="input"
             value={worry}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setWorry(filter.clean(e.target.value))}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setWorry(filter.clean(e.target.value))
+            }
             placeholder="어떤 고민이 있으신가요? 자세히 적을수록 더 깊은 조언을 드릴 수 있어요."
             className="!bg-transparent !border-none !shadow-none !p-2 !ring-0 text-gray-700 leading-relaxed text-sm h-full"
             minHeight="100%"
           />
         </div>
 
-        <div className="px-6 py-4 bg-transparent mt-6 -mx-6 z-20">
+        <div className="z-20 px-6 py-4 -mx-6 mt-6 bg-transparent">
           <div className="grid grid-cols-2 gap-4">
-            <Button 
-              text="이전으로" 
-              bgColor="bg-white/40" 
+            <Button
+              text="이전으로"
+              bgColor="bg-white/40"
               color="text-gray-600"
-              onPress={decrease} 
+              onPress={decrease}
               className="!rounded-2xl h-14"
               outline
             />

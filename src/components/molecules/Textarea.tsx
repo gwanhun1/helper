@@ -5,7 +5,7 @@ interface TextareaProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
   placeholder?: string;
-  maxRows?: number; 
+  maxRows?: number;
   minHeight?: string;
   className?: string;
 }
@@ -18,7 +18,7 @@ const Textarea = ({
   maxRows = 13,
   minHeight = "120px",
   className = "",
-}:TextareaProps) => {
+}: TextareaProps) => {
   const calculateRows = (text: string) => {
     const lineCount = text.split("\n").length;
     return Math.min(lineCount, maxRows);
@@ -30,7 +30,7 @@ const Textarea = ({
   return (
     <textarea
       id={id}
-      className={`w-full p-3 transition duration-200 ease-in-out border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent ${className}`}
+      className={`w-full p-3 transition duration-200 ease-in-out border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-[16px] ${className}`}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

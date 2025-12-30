@@ -42,7 +42,7 @@ export const useKakaoAuth = () => {
     const hasValidCount = typeof existing?.count === "number";
     const lastResetDate = existing?.lastResetDate as string | undefined;
     const needsReset = lastResetDate !== today;
-    const nextCount = needsReset ? 7 : hasValidCount ? existing.count : 7;
+    const nextCount = needsReset ? 10 : hasValidCount ? existing.count : 10;
 
     await update(dataRef, {
       uid: user.uid,

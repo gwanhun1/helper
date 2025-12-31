@@ -1,30 +1,37 @@
-import React from 'react';
-import { 
-  FaUser, FaUserFriends, FaChalkboardTeacher, FaDumbbell, 
-  FaHistory, FaTree, FaDog, FaCat, FaBookOpen, 
-  FaCut, FaChild, FaBrain, FaWater, FaGamepad, 
-  FaBuilding, FaUserTie, FaRocket, FaClock, 
-  FaMask, FaHatWizard, FaMicrophone, FaRobot,
-  FaBolt
+import React from "react";
+import {
+  FaUser,
+  FaUserFriends,
+  FaChalkboardTeacher,
+  FaDumbbell,
+  FaTree,
+  FaDog,
+  FaCat,
+  FaBookOpen,
+  FaCut,
+  FaChild,
+  FaBrain,
+  FaWater,
+  FaUserTie,
+  FaRocket,
+  FaClock,
+  FaMask,
+  FaHatWizard,
+  FaMicrophone,
+  FaRobot,
+  FaBolt,
 } from "react-icons/fa";
-import { GiDevilMask } from "react-icons/gi"; // If available, otherwise fallback
-// Note: GiDevilMask might not be in the standard Fa set, sticking to Fa for safety first unless I check package.json.
-// Let's stick to safe Fa icons or standard emojis if package is unknown.
-// Checking package.json first would be ideal but for now using standard Fa icons.
-
-import { RiAliensFill } from "react-icons/ri"; // Often available
-
-// Fallback to FaRobot if specific icon not found
-// Using a map for easy lookup
 
 type IconProps = {
   className?: string;
 };
 
-export const getPersonaIcon = (who: string | undefined, className: string = "text-white text-lg"): React.ReactNode => {
+export const getPersonaIcon = (
+  who: string | undefined,
+  className: string = "text-white text-lg"
+): React.ReactNode => {
   if (!who) return <FaRobot className={className} />;
 
-  // Normalize check
   const target = who.trim();
 
   switch (target) {
@@ -63,7 +70,7 @@ export const getPersonaIcon = (who: string | undefined, className: string = "tex
     case "CEO":
       return <FaUserTie className={className} />;
     case "외계인":
-      return <FaRocket className={className} />; // Or generic if RiAliensFill fails
+      return <FaRocket className={className} />;
     case "타임머신 여행자":
       return <FaClock className={className} />;
     case "슈퍼히어로":
@@ -80,30 +87,29 @@ export const getPersonaIcon = (who: string | undefined, className: string = "tex
 };
 
 export const getPersonaColor = (who: string | undefined): string => {
-  // Returns tailwind class or hex for background if we want varied colors
-  // Defaulting to existing blue gradient logic if this isn't used, 
-  // but let's provide some variety.
   if (!who) return "from-blue-100 to-blue-200 text-blue-500";
-  
+
   const target = who.trim();
 
-  // Simple category mapping
-  if (["엄마", "아빠", "할머니", "할아버지", "가족"].some(k => target.includes(k))) {
+  if (
+    ["엄마", "아빠", "할머니", "할아버지", "가족"].some((k) =>
+      target.includes(k)
+    )
+  ) {
     return "from-orange-100 to-orange-200 text-orange-500";
   }
-  if (["선생님", "소크라테스", "선비", "책"].some(k => target.includes(k))) {
+  if (["선생님", "소크라테스", "선비", "책"].some((k) => target.includes(k))) {
     return "from-emerald-100 to-emerald-200 text-emerald-600";
   }
-  if (["악당", "시니컬", "T"].some(k => target.includes(k))) {
-    return "from-gray-700 to-gray-900 text-white"; // Dark theme
+  if (["악당", "시니컬", "T"].some((k) => target.includes(k))) {
+    return "from-gray-700 to-gray-900 text-white";
   }
-  if (["아이돌", "슈퍼히어로", "마법사"].some(k => target.includes(k))) {
+  if (["아이돌", "슈퍼히어로", "마법사"].some((k) => target.includes(k))) {
     return "from-purple-100 to-purple-200 text-purple-500";
   }
-  if (["강아지", "고양이", "나무"].some(k => target.includes(k))) {
+  if (["강아지", "고양이", "나무"].some((k) => target.includes(k))) {
     return "from-amber-100 to-amber-200 text-amber-600";
   }
-  
-  // Default
+
   return "from-blue-100 to-blue-200 text-blue-500";
 };

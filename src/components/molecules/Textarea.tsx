@@ -24,13 +24,12 @@ const Textarea = ({
     return Math.min(lineCount, maxRows);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const rows = useMemo(() => calculateRows(value), [value]);
 
   return (
     <textarea
       id={id}
-      className={`w-full p-3 transition duration-200 ease-in-out border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-[16px] ${className}`}
+      className={`p-3 w-full rounded-md border border-gray-300 shadow-sm transition duration-200 ease-in-out resize-none focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-[16px] ${className}`}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

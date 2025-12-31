@@ -84,7 +84,7 @@ const useWorryManager = (): UseWorryManager => {
     } catch (err) {
       setError(err as Error);
       setLoading(false);
-      throw err; // Re-throw so the caller knows it failed
+      throw err;
     }
   };
 

@@ -22,14 +22,13 @@ const RemainingQuotaCard = ({
       animate={{ opacity: 1, scale: 1 }}
       className={`overflow-hidden relative p-7 border shadow-2xl backdrop-blur-xl bg-white/40 border-white/60 rounded-[32px] shadow-green/10 ${className}`}
     >
-      {/* Background patterns */}
       <div className="absolute top-0 right-0 -mt-16 -mr-16 w-32 h-32 rounded-full blur-3xl bg-green/10" />
       <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-24 h-24 rounded-full blur-2xl bg-green/5" />
 
       <div className="relative z-10">
         <div className="flex justify-between items-center mb-6">
-          <div className="flex gap-3 items-center">
-            <div className="flex justify-center items-center w-10 h-10 rounded-2xl bg-green/10">
+          <div className="flex items-center gap-3">
+            <div className="flex justify-center items-center w-10 h-10 rounded-xl bg-gradient-to-br from-white to-green/10 text-green shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),0_4px_12px_rgba(122,196,167,0.1)] border border-white/60">
               <svg
                 width="20"
                 height="20"
@@ -43,16 +42,25 @@ const RemainingQuotaCard = ({
                 />
               </svg>
             </div>
-            <div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <Text
+                  variant="caption"
+                  weight="bold"
+                  color="tertiary"
+                  className="uppercase tracking-[0.2em] text-[9px] opacity-60"
+                >
+                  Quota Status
+                </Text>
+                <span className="px-1.5 py-[1px] text-[9px] font-black rounded-full bg-green text-white shadow-sm shadow-green/20">
+                  NEW
+                </span>
+              </div>
               <Text
-                variant="caption"
+                variant="h3"
                 weight="bold"
-                color="tertiary"
-                className="uppercase tracking-[0.2em] text-[9px]"
+                className="text-slate-800 tracking-tight"
               >
-                Quota Status
-              </Text>
-              <Text variant="h3" weight="bold" className="text-slate-800">
                 남은 상담 기회
               </Text>
             </div>

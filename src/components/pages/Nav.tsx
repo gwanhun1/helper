@@ -25,10 +25,10 @@ const Nav = () => {
       {location.pathname !== "/credit" &&
       location.pathname !== "/auth" &&
       location.pathname !== "/meditation" ? (
-        <div className="pt-6 px-4  bg-gradient-to-b bg-white">
-          <div className="flex items-center justify-between pb-4">
+        <div className="px-4 pt-6 bg-white bg-gradient-to-b">
+          <div className="flex justify-between items-center pb-4">
             <p
-              className="opacity-60 text-xl font-extrabold text-green helper-text cursor-pointer select-none"
+              className="text-xl font-extrabold opacity-60 cursor-pointer select-none text-green helper-text"
               onClick={() => navigate("/")}
             >
               Mind
@@ -41,20 +41,36 @@ const Nav = () => {
               </span>
               ift
             </p>
-            <div className="relative group z-20">
-              <div className="p-2 bg-green-200 backdrop-blur-sm rounded-full">
+            <div className="relative z-20 group">
+              <div className="p-2 bg-green-200 rounded-full backdrop-blur-sm">
                 <AiTwotoneSmile className="text-lg text-white hover:text-[#FFE04D] transition-colors cursor-pointer" />
               </div>
-              <div className="absolute right-0 mt-3 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-300">
+              <div className="absolute right-0 invisible mt-3 opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">
                 <div className="bg-white rounded-[14px] shadow-[0_2px_16px_rgb(0,0,0,0.08)] p-4 relative animate-fadeIn hover:shadow-[0_4px_20px_rgb(0,0,0,0.12)] transition-shadow duration-300">
                   <div className="flex flex-col gap-2">
-                    <div className="text-[14px] font-semibold text-gray-800 whitespace-nowrap flex items-center gap-2">
-                      <span className="animate-wave inline-block">👋</span>{" "}
-                      {user?.displayName}님 안녕하세요!
+                    <div className="flex items-center gap-2 text-[14px] font-semibold text-gray-800 whitespace-nowrap">
+                      <span className="inline-block animate-wave">👋</span>
+                      <span>{user?.displayName}님 안녕하세요!</span>
                     </div>
-                    <div className="text-[14px] font-medium text-gray-800 whitespace-nowrap flex items-center gap-1">
-                      🎉<span className="text-blue-500">버전 1.0.2</span> 이
-                      출시되었습니다! 🎊
+
+                    <div className="pt-2 mt-1 border-t border-gray-100 flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2 text-[13px] font-semibold text-gray-800 whitespace-nowrap">
+                        <span className="text-[15px]">📢</span>
+                        <span>
+                          <span className="text-blue-500">버전 1.0.2</span>{" "}
+                          업데이트 소식
+                        </span>
+                      </div>
+                      <div className="ml-6 flex flex-col gap-1 text-[12.5px] text-gray-700 font-medium">
+                        <div className="flex items-start gap-2 whitespace-nowrap">
+                          <span className="mt-[1px]">🌳</span>
+                          <span>포레스트가 계절·시간대에 따라 변화해요.</span>
+                        </div>
+                        <div className="flex items-start gap-2 whitespace-nowrap">
+                          <span className="mt-[1px]">📊</span>
+                          <span>‘나의 마음 리포트’가 새로 추가됐어요.</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="absolute -top-2 right-3 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white drop-shadow-sm"></div>

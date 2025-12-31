@@ -1,36 +1,34 @@
 import React from "react";
+import { MdFamilyRestroom } from "react-icons/md";
+import { FaSuperpowers } from "react-icons/fa";
 import {
-  FaUser,
-  FaUserFriends,
-  FaChalkboardTeacher,
-  FaDumbbell,
-  FaTree,
-  FaDog,
-  FaCat,
-  FaBookOpen,
-  FaCut,
-  FaChild,
-  FaBrain,
-  FaWater,
-  FaUserTie,
-  FaRocket,
-  FaClock,
-  FaMask,
-  FaHatWizard,
-  FaMicrophone,
-  FaRobot,
-  FaBolt,
-} from "react-icons/fa";
-
-type IconProps = {
-  className?: string;
-};
+  PiBaby,
+  PiBrain,
+  PiBriefcaseMetal,
+  PiCat,
+  PiChalkboardTeacher,
+  PiClockClockwise,
+  PiDog,
+  PiMicrophoneStage,
+  PiRobot,
+  PiTreeEvergreen,
+  PiUsersThree,
+  PiWaves,
+} from "react-icons/pi";
+import {
+  GiAlienStare,
+  GiComb,
+  GiEvilMinion,
+  GiScrollUnfurled,
+  GiWeightLiftingUp,
+  GiWizardStaff,
+} from "react-icons/gi";
 
 export const getPersonaIcon = (
   who: string | undefined,
   className: string = "text-white text-lg"
 ): React.ReactNode => {
-  if (!who) return <FaRobot className={className} />;
+  if (!who) return <PiRobot className={className} />;
 
   const target = who.trim();
 
@@ -39,50 +37,50 @@ export const getPersonaIcon = (
     case "아빠":
     case "할머니":
     case "할아버지":
-      return <FaUser className={className} />;
+      return <MdFamilyRestroom className={className} />;
     case "형/오빠":
     case "동생":
     case "친구":
-      return <FaUserFriends className={className} />;
+      return <PiUsersThree className={className} />;
     case "선생님":
-      return <FaChalkboardTeacher className={className} />;
+      return <PiChalkboardTeacher className={className} />;
     case "헬스트레이너":
-      return <FaDumbbell className={className} />;
+      return <GiWeightLiftingUp className={className} />;
     case "조선시대 선비":
     case "현자 소크라테스":
-      return <FaBookOpen className={className} />;
+      return <GiScrollUnfurled className={className} />;
     case "지혜로운 나무":
-      return <FaTree className={className} />;
+      return <PiTreeEvergreen className={className} />;
     case "고민 상담 강아지":
-      return <FaDog className={className} />;
+      return <PiDog className={className} />;
     case "시니컬한 고양이":
-      return <FaCat className={className} />;
+      return <PiCat className={className} />;
     case "동네 미용실 원장님":
-      return <FaCut className={className} />;
+      return <GiComb className={className} />;
     case "천진난만한 아이":
     case "인생 2회차 초딩":
-      return <FaChild className={className} />;
+      return <PiBaby className={className} />;
     case "이성적인 T":
-      return <FaBrain className={className} />;
+      return <PiBrain className={className} />;
     case "산전수전 해녀 할머니":
-      return <FaWater className={className} />;
+      return <PiWaves className={className} />;
     case "재벌 회장님":
     case "CEO":
-      return <FaUserTie className={className} />;
+      return <PiBriefcaseMetal className={className} />;
     case "외계인":
-      return <FaRocket className={className} />;
+      return <GiAlienStare className={className} />;
     case "타임머신 여행자":
-      return <FaClock className={className} />;
+      return <PiClockClockwise className={className} />;
     case "슈퍼히어로":
-      return <FaBolt className={className} />;
+      return <FaSuperpowers className={className} />;
     case "악당":
-      return <FaMask className={className} />;
+      return <GiEvilMinion className={className} />;
     case "마법사":
-      return <FaHatWizard className={className} />;
+      return <GiWizardStaff className={className} />;
     case "아이돌":
-      return <FaMicrophone className={className} />;
+      return <PiMicrophoneStage className={className} />;
     default:
-      return <FaRobot className={className} />;
+      return <PiRobot className={className} />;
   }
 };
 

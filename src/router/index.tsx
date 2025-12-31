@@ -14,6 +14,7 @@ const CreditPage = lazy(() => import("../components/pages/Credit"));
 const AuthPage = lazy(() => import("../components/pages/Auth"));
 const AdvicePage = lazy(() => import("../components/pages/Advice"));
 const InsightPage = lazy(() => import("../components/pages/Insight"));
+const VentPage = lazy(() => import("../components/pages/Vent"));
 
 const LoadingSection = () => {
   return (
@@ -87,6 +88,16 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingSection />}>
             <AuthPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/vent",
+        element: (
+          <Suspense fallback={<LoadingSection />}>
+            <ErrorBoundary>
+              <VentPage />
+            </ErrorBoundary>
           </Suspense>
         ),
       },

@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import Text from "../atoms/Text";
 import { Link } from "react-router-dom";
-import { FiPieChart, FiArrowRight } from "react-icons/fi";
+import { FiPieChart, FiArrowRight, FiCreditCard } from "react-icons/fi";
 
 const User = () => {
   const user = useUserStore((state) => state.user);
@@ -92,6 +92,44 @@ const User = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <UserAccount email={user?.email} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.12 }}
+        >
+          <Link
+            to="/credit"
+            className="flex items-center justify-between p-7 bg-white/40 backdrop-blur-xl border border-white/60 rounded-[35px] shadow-2xl shadow-blue-500/10 text-slate-800 group overflow-hidden relative active:scale-95 transition-all"
+          >
+            <div className="absolute top-0 right-0 p-6 opacity-10 transition-transform duration-500 group-hover:scale-125 group-hover:rotate-12">
+              <FiCreditCard size={100} className="text-blue-500" />
+            </div>
+
+            <div className="flex relative z-10 items-center space-x-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-white to-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-[inset_0_2px_4px_rgba(255,255,255,0.8),0_8px_16px_rgba(59,130,246,0.1)] border border-white/60">
+                <FiCreditCard size={28} />
+              </div>
+              <div className="flex flex-col gap-0.5">
+                <div className="flex gap-2 items-center">
+                  <span className="text-xl font-black tracking-tight transition-colors text-slate-800 group-hover:text-blue-500">
+                    포인트 충전
+                  </span>
+                </div>
+                <span className="text-slate-500 text-[13px] font-medium tracking-tight">
+                  더 많은 상담을 위한 포인트 충전
+                </span>
+              </div>
+            </div>
+
+            <div className="flex relative z-10 justify-center items-center w-10 h-10 rounded-full transition-all bg-slate-900/5 group-hover:bg-blue-500 group-hover:text-white">
+              <FiArrowRight
+                size={20}
+                className="transition-transform group-hover:translate-x-1"
+              />
+            </div>
+          </Link>
         </motion.div>
 
         <motion.div

@@ -3,23 +3,18 @@ import { useLocation } from "react-router-dom";
 import {
   AiOutlinePlusCircle,
   AiOutlineHome,
-  AiOutlineCreditCard,
   AiOutlineUser,
   AiOutlineMessage,
 } from "react-icons/ai";
-import {
-  AiFillHome,
-  AiFillCreditCard,
-  AiFillPlusCircle,
-  AiFillMessage,
-} from "react-icons/ai";
+import { AiFillHome, AiFillPlusCircle, AiFillMessage } from "react-icons/ai";
+import { FaRegGrinTongueSquint } from "react-icons/fa";
 import TabButton from "../atoms/TabButton";
 
-const BottomNavigation= () => {
+const BottomNavigation = () => {
   const location = useLocation();
 
   return (
-    <div className="bottom-0 left-0 flex items-center justify-between w-full p-2 pb-0 bg-white border-t-2 shadow-lg">
+    <div className="flex bottom-0 left-0 justify-between items-center p-2 pb-0 w-full bg-white border-t-2 shadow-lg">
       <TabButton
         to="/"
         icon={location.pathname === "/" ? <AiFillHome /> : <AiOutlineHome />}
@@ -39,14 +34,6 @@ const BottomNavigation= () => {
         label="고민"
         active={location.pathname === "/advice"}
       />
-      {/* <TabButton
-        to="/meditation"
-        icon={
-          <FaYinYang className={location.pathname === "/meditation" ? "text-green" : "text-gray-600 hover:text-green"} />
-        }
-        label="명상"
-        active={location.pathname === "/meditation"}
-      /> */}
 
       <TabButton
         to="/worry"
@@ -60,18 +47,14 @@ const BottomNavigation= () => {
         label="조언"
         active={location.pathname === "/worry"}
       />
+
       <TabButton
-        to="/credit"
-        icon={
-          location.pathname === "/credit" ? (
-            <AiFillCreditCard />
-          ) : (
-            <AiOutlineCreditCard />
-          )
-        }
-        label="결제"
-        active={location.pathname === "/credit"}
+        to="/vent"
+        icon={<FaRegGrinTongueSquint />}
+        label="풀기"
+        active={location.pathname === "/vent"}
       />
+
       <TabButton
         to="/user"
         icon={<AiOutlineUser />}

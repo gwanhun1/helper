@@ -14,7 +14,7 @@ import {
   Legend,
 } from "chart.js";
 import { wellnessTips } from "../../data/wellnessTips";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StatCard from "../atoms/StatCard";
 import EmotionChart from "../molecules/EmotionChart";
 import WellnessTipCard from "../molecules/WellnessTipCard";
@@ -33,15 +33,28 @@ ChartJS.register(
 
 const Home = () => {
   const { userContents: forestData, loading } = useUserContents();
+  const toastIdRef = useRef<string | null>(null);
+  const lastToastKeyRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (forestData && forestData.length > 0) {
       const lastRecord = forestData[forestData.length - 1];
       if (lastRecord && lastRecord.level !== undefined) {
         const level = Number(lastRecord.level);
+        const toastKey = `${
+          lastRecord.id ?? lastRecord.date ?? forestData.length
+        }-${level}`;
+
+        if (lastToastKeyRef.current === toastKey) {
+          return;
+        }
+
+        if (toastIdRef.current) {
+          toast.dismiss(toastIdRef.current);
+        }
 
         if (level >= 6) {
-          toast(
+          const id = toast(
             <div className="flex flex-col gap-1">
               <span className="font-medium">기분 좋은 하루네요! 💫</span>
               <span className="text-sm">
@@ -50,8 +63,9 @@ const Home = () => {
             </div>,
             { icon: "✨", duration: 5000 }
           );
+          toastIdRef.current = id;
         } else if (level >= 3) {
-          toast(
+          const id = toast(
             <div className="flex flex-col gap-1">
               <span className="font-medium">
                 평온한 하루를 보내고 계시네요 😊
@@ -62,8 +76,9 @@ const Home = () => {
             </div>,
             { icon: "🍃", duration: 5000 }
           );
+          toastIdRef.current = id;
         } else {
-          toast(
+          const id = toast(
             <div className="flex flex-col gap-1">
               <span className="font-medium">
                 힘든 시간을 보내고 계시네요 😔
@@ -74,9 +89,17 @@ const Home = () => {
             </div>,
             { icon: "🌱", duration: 5000 }
           );
+          toastIdRef.current = id;
         }
+
+        lastToastKeyRef.current = toastKey;
       }
     }
+    return () => {
+      if (toastIdRef.current) {
+        toast.dismiss(toastIdRef.current);
+      }
+    };
   }, [forestData]);
 
   const getTodaysTip = () => {
@@ -117,7 +140,7 @@ const Home = () => {
 
   return (
     <PageLayout requireAuth>
-      <div className="flex flex-col space-y-4  pb-4">
+      <div className="flex flex-col pb-4 space-y-4">
         <WorryPromptCarousel />
         <EmotionChart
           averageLevel={getAverageLevel()}

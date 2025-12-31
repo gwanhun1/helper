@@ -45,7 +45,6 @@ const User = () => {
       </div>
 
       <div className="px-4 -mt-4 mb-4 space-y-4">
-        {/* Insight Report Button */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

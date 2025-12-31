@@ -148,7 +148,6 @@ const Insight = () => {
           <div className="absolute top-1/3 -left-32 w-80 h-80 bg-emerald-500/3 blur-[100px] rounded-full" />
         </div>
 
-        {/* Header */}
         <div className="flex relative z-10 justify-between items-center py-3">
           <div className="flex gap-3 items-center">
             <button
@@ -166,7 +165,6 @@ const Insight = () => {
           </div>
         </div>
 
-        {/* AI Summary Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -199,7 +197,6 @@ const Insight = () => {
           </div>
         </motion.div>
 
-        {/* Stats Quick Grid */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -242,9 +239,7 @@ const Insight = () => {
           </motion.div>
         </motion.div>
 
-        {/* Chart Section */}
         <div className="grid relative z-10 grid-cols-1 gap-4">
-          {/* Mood Distribution */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -288,7 +283,6 @@ const Insight = () => {
             </div>
           </motion.div>
 
-          {/* Activity by Day */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -333,7 +327,6 @@ const Insight = () => {
             </div>
           </motion.div>
 
-          {/* Time Analysis */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -396,7 +389,6 @@ const Insight = () => {
           </motion.div>
         </div>
 
-        {/* Action Suggestion */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

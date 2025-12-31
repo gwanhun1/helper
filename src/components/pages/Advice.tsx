@@ -70,10 +70,8 @@ const Advice = () => {
     try {
       let date: Date;
 
-      // ISO String 또는 표준 날짜 형식 우선 시도
       date = new Date(dateStr);
 
-      // 만약 파싱 실패(Invalid Date)하고 슬래시가 포함된 경우 (기존 형식: MM/DD/YYYY)
       if (isNaN(date.getTime()) && dateStr.includes("/")) {
         const dateParts = dateStr.split("/");
         if (dateParts.length === 3) {
@@ -84,7 +82,6 @@ const Advice = () => {
         }
       }
 
-      // 여전히 유효하지 않으면 원본 반환
       if (isNaN(date.getTime())) {
         return dateStr;
       }
@@ -106,7 +103,6 @@ const Advice = () => {
       } else if (diffDays < 7) {
         return `${diffDays}일 전`;
       } else {
-        // 일주일 이상된 경우 원래 날짜 표시 (YYYY-MM-DD 형식)
         return date.toISOString().split("T")[0];
       }
     } catch (error) {

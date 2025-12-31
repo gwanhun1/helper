@@ -44,7 +44,6 @@ const StepFour = () => {
     if (user?.uid && user?.count) {
       try {
         await fetchResponse();
-        // Only decrease count if fetchResponse succeeds
         await decreaseUserCount({ uId: user.uid, count: user.count });
       } catch (error) {
         console.error("Counseling request failed:", error);
@@ -70,9 +69,9 @@ const StepFour = () => {
       interval = setInterval(() => {
         setLoadingState((prev) => ({
           ...prev,
-          step: (prev.step + 1) % 4, // Infinite loop: 0 -> 1 -> 2 -> 3 -> 0 ...
+          step: (prev.step + 1) % 4,
         }));
-      }, 2500); // Change text every 2.5 seconds
+      }, 2500);
     }
     return () => clearInterval(interval);
   }, [loadingState.isLoading]);

@@ -29,7 +29,7 @@ const StepFive = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col h-full bg-transparent px-6 pt-6 pb-8"
+      className="flex flex-col px-6 pt-6 pb-8 h-full bg-transparent"
     >
       <div className="pb-6">
         <Title>당신을 위한 조언이 도착했어요</Title>
@@ -38,15 +38,14 @@ const StepFive = () => {
         </Text>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-1">
+      <div className="overflow-y-auto flex-1 px-1">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-orange-50/50 rounded-3xl p-6 border border-orange-100/50 shadow-sm relative overflow-hidden"
+          className="overflow-hidden relative p-6 rounded-3xl border shadow-sm bg-orange-50/50 border-orange-100/50"
         >
-          {/* Decorative element */}
-          <div className="absolute top-0 right-0 w-20 h-20 bg-orange-100/30 rounded-full blur-2xl -mr-10 -mt-10" />
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-20 h-20 rounded-full blur-2xl bg-orange-100/30" />
 
           <div className="relative z-10 text-gray-700 leading-loose text-[15px] whitespace-pre-wrap font-medium">
             {response}
@@ -64,7 +63,7 @@ const StepFive = () => {
               : "bg-gray-50 border-gray-200"
           }`}
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex justify-between items-center mb-2">
             <div
               className={`flex items-center gap-2 font-semibold text-sm ${
                 isOpen ? "text-green-700" : "text-gray-600"
@@ -79,8 +78,8 @@ const StepFive = () => {
               onClick={() => setIsOpen(!isOpen)}
               className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${
                 isOpen
-                  ? "bg-green-100 text-green-700 hover:bg-green-200"
-                  : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                  ? "text-green-700 bg-green-100 hover:bg-green-200"
+                  : "text-gray-600 bg-gray-200 hover:bg-gray-300"
               }`}
             >
               설정 변경
@@ -98,7 +97,7 @@ const StepFive = () => {
         </motion.div>
       </div>
 
-      <div className="px-6 py-4 bg-transparent -mx-6 -mb-8 mt-8 z-20">
+      <div className="z-20 px-6 py-4 -mx-6 mt-8 -mb-8 bg-transparent">
         <div className="grid grid-cols-2 gap-4">
           <Button
             text="이전으로"
@@ -122,7 +121,7 @@ const StepFive = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           onClick={handleViewInCommunity}
-          className="w-full mt-3 py-3 text-sm text-green-600 font-medium hover:bg-green-50 rounded-xl transition-colors flex items-center justify-center gap-2"
+          className="flex gap-2 justify-center items-center py-3 mt-3 w-full text-sm font-medium text-green-600 rounded-xl transition-colors hover:bg-green-50"
         >
           <FiShare2 size={16} />
           커뮤니티에서 보기

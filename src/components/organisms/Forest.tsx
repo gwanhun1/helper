@@ -31,7 +31,7 @@ const Forest = () => {
 
   // 현재 계절 계산
   const getCurrentSeason = (): Season => {
-    const month = new Date().getMonth() + 1; // 0-indexed to 1-12
+    const month = new Date().getMonth() + 1;
     if (month >= 3 && month <= 5) return "spring";
     if (month >= 6 && month <= 8) return "summer";
     if (month >= 9 && month <= 11) return "autumn";
@@ -169,7 +169,7 @@ const Forest = () => {
   ) => {
     const minDistance = 25; // 최소 거리 설정
     return existingPositions.every((pos) => {
-      const requiredDistance = (minDistance * (scale + pos.scale)) / 2; // 두 나무의 크기를 고려한 최소 거리
+      const requiredDistance = (minDistance * (scale + pos.scale)) / 2;
       const actualDistance = calculateDistance(x, y, pos.x, pos.y);
       return actualDistance > requiredDistance;
     });

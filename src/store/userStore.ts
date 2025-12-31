@@ -6,7 +6,7 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import { app } from "../firebaseConfig";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, update } from "firebase/database";
 
 interface ExtendedUser extends FirebaseUser {
   grade?: string;
@@ -36,17 +36,23 @@ const auth = getAuth(app);
 onAuthStateChanged(auth, async (user) => {
   const userStore = useUserStore.getState();
   if (user) {
-    // Firebase에서 사용자 데이터 가져오기
     const db = getDatabase(app);
     const userRef = ref(db, `users/${user.uid}`);
     const snapshot = await get(userRef);
     const userData = snapshot.val();
+    const today = new Date().toISOString().slice(0, 10);
+    const needsReset = userData?.lastResetDate !== today;
+    const refreshedCount = needsReset ? 10 : userData?.count || 0;
+
+    if (needsReset) {
+      await update(userRef, { count: 10, lastResetDate: today });
+    }
 
     userStore.setUser({
       ...user,
       grade: userData?.grade || "A",
-      count: userData?.count || 0,
-      lastResetDate: userData?.lastResetDate || "",
+      count: refreshedCount,
+      lastResetDate: userData?.lastResetDate || today,
       contentIds: userData?.contentIds || [],
     });
   } else {

@@ -28,8 +28,8 @@ const useUserStore = create<UserStore>()(
     }),
     {
       name: "user-storage",
-    }
-  )
+    },
+  ),
 );
 
 const auth = getAuth(app);
@@ -41,19 +41,30 @@ onAuthStateChanged(auth, async (user) => {
     const snapshot = await get(userRef);
     const userData = snapshot.val();
     const today = new Date().toISOString().slice(0, 10);
-    const needsReset = userData?.lastResetDate !== today;
-    const refreshedCount = needsReset ? 10 : userData?.count || 0;
 
-    if (needsReset) {
-      await update(userRef, { count: 10, lastResetDate: today });
+    // 필수 데이터가 없거나 날짜가 바뀌었을 경우 초기화
+    const needsReset = !userData || userData.lastResetDate !== today;
+    const refreshedCount = needsReset ? 10 : (userData?.count ?? 10);
+    const currentGrade = userData?.grade || "A";
+    const currentContentIds = userData?.contentIds || [];
+
+    if (needsReset || !userData?.count) {
+      await update(userRef, {
+        count: refreshedCount,
+        lastResetDate: today,
+        grade: currentGrade,
+        uid: user.uid,
+        email: user.email || "",
+        displayName: user.displayName || "",
+      });
     }
 
     userStore.setUser({
       ...user,
-      grade: userData?.grade || "A",
+      grade: currentGrade,
       count: refreshedCount,
-      lastResetDate: userData?.lastResetDate || today,
-      contentIds: userData?.contentIds || [],
+      lastResetDate: today,
+      contentIds: currentContentIds,
     });
   } else {
     userStore.setUser(null);

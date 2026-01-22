@@ -97,22 +97,14 @@ export const useKakaoAuth = () => {
           }
         } catch (error) {
           console.error("Firebase auth error:", error);
-          const auth = getAuth();
-          try {
-            const userCredential = await createUserWithEmailAndPassword(
-              auth,
-              `${userData.id}@kakao.com`,
-              `${userData.id}`
-            );
-            await updateUserDatabase(userCredential.user);
-            navigate("/");
-          } catch (createError) {
-            console.error("Error creating user:", createError);
-          }
+          alert(
+            "카카오 로그인 인증에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+          );
         }
       }
     } catch (error) {
       console.error("Kakao login error:", error);
+      alert("로그인 중 오류가 발생했습니다. 네트워크 연결을 확인해 주세요.");
     }
   };
 

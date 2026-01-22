@@ -40,7 +40,7 @@ ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
 );
 
 const Insight = () => {
@@ -62,7 +62,10 @@ const Insight = () => {
     const timeStats = { morning: 0, afternoon: 0, evening: 0, night: 0 };
 
     userContents.forEach((item) => {
+      if (!item.date) return;
       const date = new Date(item.date);
+      if (isNaN(date.getTime())) return;
+
       dayStats[date.getDay()]++;
 
       const hour = date.getHours();

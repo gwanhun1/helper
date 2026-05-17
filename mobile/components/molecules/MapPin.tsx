@@ -19,6 +19,7 @@ type Props = {
   y: number;
   replyCount?: number;
   isMine?: boolean;
+  isHot?: boolean;
   onPress?: () => void;
   /** 핀별 애니메이션 phase delay (자연스러운 비동기) */
   delay?: number;
@@ -34,6 +35,7 @@ export const MapPin = ({
   y,
   replyCount,
   isMine,
+  isHot,
   onPress,
   delay = 0,
   size = 44,
@@ -76,7 +78,12 @@ export const MapPin = ({
       ]}
     >
       <PressableScale onPress={onPress} haptic="light" scale={0.9}>
-        <PinBubble replyCount={replyCount} isMine={isMine} size={size} />
+        <PinBubble
+          replyCount={replyCount}
+          isMine={isMine}
+          isHot={isHot}
+          size={size}
+        />
       </PressableScale>
     </Animated.View>
   );

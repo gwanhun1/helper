@@ -4,7 +4,7 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
-import * as Haptics from "expo-haptics";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 type Props = Omit<PressableProps, "style"> & {
   /** 누름 스케일 정도 */
@@ -12,6 +12,11 @@ type Props = Omit<PressableProps, "style"> & {
   /** 햅틱 강도 — "off"면 안 울림 */
   haptic?: "light" | "medium" | "selection" | "off";
   style?: StyleProp<ViewStyle>;
+};
+
+const TRIGGER_OPTIONS = {
+  enableVibrateFallback: false,
+  ignoreAndroidSystemSettings: false,
 };
 
 export const PressableScale = ({
@@ -22,17 +27,19 @@ export const PressableScale = ({
   children,
   ...rest
 }: Props) => {
-  const handlePress = (e: Parameters<NonNullable<PressableProps["onPress"]>>[0]) => {
+  const handlePress = (
+    e: Parameters<NonNullable<PressableProps["onPress"]>>[0],
+  ) => {
     if (haptic !== "off") {
       switch (haptic) {
         case "light":
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          ReactNativeHapticFeedback.trigger("impactLight", TRIGGER_OPTIONS);
           break;
         case "medium":
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          ReactNativeHapticFeedback.trigger("impactMedium", TRIGGER_OPTIONS);
           break;
         case "selection":
-          Haptics.selectionAsync();
+          ReactNativeHapticFeedback.trigger("selection", TRIGGER_OPTIONS);
           break;
       }
     }

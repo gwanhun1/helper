@@ -113,6 +113,34 @@ export const SEED_WORRIES: Worry[] = [
   },
 ];
 
+/**
+ * 현재 사용자가 다른 사람 글에 보낸 답장.
+ * 가시성 룰: 답변자 본인 + 글쓴이만 봄. 다른 답변자는 못 봄.
+ */
+export const MY_REPLIES: Reply[] = [
+  {
+    id: "mr1",
+    worryId: "w5",
+    fromNickname: "나",
+    body: "저도 작심삼일이었는데 일주일에 두 번부터 시작하니 부담이 줄더라고요. 응원해요.",
+    createdAt: "2시간 전",
+  },
+  {
+    id: "mr2",
+    worryId: "w6",
+    fromNickname: "나",
+    body: "가족과의 거리감, 저도 비슷한 시기가 있었어요. 작은 안부 한 마디가 시작이 되기도 해요.",
+    createdAt: "어제",
+  },
+  {
+    id: "mr3",
+    worryId: "w8",
+    fromNickname: "나",
+    body: "감정 기복은 마음이 건강하다는 신호이기도 해요. 무너지는 것도 회복의 과정이에요.",
+    createdAt: "30분 전",
+  },
+];
+
 export const SEED_REPLIES: Reply[] = [
   {
     id: "r1",

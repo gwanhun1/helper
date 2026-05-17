@@ -1,10 +1,11 @@
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import {
   FAB,
-  PeekSheet,
+  NearbyWorrySheet,
   RoundIconButton,
   Screen,
   TopChip,
@@ -12,21 +13,23 @@ import {
 } from "@/components";
 import { SEED_WORRIES } from "@/data";
 import { spacing } from "@/theme";
+import type { RootStackParamList } from "@/App";
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
-  const router = useRouter();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const openWorry = (id: string) => {
-    router.push(`/worry/${id}`);
+    navigation.navigate("Worry", { id });
   };
 
   return (
     <Screen safe={false} bg="surfaceAlt">
-      {/* 풀스크린 지도 (Expo Go에선 placeholder, dev client에선 네이버 지도) */}
+      {/* 풀스크린 지도 */}
       <WorryMap worries={SEED_WORRIES} onPinPress={openWorry} />
 
-      {/* 상단 플로팅 칩 */}
+      {/* 상단 플로팅 칩 — 작게, 지도 가리지 않음 */}
       <SafeAreaView
         edges={["top"]}
         style={styles.topOverlay}
@@ -48,19 +51,14 @@ export default function MapScreen() {
         <RoundIconButton icon="layers" onPress={() => {}} />
       </View>
 
-      {/* peek 시트 */}
-      <PeekSheet
-        title="이 근처에서 들려오는 마음"
-        subtitle="위로 올려서 둘러보세요"
-        onPress={() => {}}
-        style={styles.peek}
-      />
+      {/* 드래그 가능한 풀 바텀시트 */}
+      <NearbyWorrySheet worries={SEED_WORRIES} onPinPress={openWorry} />
 
       {/* 작성 FAB */}
       <FAB
         icon="edit-3"
         label="내 마음 띄우기"
-        onPress={() => {}}
+        onPress={() => navigation.navigate("Compose")}
         style={styles.fab}
       />
     </Screen>
@@ -80,12 +78,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: spacing.lg,
     gap: spacing.sm,
-  },
-  peek: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
   },
   fab: {
     position: "absolute",

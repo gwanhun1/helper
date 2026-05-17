@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,8 +9,12 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Feather } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import Feather from "react-native-vector-icons/Feather";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { RouteProp } from "@react-navigation/native";
+
+import type { RootStackParamList } from "@/App";
 
 import {
   Avatar,
@@ -19,19 +23,26 @@ import {
   Card,
   PressableScale,
   ReplyCard,
+  ReportSheet,
   Text,
 } from "@/components";
-import { findWorry, repliesForWorry } from "@/data";
+import { findWorry, myReplyToWorry, repliesForWorry } from "@/data";
 import { colors, fontSize, radius, spacing } from "@/theme";
 
 export default function WorryDetailModal() {
-  const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
+  const route = useRoute<RouteProp<RootStackParamList, "Worry">>();
+  const { id } = route.params;
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const worry = id ? findWorry(id) : undefined;
   const replies = id ? repliesForWorry(id) : [];
+  const myReply = id ? myReplyToWorry(id) : undefined;
+  // 다른 답변자가 보낸 답장 수 (내 답장 제외)
+  const otherRepliesCount = (worry?.replyCount ?? 0) - (myReply ? 1 : 0);
 
   const [reply, setReply] = useState("");
+  const reportRef = useRef<{ open: () => void; close: () => void }>(null);
 
   if (!worry) {
     return (
@@ -40,7 +51,7 @@ export default function WorryDetailModal() {
           <Text variant="body" tone="secondary">
             마음을 찾을 수 없어요
           </Text>
-          <Button label="닫기" variant="ghost" onPress={() => router.back()} />
+          <Button label="닫기" variant="ghost" onPress={() => navigation.goBack()} />
         </View>
       </SafeAreaView>
     );
@@ -50,7 +61,7 @@ export default function WorryDetailModal() {
     if (!reply.trim()) return;
     // TODO: 실제 답장 저장
     setReply("");
-    router.back();
+    navigation.replace("Reward", { type: "reply", count: "1" });
   };
 
   return (
@@ -58,14 +69,20 @@ export default function WorryDetailModal() {
       {/* 헤더 — 닫기 + 카테고리 뱃지 */}
       <View style={styles.header}>
         <PressableScale
-          onPress={() => router.back()}
+          onPress={() => navigation.goBack()}
           haptic="selection"
           style={styles.closeBtn}
         >
           <Feather name="x" size={22} color={colors.textPrimary} />
         </PressableScale>
         <Badge label={worry.category} variant="soft" />
-        <View style={styles.closeBtn} />
+        <PressableScale
+          onPress={() => reportRef.current?.open()}
+          haptic="selection"
+          style={styles.closeBtn}
+        >
+          <Feather name="flag" size={20} color={colors.textTertiary} />
+        </PressableScale>
       </View>
 
       <KeyboardAvoidingView
@@ -138,6 +155,40 @@ export default function WorryDetailModal() {
                   </View>
                 </Card>
               )
+            ) : myReply ? (
+              // 답변자 본인 — 자기가 쓴 답장만 보이고 다른 답변자는 카운트만
+              <View style={{ gap: spacing.md }}>
+                <Card padding="lg" style={styles.myReplyCard}>
+                  <View style={styles.myReplyHead}>
+                    <View style={styles.myReplyBadge}>
+                      <Feather name="send" size={12} color={colors.white} />
+                      <Text style={styles.myReplyBadgeText}>내가 보낸 답장</Text>
+                    </View>
+                    <Text variant="caption" tone="tertiary">
+                      {myReply.createdAt}
+                    </Text>
+                  </View>
+                  <Text
+                    variant="body"
+                    tone="primary"
+                    style={{ marginTop: spacing.md, lineHeight: 22 }}
+                  >
+                    {myReply.body}
+                  </Text>
+                </Card>
+
+                {otherRepliesCount > 0 && (
+                  <Card variant="soft" padding="lg" shadowed={false}>
+                    <View style={styles.othersRow}>
+                      <Feather name="users" size={14} color={colors.textSecondary} />
+                      <Text variant="caption" tone="secondary">
+                        다른 답변자 {otherRepliesCount}명의 답장은
+                        글쓴이에게만 닿아요
+                      </Text>
+                    </View>
+                  </Card>
+                )}
+              </View>
             ) : (
               // 제3자 — 답장 내용은 잠금
               <Card variant="soft" padding="xl" shadowed={false}>
@@ -159,8 +210,8 @@ export default function WorryDetailModal() {
           </View>
         </ScrollView>
 
-        {/* 답장 입력바 (제3자만) */}
-        {!worry.isMine && (
+        {/* 답장 입력바 — 제3자 + 아직 답장 안 한 경우만 */}
+        {!worry.isMine && !myReply && (
           <View style={styles.composeBar}>
             <TextInput
               value={reply}
@@ -189,6 +240,9 @@ export default function WorryDetailModal() {
           </View>
         )}
       </KeyboardAvoidingView>
+
+      {/* 신고 시트 */}
+      <ReportSheet controllerRef={reportRef} />
     </SafeAreaView>
   );
 }
@@ -247,6 +301,35 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.sm,
     paddingVertical: spacing.md,
+  },
+
+  myReplyCard: {
+    borderColor: colors.mintSoft,
+    borderWidth: 1.5,
+  },
+  myReplyHead: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  myReplyBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: colors.mintDeep,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: radius.full,
+  },
+  myReplyBadgeText: {
+    color: colors.white,
+    fontSize: fontSize.xs - 1,
+    fontWeight: "800" as const,
+  },
+  othersRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
   },
 
   lockBox: {

@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "mobile",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
@@ -28,11 +28,26 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "imageWidth": 180,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff",
+          "backgroundColor": "#F8FAFC",
           "dark": {
-            "backgroundColor": "#000000"
+            "backgroundColor": "#F8FAFC"
+          }
+        }
+      ],
+      [
+        "@mj-studio/react-native-naver-map",
+        {
+          "client_id": "czp8jxgbw3",
+          "android": {
+            "ACCESS_FINE_LOCATION": true,
+            "ACCESS_COARSE_LOCATION": true,
+            "ACCESS_BACKGROUND_LOCATION": false
+          },
+          "ios": {
+            "locationAlwaysAndWhenInUseUsageDescription": "근처에 떠있는 마음을 보여드리려면 위치가 필요해요.",
+            "locationWhenInUseUsageDescription": "근처에 떠있는 마음을 보여드리려면 위치가 필요해요."
           }
         }
       ]

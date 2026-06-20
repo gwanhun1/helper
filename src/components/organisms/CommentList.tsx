@@ -3,13 +3,15 @@ import { motion } from "framer-motion";
 import Comment from "./Comment";
 import CommentInput from "../molecules/CommentInput";
 import LikeButton from "../molecules/LikeButton";
-import { FaRobot } from "react-icons/fa";
 import { getPersonaIcon, getPersonaColor } from "../../utils/personaIcons";
 import { Comment as CommentType, MainContent } from "../../types/comment";
+import { RiKakaoTalkFill } from "react-icons/ri";
+import { KAKAO_AUTH_URL } from "../molecules/KakaoLogin";
 
 interface CommentListProps {
   mainContent: MainContent;
   comments: any;
+  isLoggedIn: boolean;
   isPostLiked: boolean;
   commentLikeStates: { [key: string]: boolean };
   currentUsername?: string;
@@ -26,6 +28,7 @@ interface CommentListProps {
 const CommentList = ({
   mainContent,
   comments,
+  isLoggedIn,
   isPostLiked,
   commentLikeStates,
   currentUsername,
@@ -70,12 +73,14 @@ const CommentList = ({
         <p className="text-[15px] text-[#333333] leading-relaxed mb-3">
           {mainContent.response}
         </p>
-        <LikeButton
-          isLiked={isPostLiked}
-          count={mainContent.like || 0}
-          onToggle={onTogglePostLike}
-          disabled={isLoading}
-        />
+        {isLoggedIn && (
+          <LikeButton
+            isLiked={isPostLiked}
+            count={mainContent.like || 0}
+            onToggle={onTogglePostLike}
+            disabled={isLoading}
+          />
+        )}
       </div>
 
       {/* 댓글 목록 */}
@@ -125,12 +130,22 @@ const CommentList = ({
       )}
 
       <div className="mt-4 pt-4 border-t border-gray-100">
-        <CommentInput
-          value={newComment}
-          onChange={onCommentChange}
-          onSubmit={onCommentSubmit}
-          disabled={isLoading}
-        />
+        {isLoggedIn ? (
+          <CommentInput
+            value={newComment}
+            onChange={onCommentChange}
+            onSubmit={onCommentSubmit}
+            disabled={isLoading}
+          />
+        ) : (
+          <a
+            href={KAKAO_AUTH_URL}
+            className="flex items-center justify-center gap-2 w-full py-3 bg-[#FEE500] rounded-xl font-bold text-sm text-gray-900"
+          >
+            <RiKakaoTalkFill size={18} />
+            로그인하고 댓글 달기
+          </a>
+        )}
       </div>
     </motion.div>
   );

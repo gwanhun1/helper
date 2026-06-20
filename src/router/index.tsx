@@ -105,11 +105,9 @@ const router = createBrowserRouter([
         path: "/advice",
         element: (
           <Suspense fallback={<LoadingSection />}>
-            <AuthGuard>
-              <ErrorBoundary>
-                <AdvicePage />
-              </ErrorBoundary>
-            </AuthGuard>
+            <ErrorBoundary>
+              <AdvicePage />
+            </ErrorBoundary>
           </Suspense>
         ),
       },

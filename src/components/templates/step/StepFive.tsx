@@ -43,9 +43,9 @@ const StepFive = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="overflow-hidden relative p-6 rounded-3xl border shadow-sm bg-orange-50/50 border-orange-100/50"
+          className="overflow-hidden relative p-6 rounded-2xl border shadow-sm bg-emerald-50/60 border-emerald-100/60"
         >
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-20 h-20 rounded-full blur-2xl bg-orange-100/30" />
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-20 h-20 rounded-full blur-2xl bg-emerald-100/40" />
 
           <div className="relative z-10 text-gray-700 leading-loose text-[15px] whitespace-pre-wrap font-medium">
             {response}
@@ -97,16 +97,8 @@ const StepFive = () => {
         </motion.div>
       </div>
 
-      <div className="z-20 px-6 py-4 -mx-6 mt-8 -mb-8 bg-transparent">
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            text="이전으로"
-            bgColor="bg-white/40"
-            color="text-gray-600"
-            onPress={() => decrease()}
-            className="h-14 !rounded-2xl"
-            outline
-          />
+      <div className="shrink-0 pt-4 pb-2 bg-transparent">
+        <div className="grid grid-cols-1 gap-4">
           <Button
             className="sparkle-effect h-14 !rounded-2xl !shadow-green/20"
             text="다시 심기"

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import PageLayout from "../organisms/PageLayout";
 import AdvicePromptCarousel from "../molecules/AdvicePromptCarousel";
 import AdviceBanner from "../organisms/AdviceBanner";
@@ -12,6 +12,7 @@ import useCommentManager from "../../hooks/useCommentManager";
 import useDeleteData from "../../hooks/useDeleteData";
 import { toast } from "react-hot-toast";
 import { FiTrash2 } from "react-icons/fi";
+import { formatRelativeDate } from "../../utils/date";
 
 interface Comment {
   id?: string;
@@ -30,10 +31,11 @@ interface Content {
   comments?: Comment[];
   username?: string;
   open?: boolean;
+  who?: string;
 }
 
 const Advice = () => {
-  const { data: contentsData = [] } = useContentsData();
+  const { data: contentsData = [], loading: dataLoading } = useContentsData();
   const [currentIndex, setCurrentIndex] = useState(0);
   const user = useUserStore((state) => state.user);
   const {
@@ -50,69 +52,28 @@ const Advice = () => {
   } = useCommentManager();
   const { deleteData, loading: deleteLoading } = useDeleteData();
   const [newComment, setNewComment] = useState("");
-  const [postLikeStates, setPostLikeStates] = useState<{
-    [key: string]: boolean;
-  }>({});
-  const [commentLikeStates, setCommentLikeStates] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [postLikeStates, setPostLikeStates] = useState<{ [key: string]: boolean }>({});
+  const [commentLikeStates, setCommentLikeStates] = useState<{ [key: string]: boolean }>({});
   const [isUpdatingLikes, setIsUpdatingLikes] = useState(false);
-  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(
-    null
-  );
+  const [swipeDirection, setSwipeDirection] = useState<"left" | "right" | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // 좋아요 상태 로컬 캐시 — postId별로 저장해 스와이프 시 중복 호출 방지
+  const likeCache = useRef<{ [postId: string]: { post: boolean; comments: { [id: string]: boolean } } }>({});
 
   const currentContent = contentsData[currentIndex] || null;
   const isUpdatingRef = useRef(false);
 
-  const formatRelativeDate = (dateStr: string | undefined) => {
-    if (!dateStr) return "";
-
-    try {
-      let date: Date;
-
-      date = new Date(dateStr);
-
-      if (isNaN(date.getTime()) && dateStr.includes("/")) {
-        const dateParts = dateStr.split("/");
-        if (dateParts.length === 3) {
-          const [month, day, year] = dateParts;
-          date = new Date(
-            `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
-          );
-        }
-      }
-
-      if (isNaN(date.getTime())) {
-        return dateStr;
-      }
-
-      const now = new Date();
-      const diffTime = Math.abs(now.getTime() - date.getTime());
-      const diffMinutes = Math.floor(diffTime / (1000 * 60));
-      const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffMinutes < 1) {
-        return "방금 전";
-      } else if (diffMinutes < 60) {
-        return `${diffMinutes}분 전`;
-      } else if (diffHours < 24) {
-        return `${diffHours}시간 전`;
-      } else if (diffDays === 1) {
-        return "어제";
-      } else if (diffDays < 7) {
-        return `${diffDays}일 전`;
-      } else {
-        return date.toISOString().split("T")[0];
-      }
-    } catch (error) {
-      console.error("Date parsing error:", error);
-      return dateStr || "";
-    }
-  };
-
   const updateLikeStates = useCallback(async () => {
     if (!currentContent?.id || isUpdatingRef.current) return;
+
+    // 캐시 히트 — Firebase 호출 생략
+    if (likeCache.current[currentContent.id]) {
+      const cached = likeCache.current[currentContent.id];
+      setPostLikeStates((prev) => ({ ...prev, [currentContent.id]: cached.post }));
+      setCommentLikeStates((prev) => ({ ...prev, ...cached.comments }));
+      return;
+    }
 
     isUpdatingRef.current = true;
     setIsUpdatingLikes(true);
@@ -120,33 +81,28 @@ const Advice = () => {
       const isLiked = await isPostLiked(currentContent.id);
       setPostLikeStates((prev) => ({ ...prev, [currentContent.id]: isLiked }));
 
+      const commentResults: { [id: string]: boolean } = {};
       if (currentContent.comments && Array.isArray(currentContent.comments)) {
         const commentPromises = currentContent.comments
           .filter((comment): comment is { id: string } => Boolean(comment?.id))
           .map(async (comment) => {
-            const isCommentLikedState = await isCommentLiked(
-              currentContent.id,
-              comment.id
-            );
-            return [comment.id, isCommentLikedState];
+            const liked = await isCommentLiked(currentContent.id, comment.id);
+            return [comment.id, liked] as [string, boolean];
           });
-
         const results = await Promise.all(commentPromises);
-        const newCommentStates = Object.fromEntries(results);
-        setCommentLikeStates((prev) => ({ ...prev, ...newCommentStates }));
+        results.forEach(([id, liked]) => { commentResults[id] = liked; });
+        setCommentLikeStates((prev) => ({ ...prev, ...commentResults }));
       }
+
+      // 캐시 저장
+      likeCache.current[currentContent.id] = { post: isLiked, comments: commentResults };
     } catch (error) {
       console.error("Error updating like states:", error);
     } finally {
       setIsUpdatingLikes(false);
       isUpdatingRef.current = false;
     }
-  }, [
-    currentContent?.id,
-    currentContent?.comments,
-    isPostLiked,
-    isCommentLiked,
-  ]);
+  }, [currentContent?.id, currentContent?.comments, isPostLiked, isCommentLiked]);
 
   useEffect(() => {
     updateLikeStates();
@@ -154,9 +110,7 @@ const Advice = () => {
 
   const handlePrev = useCallback(() => {
     setSwipeDirection("right");
-    setCurrentIndex(
-      (prev) => (prev - 1 + contentsData.length) % contentsData.length
-    );
+    setCurrentIndex((prev) => (prev - 1 + contentsData.length) % contentsData.length);
   }, [contentsData.length]);
 
   const handleNext = useCallback(() => {
@@ -165,169 +119,191 @@ const Advice = () => {
   }, [contentsData.length]);
 
   const handleAddComment = useCallback(async () => {
-    if (!user?.uid) {
-      toast.error("로그인이 필요합니다.");
-      return;
-    }
-    if (!newComment.trim()) {
-      toast.error("댓글 내용을 입력해주세요.");
-      return;
-    }
+    if (!user?.uid) { toast.error("로그인이 필요합니다."); return; }
+    if (!newComment.trim()) { toast.error("댓글 내용을 입력해주세요."); return; }
     if (!currentContent?.id) return;
-
     try {
       const success = await addComment(currentContent.id, newComment.trim());
       if (success) {
         setNewComment("");
         toast.success("댓글이 작성되었습니다.");
+        // 캐시 무효화 후 재조회
+        delete likeCache.current[currentContent.id];
         updateLikeStates();
       }
-    } catch (error) {
-      console.error("Failed to add comment:", error);
+    } catch {
       toast.error("댓글 작성에 실패했습니다.");
     }
   }, [user?.uid, newComment, currentContent?.id, addComment, updateLikeStates]);
 
-  const handleTogglePostLike = useCallback(
-    async (postId: string) => {
-      if (!postId) return;
+  const handleTogglePostLike = useCallback(async (postId: string) => {
+    if (!postId) return;
+    try {
+      await togglePostLike(postId);
+      const newState = await isPostLiked(postId);
+      setPostLikeStates((prev) => ({ ...prev, [postId]: newState }));
+      if (likeCache.current[postId]) likeCache.current[postId].post = newState;
+    } catch (error) {
+      console.error("Error toggling post like:", error);
+    }
+  }, [togglePostLike, isPostLiked]);
 
-      try {
-        await togglePostLike(postId);
-        const newState = await isPostLiked(postId);
-        setPostLikeStates((prev) => ({ ...prev, [postId]: newState }));
-      } catch (error) {
-        console.error("Error toggling post like:", error);
+  const handleToggleCommentLike = useCallback(async (postId: string, commentId: string) => {
+    if (!postId || !commentId) return;
+    try {
+      await toggleCommentLike(postId, commentId);
+      const newState = await isCommentLiked(postId, commentId);
+      setCommentLikeStates((prev) => ({ ...prev, [commentId]: newState }));
+      if (likeCache.current[postId]) likeCache.current[postId].comments[commentId] = newState;
+    } catch (error) {
+      console.error("Error toggling comment like:", error);
+    }
+  }, [toggleCommentLike, isCommentLiked]);
+
+  const handleDeleteComment = useCallback(async (commentId: string) => {
+    if (!currentContent?.id || !commentId) return;
+    try {
+      const success = await deleteComment(currentContent.id, commentId);
+      if (success) {
+        toast.success("댓글이 삭제되었습니다.");
+        delete likeCache.current[currentContent.id];
       }
-    },
-    [togglePostLike, isPostLiked]
-  );
-
-  const handleToggleCommentLike = useCallback(
-    async (postId: string, commentId: string) => {
-      if (!postId || !commentId) return;
-
-      try {
-        await toggleCommentLike(postId, commentId);
-        const newState = await isCommentLiked(postId, commentId);
-        setCommentLikeStates((prev) => ({ ...prev, [commentId]: newState }));
-      } catch (error) {
-        console.error("Error toggling comment like:", error);
-      }
-    },
-    [toggleCommentLike, isCommentLiked]
-  );
-
-  const handleDeleteComment = useCallback(
-    async (commentId: string) => {
-      if (!currentContent?.id || !commentId) return;
-
-      try {
-        const success = await deleteComment(currentContent.id, commentId);
-        if (success) {
-          toast.success("댓글이 삭제되었습니다.");
-        }
-      } catch (error) {
-        console.error("Error deleting comment:", error);
-        toast.error("댓글 삭제에 실패했습니다.");
-      }
-    },
-    [currentContent?.id, deleteComment]
-  );
+    } catch {
+      toast.error("댓글 삭제에 실패했습니다.");
+    }
+  }, [currentContent?.id, deleteComment]);
 
   const handleDeletePost = useCallback(async () => {
     if (!currentContent?.id) return;
-
-    if (window.confirm("정말 이 고민을 삭제하시겠습니까?")) {
-      try {
-        const idToDelete = currentContent.id;
-        await deleteData(idToDelete);
-        toast.success("고민이 삭제되었습니다.");
-
-        // 삭제 후 인덱스 조정
-        if (contentsData.length <= 1) {
-          // 마지막 글인 경우
-          setCurrentIndex(0);
-        } else if (currentIndex >= contentsData.length - 1) {
-          // 마지막 인덱스 글을 삭제한 경우 이전 글로 이동
-          setCurrentIndex(contentsData.length - 2);
-        }
-        // 그 외의 경우(중간 글 삭제)는 다음 글이 자동으로 해당 인덱스로 올라옴
-      } catch (error) {
-        console.error("Failed to delete post:", error);
-        toast.error("삭제에 실패했습니다.");
+    try {
+      const idToDelete = currentContent.id;
+      await deleteData(idToDelete);
+      toast.success("고민이 삭제되었습니다.");
+      setShowDeleteConfirm(false);
+      if (contentsData.length <= 1) {
+        setCurrentIndex(0);
+      } else if (currentIndex >= contentsData.length - 1) {
+        setCurrentIndex(contentsData.length - 2);
       }
+    } catch {
+      toast.error("삭제에 실패했습니다.");
     }
   }, [currentContent?.id, deleteData, currentIndex, contentsData]);
 
-  if (!currentContent) {
+  // 로딩 중
+  if (dataLoading) {
     return (
-      <PageLayout requireAuth>
+      <PageLayout>
         <div className="flex justify-center items-center h-full">
-          <p>데이터를 불러오는 중입니다...</p>
+          <div className="text-slate-400 text-sm">불러오는 중...</div>
         </div>
       </PageLayout>
     );
   }
 
+  // 빈 상태
+  if (!currentContent) {
+    return (
+      <PageLayout>
+        <div className="flex flex-col items-center justify-center h-full gap-3 px-6 text-center">
+          <span className="text-5xl">💬</span>
+          <p className="text-base font-bold text-slate-700">아직 공유된 고민이 없어요</p>
+          <p className="text-sm text-slate-400">먼저 고민을 나눠보세요!</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  const isMyPost =
+    currentContent?.username &&
+    user?.displayName &&
+    currentContent.username.replace(/\s+/g, "") === user.displayName;
+
   return (
-    <PageLayout requireAuth>
-      <div className="bg-[#F2F4F6] pb-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div className="relative px-5 py-3 bg-white border-b">
+    <PageLayout>
+      {/* 인앱 삭제 확인 모달 */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex items-end justify-center bg-black/30 pb-8"
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            <motion.div
+              initial={{ y: 60, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 60, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-2xl mx-4 p-5 w-full max-w-sm shadow-xl"
+            >
+              <p className="text-base font-bold text-slate-800 mb-1">고민을 삭제할까요?</p>
+              <p className="text-sm text-slate-400 mb-5">삭제하면 복구할 수 없어요.</p>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="flex-1 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-sm"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={handleDeletePost}
+                  disabled={deleteLoading}
+                  className="flex-1 py-3 rounded-xl bg-rose-500 text-white font-bold text-sm disabled:opacity-60"
+                >
+                  삭제
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="bg-slate-100 pb-4 min-h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="relative px-5 py-3 bg-white border-b border-slate-100">
           <div className="flex gap-3 items-end">
-            <h1 className="text-xl font-bold text-[#333333]">고민나누기</h1>
-            <span className="text-[10px] text-[#666666] mb-1">
-              함께 고민을 나눠요
-            </span>
+            <h1 className="text-xl font-bold text-slate-800">고민나누기</h1>
+            <span className="text-[10px] text-slate-400 mb-1">함께 고민을 나눠요</span>
           </div>
         </div>
 
         <div className="p-4 space-y-4">
-          <div>
-            <AdviceBanner />
-          </div>
+          <AdviceBanner />
 
-          <div className="bg-white rounded-2xl border border-[#E5E8EB]">
+          <div className="bg-white rounded-2xl border border-slate-200">
             <AnimatePresence mode="wait" custom={swipeDirection}>
-              <div>
-                <AdvicePromptCarousel
-                  currentIndex={currentIndex}
-                  setCurrentIndex={setCurrentIndex}
-                  prompts={contentsData}
-                  onPrev={handlePrev}
-                  onNext={handleNext}
-                />
-              </div>
+              <AdvicePromptCarousel
+                currentIndex={currentIndex}
+                prompts={contentsData}
+                onPrev={handlePrev}
+                onNext={handleNext}
+              />
             </AnimatePresence>
 
-            {currentContent?.username &&
-              user?.displayName &&
-              currentContent.username.replace(/\s+/g, "") ===
-                user.displayName && (
-                <div className="px-4 py-3 border-t border-[#E5E8EB] flex justify-between items-center bg-white rounded-b-2xl">
-                  <div className="flex gap-1 items-center">
-                    <span className="sparkle-effect px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full shadow-md border border-green-600/20">
-                      ME
-                    </span>
-                    <span className="text-xs font-medium text-green-600">
-                      내가 쓴 글
-                    </span>
-                  </div>
-                  <div className="flex gap-2 items-center">
-                    <span className="text-xs text-green-600 bg-green-50 px-3 py-1.5 rounded-lg">
-                      ✓ 공유됨
-                    </span>
-                    <button
-                      onClick={handleDeletePost}
-                      disabled={deleteLoading}
-                      className="p-2 text-gray-400 bg-gray-50 rounded-lg transition-colors hover:text-rose-500"
-                      title="게시글 삭제"
-                    >
-                      <FiTrash2 size={16} />
-                    </button>
-                  </div>
+            {isMyPost && (
+              <div className="px-4 py-3 border-t border-slate-100 flex justify-between items-center bg-white rounded-b-2xl">
+                <div className="flex gap-1 items-center">
+                  <span className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-400 text-white font-bold rounded-full text-xs">
+                    ME
+                  </span>
+                  <span className="text-xs font-medium text-green-600">내가 쓴 글</span>
                 </div>
-              )}
+                <div className="flex gap-2 items-center">
+                  <span className="text-xs text-green-600 bg-green-50 px-3 py-1.5 rounded-lg">
+                    ✓ 공유됨
+                  </span>
+                  <button
+                    onClick={() => setShowDeleteConfirm(true)}
+                    disabled={deleteLoading}
+                    className="p-2 text-slate-400 bg-slate-50 rounded-lg transition-colors hover:text-rose-500"
+                    title="게시글 삭제"
+                  >
+                    <FiTrash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="mt-6 space-y-4">
@@ -342,6 +318,7 @@ const Advice = () => {
               comments={(currentContent.comments || []).filter(
                 (comment): comment is Comment => comment.content !== undefined
               )}
+              isLoggedIn={!!user}
               isPostLiked={postLikeStates[currentContent.id]}
               commentLikeStates={commentLikeStates}
               currentUsername={user?.displayName || undefined}
@@ -353,7 +330,7 @@ const Advice = () => {
               newComment={newComment}
               onCommentChange={setNewComment}
               onCommentSubmit={handleAddComment}
-              isLoading={likeLoading || commentLoading}
+              isLoading={likeLoading || commentLoading || isUpdatingLikes}
               formatDate={formatRelativeDate}
             />
           </div>

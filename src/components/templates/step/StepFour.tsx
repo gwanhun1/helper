@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useStepStore from "../../../store/stepStore";
 import Button from "../../atoms/Button";
 import Title from "../../atoms/Title";
@@ -11,68 +11,77 @@ import useUpdateUserCount from "../../../hooks/useUpdateUserCount";
 import useUserStore from "../../../store/userStore";
 import { useNavigate } from "react-router-dom";
 import Filter from "badwords-ko";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChangeEvent } from "react";
 import { toast } from "react-hot-toast";
+
+// 모듈 스코프로 이동 — 매 렌더마다 재생성 방지
+const filter = new Filter();
 
 const StepFour = () => {
   const { decrease } = useStepStore();
   const { setWorry, worry, how, who } = useWorryStore();
   const { fetchResponse } = useCounselingPrompt();
-  const [loadingState, setLoadingState] = useState({
-    isLoading: false,
-    step: 0,
-  });
+  const [loadingState, setLoadingState] = useState({ isLoading: false, step: 0 });
   const { decreaseUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
   const [isRequesting, setIsRequesting] = useState(false);
-  const filter = new Filter();
 
   const handleAsk = async () => {
     if (isRequesting) return;
-    setIsRequesting(true);
-    setLoadingState({ isLoading: true, step: 0 });
 
     if (!worry || worry.trim().length === 0) {
-      alert("당신의 소중한 고민을 들려주세요.");
-      setLoadingState({ isLoading: false, step: 0 });
-      setIsRequesting(false);
+      toast.error("당신의 소중한 고민을 들려주세요.");
       return;
     }
 
-    if (user?.uid && user?.count) {
-      try {
-        await fetchResponse();
-        await decreaseUserCount({ uId: user.uid, count: user.count });
-      } catch (error) {
-        console.error("Counseling request failed:", error);
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-        );
-      } finally {
-        setLoadingState({ isLoading: false, step: 0 });
-        setIsRequesting(false);
-      }
-    } else {
+    setIsRequesting(true);
+    setLoadingState({ isLoading: true, step: 0 });
+
+    if (!user?.uid) {
+      toast.error("로그인이 필요합니다.");
+      setIsRequesting(false);
+      setLoadingState({ isLoading: false, step: 0 });
+      return;
+    }
+
+    // count가 undefined(미로드)인지 0(소진)인지 구분
+    if (user.count === undefined) {
+      toast.error("사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      setIsRequesting(false);
+      setLoadingState({ isLoading: false, step: 0 });
+      return;
+    }
+
+    if (user.count <= 0) {
       toast.error("추가 상담을 위해서는 결제가 필요합니다.");
       navigate("/credit");
+      setIsRequesting(false);
+      setLoadingState({ isLoading: false, step: 0 });
+      return;
+    }
+
+    try {
+      await fetchResponse();
+      await decreaseUserCount({ uId: user.uid, count: user.count });
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
+    } finally {
+      setLoadingState({ isLoading: false, step: 0 });
       setIsRequesting(false);
     }
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (loadingState.isLoading) {
-      interval = setInterval(() => {
-        setLoadingState((prev) => ({
-          ...prev,
-          step: (prev.step + 1) % 4,
-        }));
-      }, 2500);
-    }
+    if (!loadingState.isLoading) return;
+    const interval = setInterval(() => {
+      setLoadingState((prev) => ({ ...prev, step: (prev.step + 1) % 4 }));
+    }, 2500);
     return () => clearInterval(interval);
   }, [loadingState.isLoading]);
 
@@ -101,7 +110,7 @@ const StepFour = () => {
       </div>
 
       <div className="flex flex-col flex-1 min-h-0">
-        <div className="overflow-hidden relative flex-1 p-4 bg-gray-50 rounded-3xl border border-gray-100 shadow-inner">
+        <div className="overflow-hidden relative flex-1 p-4 bg-gray-50 rounded-2xl border border-gray-100 shadow-inner">
           <Textarea
             id="input"
             value={worry}
@@ -114,7 +123,7 @@ const StepFour = () => {
           />
         </div>
 
-        <div className="z-20 px-6 py-4 -mx-6 mt-6 bg-transparent">
+        <div className="shrink-0 pt-4 pb-2 bg-transparent">
           <div className="grid grid-cols-2 gap-4">
             <Button
               text="이전으로"
@@ -129,7 +138,7 @@ const StepFour = () => {
               bgColor="bg-green"
               onPress={handleAsk}
               className="sparkle-effect !rounded-2xl h-14 !shadow-green/20"
-              disabled={!worry.trim()}
+              disabled={!worry.trim() || isRequesting}
             />
           </div>
         </div>

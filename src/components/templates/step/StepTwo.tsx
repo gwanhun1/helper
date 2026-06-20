@@ -39,13 +39,13 @@ const StepTwo = () => {
         </Text>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="flex-1 px-6 overflow-y-auto pb-32"
+        className="flex-1 min-h-0 px-6 overflow-y-auto pb-2"
       >
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="grid grid-cols-2 gap-3 mt-1">
           {whoList.map((button, index) => (
             <motion.div key={index} variants={item}>
               <Button
@@ -62,12 +62,12 @@ const StepTwo = () => {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-transparent z-20">
-        <Button 
-              text="이전으로" 
-              bgColor="bg-white/40" 
+      <div className="shrink-0 px-6 pt-2 pb-4 bg-transparent">
+        <Button
+              text="이전으로"
+              bgColor="bg-white/40"
               color="text-gray-600"
-              onPress={decrease} 
+              onPress={decrease}
               className="w-full !rounded-2xl h-14"
               outline
             />

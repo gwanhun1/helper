@@ -39,13 +39,13 @@ const StepThree = () => {
         </Text>
       </div>
 
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         animate="show"
-        className="flex-1 px-6 overflow-y-auto pb-32"
+        className="flex-1 min-h-0 px-6 overflow-y-auto pb-2"
       >
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="grid grid-cols-2 gap-3 mt-1">
           {howList.map((button, index) => (
             <motion.div key={index} variants={item}>
               <Button
@@ -62,7 +62,7 @@ const StepThree = () => {
         </div>
       </motion.div>
 
-      <div className="absolute bottom-0 left-0 right-0 p-6 bg-transparent z-20">
+      <div className="shrink-0 px-6 pt-2 pb-4 bg-transparent">
         <Button
           onPress={() => decrease()}
           text="이전으로"

@@ -1,8 +1,7 @@
 import useUserContents from "../../hooks/useUserContents";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import LogForm from "./LogForm";
-import { BsArrowUpCircle } from "react-icons/bs";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ForestLog = () => {
   const { userContents: forestData, refreshUserContents: refreshData } = useUserContents();
@@ -18,66 +17,70 @@ const ForestLog = () => {
       item.content === selectedContent && item.response === selectedResponse
   );
 
+  const hasItems = forestData.length > 0;
+
   return (
-    <div className="h-full flex flex-col min-h-0 bg-transparent">
-      {forestData && forestData.length > 0 ? (
-        <>
-          {selectedItem ? (
-            <div className="h-full min-h-0 overflow-auto">
-              <LogForm
-                key={selectedItem.id}
-                data={selectedItem}
-                onDelete={refreshData}
-              />
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="flex-1 flex flex-col items-center justify-center text-slate-500 select-none pb-8"
+    <div className="flex flex-col flex-1 min-h-0 bg-transparent py-2">
+      <AnimatePresence mode="wait">
+        {hasItems && selectedItem ? (
+          <motion.div
+            key={selectedItem.id}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="flex flex-col flex-1 min-h-0"
+          >
+            <LogForm
+              data={selectedItem}
+              onDelete={refreshData}
+            />
+          </motion.div>
+        ) : hasItems ? (
+          <motion.div
+            key="hint"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col items-center justify-center py-8 gap-3 select-none"
+          >
+            <motion.span
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="text-3xl"
             >
-              <motion.div
-                animate={{
-                  y: [0, -8, 0],
-                  scale: [1, 1.05, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="mb-4 relative"
-              >
-                <motion.div
-                  animate={{ opacity: [0.3, 0.6, 0.3] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute inset-0 rounded-full bg-emerald-200 blur-lg"
-                />
-                <BsArrowUpCircle className="w-12 h-12 text-emerald-500 relative z-10" />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="bg-white/40 backdrop-blur-sm px-8 py-5 rounded-[24px] border border-white/60 shadow-lg"
-              >
-                <p className="text-base font-bold text-slate-700 text-center">
-                  위의 나무를 선택해주세요
-                </p>
-                <p className="text-xs text-slate-400 text-center mt-2 leading-relaxed font-medium">
-                  당신의 소중한 생각이 기록된 <br />
-                  나무를 확인할 수 있어요
-                </p>
-              </motion.div>
-            </motion.div>
-          )}
-        </>
-      ) : null}
+              🌳
+            </motion.span>
+            <p className="text-sm font-semibold text-slate-500 text-center">
+              나무를 눌러 기록을 확인해보세요
+            </p>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="empty"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col items-center justify-center py-8 gap-3 select-none"
+          >
+            <motion.span
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="text-3xl"
+            >
+              🌱
+            </motion.span>
+            <p className="text-sm font-semibold text-slate-500 text-center">
+              아직 심은 고민이 없어요
+            </p>
+            <p className="text-xs text-slate-400 text-center">
+              아래 버튼을 눌러 첫 번째 나무를 심어보세요
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

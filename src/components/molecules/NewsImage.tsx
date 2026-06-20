@@ -1,7 +1,7 @@
-import news1 from "/news1.png";
+import news2 from "/news2.png";
 
 const NewsImage = () => {
-  return <img src={news1} alt="news" className="h-36 bg-red-200 w-68" />;
+  return <img src={news2} alt="news" className="w-full h-full object-cover object-top" />;
 };
 
 export default NewsImage;

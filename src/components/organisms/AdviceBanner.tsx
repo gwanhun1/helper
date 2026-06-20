@@ -1,15 +1,15 @@
-import { RiKakaoTalkFill } from "react-icons/ri";
+import { FiMessageCircle } from "react-icons/fi";
 
 const AdviceBanner = () => {
   return (
-    <div className="rounded-2xl p-4 border border-[#E5E8EB] bg-[#def9f8]">
-      <div className="flex items-center gap-2 mb-3">
-        <div className="w-10 h-10 bg-[#2AC1BC] rounded-full flex items-center justify-center">
-          <RiKakaoTalkFill className="text-white" size={24} />
+    <div className="rounded-2xl p-4 border border-emerald-100 bg-emerald-50">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+          <FiMessageCircle className="text-white" size={20} />
         </div>
         <div>
-          <h2 className="font-bold text-[#333333]">오늘의 고민 공유하기</h2>
-          <p className="text-sm text-[#666666]">다른 사람들과 고민을 나눠보세요</p>
+          <h2 className="font-bold text-slate-800">오늘의 고민 공유하기</h2>
+          <p className="text-sm text-slate-500">다른 사람들과 고민을 나눠보세요</p>
         </div>
       </div>
     </div>

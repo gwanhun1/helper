@@ -12,8 +12,8 @@ const Loading = ({ textStep }: { textStep: number }) => {
 
   return (
     <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-white/95 backdrop-blur-sm px-6 overflow-hidden">
-      <div className="flex flex-col justify-center items-center -translate-y-12">
-        <div className="flex relative justify-center items-center w-64 h-64">
+      <div className="flex flex-col justify-center items-center -translate-y-16">
+        <div className="flex relative justify-center items-center w-48 h-48">
           {/* 배경 글로우 효과 */}
           <div className="absolute inset-0 bg-green-100 rounded-full opacity-30 blur-3xl animate-pulse" />
           <Lottie
@@ -23,7 +23,7 @@ const Loading = ({ textStep }: { textStep: number }) => {
           />
         </div>
 
-        <div className="flex flex-col justify-center items-center mt-8 h-20">
+        <div className="flex flex-col justify-center items-center mt-6 h-16">
           <AnimatePresence mode="wait">
             <motion.div
               key={textStep}
@@ -41,7 +41,7 @@ const Loading = ({ textStep }: { textStep: number }) => {
           </AnimatePresence>
         </div>
 
-        <div className="mt-12 w-48 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+        <div className="mt-8 w-48 h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-green"
             animate={{

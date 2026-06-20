@@ -1,5 +1,4 @@
 import {
-  AiOutlineNotification,
   AiOutlineQuestionCircle,
   AiOutlineInfoCircle,
 } from "react-icons/ai";
@@ -9,12 +8,9 @@ import NewsContents from "./NewsContents";
 const UserNotice = () => {
   return (
     <div className="mt-5 bg-white rounded-[22px] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_4px_6px_-1px_rgba(0,0,0,0.1)]">
-      <div className="px-5 py-3 border-b border-gray-100">
-        <IconRow
-          icon={<AiOutlineNotification className="w-6 h-6 text-gray-500" />}
-          mainText="공지"
-          subText={<NewsContents />}
-        />
+      <div className="px-5 pt-4 pb-3 border-b border-gray-100">
+        <p className="text-sm font-bold text-gray-800 mb-2">공지</p>
+        <NewsContents />
       </div>
       <div className="px-5 py-3 border-b border-gray-100">
         <IconRow
@@ -29,7 +25,7 @@ const UserNotice = () => {
           mainText={
             <div className="flex justify-center items-center ">
               <div className="font-bold">웹/앱버전</div>
-              <div className="font-bold text-gray-300 ml-2">v1.0.2</div>
+              <div className="font-bold text-gray-300 ml-2">v1.0.4</div>
             </div>
           }
         />

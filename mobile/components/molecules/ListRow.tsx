@@ -7,7 +7,7 @@ import { PressableScale } from "../atoms/PressableScale";
 import { Text } from "../atoms/Text";
 
 type Props = {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   label: string;
   onPress?: () => void;
   showChevron?: boolean;

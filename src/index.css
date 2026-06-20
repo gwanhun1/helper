@@ -4,6 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 반응형 기준선: 가로 스크롤 차단 + 안전영역 + 일관된 높이 */
+html,
+body,
+#root {
+  height: 100%;
+}
+body {
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+/* iOS 홈 인디케이터 안전영역 (하단 네비 등) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 .helper-text {
   font-family: 'Righteous', cursive;
   letter-spacing: 0.05em;

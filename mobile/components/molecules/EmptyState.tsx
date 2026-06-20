@@ -6,7 +6,7 @@ import { colors, radius, spacing } from "@/theme";
 import { Text } from "../atoms/Text";
 
 type Props = {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   title: string;
   description?: string;
 };

@@ -19,7 +19,7 @@ const { width: SCREEN_W } = Dimensions.get("window");
 
 type Slide = {
   key: string;
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   title: string;
   subtitle: string;
   accent: "mint" | "navy" | "coral" | "gold";

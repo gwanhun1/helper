@@ -16,7 +16,7 @@ type ReportReason =
   | "ad"
   | "other";
 
-const REASONS: { key: ReportReason; label: string; icon: keyof typeof Feather.glyphMap }[] = [
+const REASONS: { key: ReportReason; label: string; icon: string }[] = [
   { key: "abuse", label: "욕설 / 비속어", icon: "alert-circle" },
   { key: "hate", label: "혐오 / 차별 표현", icon: "x-octagon" },
   { key: "stalking", label: "스토킹 / 위협", icon: "shield-off" },

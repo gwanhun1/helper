@@ -1,10 +1,9 @@
 import { RiKakaoTalkFill } from "react-icons/ri";
+import { KAKAO_REDIRECT_URI } from "../../constants/auth";
 
 export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
   import.meta.env.VITE_KAKAO_REST_API_KEY
-}&redirect_uri=${encodeURIComponent(
-  import.meta.env.VITE_KAKAO_REDIRECT_URI
-)}&response_type=code`;
+}&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}&response_type=code`;
 
 function KakaoLogin() {
   return (

@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import type { Worry } from "@/data";
@@ -48,6 +55,8 @@ const TOOLTIP_TOTAL_H = TOOLTIP_STACK_H + TOOLTIP_GAP + PIN_HEIGHT;
 type Props = {
   worries: Worry[];
   onPinPress: (id: string) => void;
+  /** viewport 안에 보이는 worry 수가 바뀔 때마다 호출 */
+  onVisibleCountChange?: (count: number) => void;
 };
 
 /**
@@ -225,29 +234,57 @@ const isInRegion = (region: ViewRegion, lat: number, lng: number) =>
   lng >= region.longitude &&
   lng <= region.longitude + region.longitudeDelta;
 
-export const WorryMap = ({ worries, onPinPress }: Props) => {
+export type WorryMapHandle = {
+  /** 특정 좌표로 카메라 이동 */
+  animateTo: (lat: number, lng: number, zoom?: number) => void;
+  /** 현위치 오버레이(파란 점) 모드 변경 — 'NoFollow'면 점만 표시, 'None'이면 끔 */
+  setLocationTracking: (mode: "None" | "NoFollow" | "Follow") => void;
+};
+
+export const WorryMap = forwardRef<WorryMapHandle, Props>(
+  ({ worries, onPinPress, onVisibleCountChange }, ref) => {
   // 현재 viewport region — 카메라 멈출 때마다 갱신
   const [region, setRegion] = useState<ViewRegion | null>(null);
+  const mapRef = useRef<any>(null);
 
-  // viewport 안에 있는 worries만 hot 후보로
-  const hotId = useMemo(() => {
-    if (!region) {
-      // 첫 mount 등 region 모를 때는 전체 기준
-      return findHotId(worries);
-    }
-    const visible = worries.filter(
+  useImperativeHandle(ref, () => ({
+    animateTo: (lat, lng, zoom) => {
+      mapRef.current?.animateCameraTo?.({
+        latitude: lat,
+        longitude: lng,
+        zoom: zoom ?? 17,
+        duration: 600,
+      });
+    },
+    setLocationTracking: (mode) => {
+      mapRef.current?.setLocationTrackingMode?.(mode);
+    },
+  }));
+
+  // viewport 안에 보이는 worries — region이 아직 없으면 전체로 폴백
+  const visibleWorries = useMemo(() => {
+    if (!region) return worries;
+    return worries.filter(
       (w) =>
         w.lat != null &&
         w.lng != null &&
         isInRegion(region, w.lat, w.lng),
     );
-    return findHotId(visible);
   }, [region, worries]);
+
+  // 보이는 worry 수가 바뀔 때마다 부모에게 알림
+  useEffect(() => {
+    onVisibleCountChange?.(visibleWorries.length);
+  }, [visibleWorries.length, onVisibleCountChange]);
+
+  // hot pin도 viewport 안에서 결정
+  const hotId = useMemo(() => findHotId(visibleWorries), [visibleWorries]);
 
   // 네이버 지도 사용 가능 → 실제 지도 렌더
   if (NaverMapView && NaverMapMarkerOverlay) {
     return (
       <NaverMapView
+        ref={mapRef}
         style={StyleSheet.absoluteFill}
         initialCamera={{
           latitude: DEMO_CENTER.lat,
@@ -291,7 +328,9 @@ export const WorryMap = ({ worries, onPinPress }: Props) => {
       ))}
     </View>
   );
-};
+  },
+);
+WorryMap.displayName = "WorryMap";
 
 const styles = StyleSheet.create({
   placeholderLayer: {

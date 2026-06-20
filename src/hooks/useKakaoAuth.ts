@@ -11,6 +11,7 @@ import { getDatabase, ref, update, get } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import { app } from "../firebaseConfig";
+import { KAKAO_REDIRECT_URI } from "../constants/auth";
 
 export const useKakaoAuth = () => {
   const navigate = useNavigate();
@@ -65,7 +66,7 @@ export const useKakaoAuth = () => {
         body: new URLSearchParams({
           grant_type: "authorization_code",
           client_id: import.meta.env.VITE_KAKAO_REST_API_KEY,
-          redirect_uri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+          redirect_uri: KAKAO_REDIRECT_URI,
           client_secret: import.meta.env.VITE_KAKAO_SECRET_KEY,
           code,
         }),

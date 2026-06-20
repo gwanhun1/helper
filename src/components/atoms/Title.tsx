@@ -13,7 +13,7 @@ const Title = ({
 }:TitleProps) => {
     return (
         <h1
-            className={`font-bold tracking-tight ${color} text-[20px] sm:text-[22px] leading-snug ${className}`}
+            className={`font-bold tracking-tight ${color} text-[20px] sm:text-[22px] leading-normal break-keep ${className}`}
         >
             {children}
         </h1>

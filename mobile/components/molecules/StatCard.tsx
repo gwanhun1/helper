@@ -7,7 +7,7 @@ import { Card } from "../atoms/Card";
 import { Text } from "../atoms/Text";
 
 type Props = {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   value: string | number;
   label: string;
   accent?: "mint" | "navy" | "coral";

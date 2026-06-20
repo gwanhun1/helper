@@ -8,18 +8,24 @@ import {
 import useStepStore from "../../store/stepStore";
 import { motion, AnimatePresence } from "framer-motion";
 
-const StepIndicator = ({ currentStep }: { currentStep: number }) => {
+const StepIndicator = ({
+  currentStep,
+  totalSteps,
+}: {
+  currentStep: number;
+  totalSteps: number;
+}) => {
   return (
     <div className="px-6 py-4 flex items-center justify-between relative">
       <div className="absolute top-1/2 left-6 right-6 h-[2px] bg-gray-200 -translate-y-1/2 overflow-hidden rounded-full">
-        <motion.div 
+        <motion.div
           className="h-full bg-green"
           initial={{ width: "0%" }}
-          animate={{ width: `${((currentStep - 1) / 4) * 100}%` }}
+          animate={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         />
       </div>
-      {[1, 2, 3, 4, 5].map((s) => (
+      {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
         <div key={s} className="relative z-10">
           <motion.div
             className={`w-3 h-3 rounded-full border-2 transition-colors duration-300 ${
@@ -53,8 +59,8 @@ const Worry = () => {
       <div className="absolute top-[-10%] right-[-10%] w-64 h-64 bg-green-100 rounded-full blur-[80px] opacity-40 pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-80 h-80 bg-blue-100 rounded-full blur-[100px] opacity-30 pointer-events-none" />
 
-      {/* 단계 표시기 */}
-      <StepIndicator currentStep={step} />
+      {/* 단계 표시기 - 글쓰기 흐름(2~5단계)에서만 노출. 숲 화면(1단계)은 독립 화면 */}
+      {step >= 2 && <StepIndicator currentStep={step - 1} totalSteps={4} />}
 
       <div className="flex-1 min-h-0 relative overflow-hidden flex flex-col">
         <AnimatePresence mode="wait">

@@ -7,7 +7,7 @@ type Size = "sm" | "md" | "lg";
 type Variant = "mint" | "navy" | "soft";
 
 type Props = {
-  icon?: keyof typeof Feather.glyphMap;
+  icon?: string;
   size?: Size;
   variant?: Variant;
 };

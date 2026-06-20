@@ -14,7 +14,7 @@ const BottomNavigation = () => {
   const location = useLocation();
 
   return (
-    <div className="flex bottom-0 left-0 justify-between items-center p-2 pb-0 w-full bg-white border-t-2 shadow-lg">
+    <div className="flex bottom-0 left-0 gap-1 justify-between items-center p-2 pb-0 w-full bg-white border-t-2 shadow-lg pb-safe">
       <TabButton
         to="/"
         icon={location.pathname === "/" ? <AiFillHome /> : <AiOutlineHome />}

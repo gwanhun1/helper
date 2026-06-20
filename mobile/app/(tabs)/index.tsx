@@ -1,3 +1,4 @@
+import { useCallback, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -11,23 +12,46 @@ import {
   TopChip,
   WorryMap,
 } from "@/components";
+import type { WorryMapHandle } from "@/components/organisms/WorryMap";
 import { SEED_WORRIES } from "@/data";
 import { spacing } from "@/theme";
 import type { RootStackParamList } from "@/App";
+import { useMyLocation } from "@/utils/useMyLocation";
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const mapRef = useRef<WorryMapHandle>(null);
+  const { request: requestLocation, loading } = useMyLocation();
+  const [visibleCount, setVisibleCount] = useState(SEED_WORRIES.length);
 
   const openWorry = (id: string) => {
     navigation.navigate("Worry", { id });
   };
 
+  const handleVisibleCountChange = useCallback((count: number) => {
+    setVisibleCount(count);
+  }, []);
+
+  const handleLocateMe = async () => {
+    const coords = await requestLocation();
+    if (coords) {
+      // 카메라는 그대로 두고 현위치 오버레이(파란 점)만 표시
+      mapRef.current?.setLocationTracking("NoFollow");
+      mapRef.current?.animateTo(coords.lat, coords.lng, 16.5);
+    }
+  };
+
   return (
     <Screen safe={false} bg="surfaceAlt">
       {/* 풀스크린 지도 */}
-      <WorryMap worries={SEED_WORRIES} onPinPress={openWorry} />
+      <WorryMap
+        ref={mapRef}
+        worries={SEED_WORRIES}
+        onPinPress={openWorry}
+        onVisibleCountChange={handleVisibleCountChange}
+      />
 
       {/* 상단 플로팅 칩 — 작게, 지도 가리지 않음 */}
       <SafeAreaView
@@ -37,7 +61,7 @@ export default function MapScreen() {
       >
         <TopChip
           label="오늘의 마음"
-          count={SEED_WORRIES.length}
+          count={visibleCount}
           suffix="개가 떠있어요"
         />
       </SafeAreaView>
@@ -47,7 +71,11 @@ export default function MapScreen() {
         style={[styles.rightStack, { top: insets.top + 72 }]}
         pointerEvents="box-none"
       >
-        <RoundIconButton icon="navigation" onPress={() => {}} />
+        <RoundIconButton
+          icon="navigation"
+          onPress={handleLocateMe}
+          disabled={loading}
+        />
         <RoundIconButton icon="layers" onPress={() => {}} />
       </View>
 

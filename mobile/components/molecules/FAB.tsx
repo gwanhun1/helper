@@ -9,7 +9,7 @@ import { Text } from "../atoms/Text";
 type Variant = "primary" | "navy";
 
 type Props = {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   label?: string;
   onPress?: () => void;
   variant?: Variant;

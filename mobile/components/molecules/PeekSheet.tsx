@@ -9,7 +9,7 @@ import { Text } from "../atoms/Text";
 type Props = {
   title: string;
   subtitle?: string;
-  icon?: keyof typeof Feather.glyphMap;
+  icon?: string;
   onPress?: () => void;
   style?: ViewStyle;
 };

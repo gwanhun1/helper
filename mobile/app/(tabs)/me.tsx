@@ -197,7 +197,7 @@ const SummaryStat = ({
   label,
   accent = "navy",
 }: {
-  icon: keyof typeof Feather.glyphMap;
+  icon: string;
   value: number;
   label: string;
   accent?: "navy" | "coral";

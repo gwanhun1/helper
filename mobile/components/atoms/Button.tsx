@@ -14,7 +14,7 @@ type Props = {
   onPress?: () => void;
   variant?: Variant;
   size?: Size;
-  icon?: keyof typeof Feather.glyphMap;
+  icon?: string;
   fullWidth?: boolean;
   style?: ViewStyle;
 };

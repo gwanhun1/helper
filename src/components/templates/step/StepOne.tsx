@@ -11,12 +11,12 @@ const StepOne = () => {
   const { showWeatherEffect, toggleWeatherEffect } = useUIStore();
 
   return (
-    <div className="h-full flex flex-col bg-transparent overflow-hidden">
-      {/* 헤더 영역 - 고정 높이, 축소 안함, 패딩 축소 */}
-      <motion.div 
+    <div className="h-full flex flex-col bg-transparent">
+      {/* 헤더 영역 - 고정 높이, 축소 안함 */}
+      <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex-shrink-0 px-5 pt-3 pb-2"
+        className="flex-shrink-0 px-5 pt-4 pb-2 relative z-10"
       >
         <Title>마음의 숲에 오신 것을 환영해요</Title>
         <div className="flex items-center justify-between mt-1">
@@ -38,22 +38,19 @@ const StepOne = () => {
         </div>
       </motion.div>
 
-      {/* 콘텐츠 영역 - 남은 공간을 채움 */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-        {/* Forest 영역 - 콘텐츠의 55% 정도 차지 */}
-        <div className="flex-[1.2] min-h-0 relative">
-          <Forest />
-        </div>
+      {/* Forest 영역 - 항상 고정, 스크롤 없음 */}
+      <div className="relative h-56 shrink-0">
+        <Forest />
+      </div>
 
-        {/* ForestLog 영역 - 나머지 공간, 스크롤 필요시에만 */}
-        <div className="flex-1 min-h-0 px-3 overflow-auto">
-          <ForestLog />
-        </div>
+      {/* ForestLog 영역 - 남은 공간 채움, 버튼을 하단에 고정 */}
+      <div className="flex-1 min-h-0 flex flex-col px-3 pb-2 pt-1">
+        <ForestLog />
       </div>
 
       {/* 버튼 영역 - 고정 높이, 축소 안함, 패딩 축소 */}
       <motion.div
-        className="flex-shrink-0 px-5 py-2 bg-transparent"
+        className="flex-shrink-0 px-5 pt-2 pb-4 bg-transparent"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >

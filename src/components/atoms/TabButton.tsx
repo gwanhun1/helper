@@ -15,10 +15,10 @@ const TabButton  = ({ to, icon, label, active }:TabButtonProps) => {
       to={to}
       className={`flex flex-col items-center flex-1 justify-center ${
         active ? "text-green" : "text-gray-600 hover:text-green"
-      } py-2 px-4 transition-all duration-200`}
+      } py-2 px-1 min-w-0 transition-all duration-200`}
     >
       <div className="text-xl">{icon}</div>
-      <Text size="xs" className="mt-2 whitespace-nowrap">
+      <Text size="xs" className="mt-1.5 whitespace-nowrap">
         {label}
       </Text>
     </Link>

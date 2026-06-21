@@ -4,17 +4,6 @@ import useUserStore from "../store/userStore";
 import useWorryManager from "./useWorryManager";
 import useStepStore from "../store/stepStore";
 import Filter from "badwords-ko";
-import { generateCounselingResponse } from "../utils/counsel";
-
-/**
- * 상담 응답 훅.
- *
- * 과거에는 Dify(외부 유료 LLM)에 네트워크 요청을 보내 응답을 받았으나,
- * 토큰 비용 문제로 외부 의존성을 제거하고 로컬 규칙 기반 생성기로 전환했다.
- * 외부 호출이 없으므로 비용·지연·타임아웃 리스크가 사라졌고,
- * "상담 중" UX 유지를 위해 짧은 지연만 둔다.
- */
-const RESPONSE_DELAY_MS = 900;
 
 const useCounselingPrompt = () => {
   const { who, how, worry, setResponse } = useWorryStore();
@@ -40,10 +29,53 @@ const useCounselingPrompt = () => {
     setError(null);
 
     try {
-      // "상담 중" 연출을 위한 짧은 지연 (외부 호출 없음)
-      await new Promise((resolve) => setTimeout(resolve, RESPONSE_DELAY_MS));
+      const isDev = import.meta.env.DEV;
+      const API_URL = isDev
+        ? `${import.meta.env.VITE_DIFY_BASE_URL}/chat-messages`
+        : "/api/chat";
 
-      const messageContent = generateCounselingResponse({ who, how, worry });
+      const requestBody = isDev
+        ? {
+            inputs: { who, how, worry },
+            query: "상담을 진행해줘.",
+            response_mode: "blocking",
+            user: "helper-user",
+          }
+        : { who, how, worry };
+
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
+      if (isDev) {
+        headers["Authorization"] = `Bearer ${
+          import.meta.env.VITE_DIFY_API_KEY
+        }`;
+      }
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        const detailedMessage =
+          errorData.details?.message ||
+          errorData.error ||
+          errorData.message ||
+          "API 요청에 실패했습니다.";
+        throw new Error(detailedMessage);
+      }
+
+      const data = await response.json();
+      const messageContent = data.message || data.answer || "";
 
       if (!messageContent) {
         throw new Error("응답 내용이 비어있습니다.");
@@ -60,8 +92,30 @@ const useCounselingPrompt = () => {
       increase();
     } catch (err) {
       console.error(err);
-      const errorMessage =
-        err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.";
+
+      let errorMessage = "알 수 없는 오류가 발생했습니다.";
+
+      if (err instanceof Error) {
+        if (
+          err.message.includes("429") ||
+          err.message.includes("RESOURCE_EXHAUSTED")
+        ) {
+          errorMessage =
+            "현재 상담 요청이 많아 연결이 지연되고 있습니다. 약 1분 후에 다시 시도해주세요.";
+        } else if (
+          err.message.includes("504") ||
+          err.message.includes("timeout")
+        ) {
+          errorMessage =
+            "응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.";
+        } else if (err.message.includes("Safety")) {
+          errorMessage =
+            "입력하신 내용에 부적절한 표현이 포함되어 있어 상담이 어렵습니다.";
+        } else {
+          errorMessage = err.message;
+        }
+      }
+
       const userFriendlyError = new Error(errorMessage);
       setError(userFriendlyError);
       throw userFriendlyError;

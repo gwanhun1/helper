@@ -1,0 +1,106 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - heading "Dify Dify logo" [level=1] [ref=e17]:
+          - link "Dify Dify logo" [ref=e18] [cursor=pointer]:
+            - /url: /apps
+            - text: Dify
+            - img "Dify logo" [ref=e19]
+        - generic [ref=e20]: /
+        - combobox [ref=e21] [cursor=pointer]:
+          - generic [ref=e23]:
+            - generic [ref=e25]: D
+            - generic [ref=e26]: Dify's Workspace
+        - textbox [ref=e29]: 28e2e17a-d18b-4630-8ed3-18d2b65d9f08
+        - button "업그레이드" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+          - generic [ref=e35]: 업그레이드
+          - img [ref=e36]
+      - generic [ref=e38]:
+        - link "탐색" [ref=e39] [cursor=pointer]:
+          - /url: /explore/apps
+          - img [ref=e40]
+          - generic [ref=e42]: 탐색
+        - generic [ref=e43]:
+          - link "스튜디오" [ref=e44] [cursor=pointer]:
+            - /url: /apps
+            - generic [ref=e45]
+          - generic [ref=e241]: /
+          - button "Counseling Helper" [ref=e242] [cursor=pointer]:
+            - generic "Counseling Helper" [ref=e243]
+            - img [ref=e244]
+        - link "지식" [ref=e51] [cursor=pointer]:
+          - /url: /datasets
+          - generic [ref=e52]:
+            - img [ref=e54]
+            - generic [ref=e56]: 지식
+        - link "도구" [ref=e57] [cursor=pointer]:
+          - /url: /tools
+          - img [ref=e58]
+          - generic [ref=e60]: 도구
+      - generic [ref=e61]:
+        - link "플러그인" [ref=e63] [cursor=pointer]:
+          - /url: /plugins
+          - generic [ref=e64]:
+            - img [ref=e67]
+            - generic [ref=e73]: 플러그인
+        - button "계정" [ref=e75] [cursor=pointer]:
+          - generic [ref=e77]: D
+    - generic [ref=e246]:
+      - generic [ref=e247]:
+        - button "🤖 Counseling Helper 챗봇" [ref=e250] [cursor=pointer]:
+          - generic [ref=e251]:
+            - generic [ref=e252]
+            - generic [ref=e261]
+        - navigation [ref=e267]:
+          - link "오케스트레이트" [ref=e268] [cursor=pointer]:
+            - /url: /app/ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c/configuration
+            - img [ref=e270]
+            - generic [ref=e272]: 오케스트레이트
+          - link "API 액세스" [ref=e273] [cursor=pointer]:
+            - /url: /app/ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c/develop
+            - img [ref=e275]
+            - generic [ref=e277]: API 액세스
+          - link "로그 및 어노테이션" [ref=e278] [cursor=pointer]:
+            - /url: /app/ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c/logs
+            - img [ref=e280]
+            - generic [ref=e282]: 로그 및 어노테이션
+          - link "모니터링" [ref=e283] [cursor=pointer]:
+            - /url: /app/ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c/overview
+            - img [ref=e285]
+            - generic [ref=e287]: 모니터링
+      - generic [ref=e290]:
+        - generic [ref=e292]:
+          - generic [ref=e294]: 오케스트레이션
+          - generic [ref=e295]:
+            - button "model-icon gpt-oss-120b CHAT" [ref=e3349] [cursor=pointer]
+            - button "게시하기" [expanded] [ref=e310] [cursor=pointer]: 게시하기
+            - dialog [ref=e3653]
+        - generic [ref=e313]:
+          - generic [ref=e315]:
+            - generic [ref=e316]
+            - generic [ref=e326]
+          - generic [ref=e408]:
+            - generic [ref=e410]
+            - generic [ref=e427]
+          - generic [ref=e461]:
+            - generic [ref=e463]
+            - generic [ref=e478]
+        - generic [ref=e494]:
+          - generic [ref=e495]:
+            - generic [ref=e496]
+            - generic [ref=e509]
+          - generic [ref=e533]:
+            - generic [ref=e1246]
+            - generic [ref=e536]
+          - generic [ref=e3697]:
+            - img [ref=e3699]
+            - generic [ref=e3701]: 포맷이 변경되었습니다
+            - generic [ref=e3702]: 포맷을 변경하면 디버그 영역이 재설정됩니다. 계속하시겠습니까?
+            - generic [ref=e3704]
+  - alert [ref=e11]: 스튜디오 - Dify
+  - generic:
+    - region "Notifications"
+  - listbox "Typeahead menu"
+  - listbox "Typeahead menu"

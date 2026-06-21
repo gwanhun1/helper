@@ -1,0 +1,6 @@
+[ 1156391ms] [WARNING] [app-publisher] socket not ready, skip collaboration_event emit {appId: ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c} @ https://cloud.dify.ai/_next/static/chunks/0r7jk8u5n050i.js:476
+[ 1303640ms] [WARNING] [app-publisher] socket not ready, skip collaboration_event emit {appId: ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c} @ https://cloud.dify.ai/_next/static/chunks/0r7jk8u5n050i.js:476
+[ 1385916ms] [WARNING] [app-publisher] socket not ready, skip collaboration_event emit {appId: ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c} @ https://cloud.dify.ai/_next/static/chunks/0r7jk8u5n050i.js:476
+[ 1801737ms] [ERROR] Failed to load resource: the server responded with a status of 401 () @ https://cloud.dify.ai/console/api/apps/ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c/model-config:0
+[ 1802395ms] [WARNING] [app-publisher] socket not ready, skip collaboration_event emit {appId: ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c} @ https://cloud.dify.ai/_next/static/chunks/0r7jk8u5n050i.js:476
+[ 1876104ms] [WARNING] [app-publisher] socket not ready, skip collaboration_event emit {appId: ee3f1bdc-d3d6-4469-9dca-91e5fa61f31c} @ https://cloud.dify.ai/_next/static/chunks/0r7jk8u5n050i.js:476

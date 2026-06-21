@@ -22,7 +22,10 @@ const StepFour = () => {
   const { decrease } = useStepStore();
   const { setWorry, worry, how, who } = useWorryStore();
   const { fetchResponse } = useCounselingPrompt();
-  const [loadingState, setLoadingState] = useState({ isLoading: false, step: 0 });
+  const [loadingState, setLoadingState] = useState({
+    isLoading: false,
+    step: 0,
+  });
   const { decreaseUserCount } = useUpdateUserCount();
   const user = useUserStore((state) => state.user);
   const navigate = useNavigate();
@@ -48,7 +51,9 @@ const StepFour = () => {
 
     // count가 undefined(미로드)인지 0(소진)인지 구분
     if (user.count === undefined) {
-      toast.error("사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      toast.error(
+        "사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.",
+      );
       setIsRequesting(false);
       setLoadingState({ isLoading: false, step: 0 });
       return;
@@ -69,7 +74,7 @@ const StepFour = () => {
       toast.error(
         error instanceof Error
           ? error.message
-          : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+          : "상담 요청 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
       );
     } finally {
       setLoadingState({ isLoading: false, step: 0 });
@@ -115,9 +120,17 @@ const StepFour = () => {
             id="input"
             value={worry}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setWorry(filter.clean(e.target.value))
+              // filter.clean()은 줄바꿈을 공백으로 바꾸므로, 줄 단위로 필터링해 \n 보존
+              setWorry(
+                e.target.value
+                  .split("\n")
+                  .map((line) => (line ? filter.clean(line) : line))
+                  .join("\n")
+              )
             }
-            placeholder="어떤 고민이 있으신가요? 자세히 적을수록 더 깊은 조언을 드릴 수 있어요."
+            placeholder={
+              "어떤 고민이 있으신가요?\n자세히 적을수록 더 깊은 조언을 드릴 수 있어요."
+            }
             className="!bg-transparent !border-none !shadow-none !p-2 !ring-0 text-gray-700 leading-relaxed text-sm h-full"
             minHeight="100%"
           />

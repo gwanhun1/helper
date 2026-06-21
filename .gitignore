@@ -13,3 +13,8 @@ node_modules/
 .env
 # typescript
 *.tsbuildinfo
+.vercel
+
+# 자동화/에이전트 산출물
+.claude/
+.playwright-mcp/

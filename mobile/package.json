@@ -6,7 +6,7 @@
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.2.14",
@@ -34,8 +34,10 @@
     "@react-native/typescript-config": "0.81.5",
     "@types/react": "~19.1.0",
     "@types/react-native-vector-icons": "^6.4.18",
+    "@typescript-eslint/parser": "^8.71.0",
     "babel-plugin-module-resolver": "^5.0.3",
     "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "typescript": "~5.9.2"
   },
   "private": true

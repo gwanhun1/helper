@@ -2,8 +2,6 @@ import {
   StepFive,
   StepFour,
   StepOne,
-  StepThree,
-  StepTwo,
 } from "../templates/step";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -65,8 +63,6 @@ const Worry = () => {
 
   const stepFrom: { [key: number]: JSX.Element } = {
     1: <StepOne />,
-    2: <StepTwo />,
-    3: <StepThree />,
     4: <StepFour />,
     5: <StepFive />,
   };

@@ -1,7 +1,7 @@
 import { randomBytes, timingSafeEqual } from "node:crypto";
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { ApiRequest, ApiResponse } from "../server/types.js";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   res.setHeader("Cache-Control", "no-store");
   const secure = !req.headers.host?.startsWith("localhost") && !req.headers.host?.startsWith("127.0.0.1");
   const origin = `${secure ? "https" : "http"}://${req.headers.host}`;

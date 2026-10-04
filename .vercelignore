@@ -1,0 +1,8 @@
+node_modules
+mobile
+.local-backups
+.env*
+.playwright-mcp
+.claude
+.git
+docs/assets

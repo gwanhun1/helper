@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { services } from "./firebase";
+import type { ApiRequest, ApiResponse } from "./types.js";
+import { services } from "./firebase.js";
 
 export class HttpError extends Error {
   constructor(
@@ -11,9 +11,9 @@ export class HttpError extends Error {
 }
 export function endpoint(
   methods: string[],
-  run: (req: VercelRequest, uid: string) => Promise<unknown>,
+  run: (req: ApiRequest, uid: string) => Promise<unknown>,
 ) {
-  return async (req: VercelRequest, res: VercelResponse) => {
+  return async (req: ApiRequest, res: ApiResponse) => {
     res.setHeader("Cache-Control", "no-store");
     if (!methods.includes(req.method || "")) {
       res.setHeader("Allow", methods.join(", "));

@@ -1,50 +1,14 @@
-# Welcome to your Expo app 👋
+# WorryHelper 마음 지도 프로토타입
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+React Native CLI 기반의 별도 네이티브 데모입니다. 화면의 지도·고민·답장·통계는 seed 예시 데이터이며, 실제 카카오 로그인·작성 저장·답장 전송은 연결되어 있지 않습니다. 데모 버튼을 인증 성공이나 저장 성공으로 안내하지 않습니다. 운영 웹 서비스는 https://worryhelper.shop 입니다.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+npm ci
+npm start
+# 다른 터미널
+npm run ios
+# 또는
+npm run android
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+iOS는 Xcode와 CocoaPods, Android는 Android Studio/JDK 및 네이버 지도 SDK 설정이 필요합니다. 설치·권한 설정은 해당 네이티브 프로젝트의 구성을 확인하세요. `npm run lint`와 `npx tsc --noEmit`으로 소스를 확인할 수 있습니다. 웹의 배포와 네이티브 앱 배포는 별개입니다.

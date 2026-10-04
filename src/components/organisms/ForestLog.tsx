@@ -1,88 +1,80 @@
 import useUserContents from "../../hooks/useUserContents";
 import useSelectTreeStore from "../../store/selectTreeStore";
 import LogForm from "./LogForm";
-import { motion, AnimatePresence } from "framer-motion";
-
+import { formatDate } from "../../utils/date";
 const ForestLog = () => {
-  const { userContents: forestData, refreshUserContents: refreshData } = useUserContents();
-  const { content: selectedContent, response: selectedResponse } =
-    useSelectTreeStore();
-
-  if (!forestData || !Array.isArray(forestData)) {
-    return null;
-  }
-
-  const selectedItem = forestData.find(
-    (item) =>
-      item.content === selectedContent && item.response === selectedResponse
-  );
-
-  const hasItems = forestData.length > 0;
-
+  const {
+    userContents: records,
+    loading,
+    error,
+    refreshUserContents,
+  } = useUserContents();
+  const selected = useSelectTreeStore();
+  const record = records.find((item) => item.id === selected.id);
+  if (loading)
+    return (
+      <p role="status" className="p-4 text-sm text-slate-600">
+        기록을 불러오고 있어요
+      </p>
+    );
+  if (error)
+    return (
+      <div role="alert" className="p-4 text-sm text-rose-700">
+        {error}
+        <button
+          onClick={() => void refreshUserContents()}
+          className="block underline mt-2"
+        >
+          다시 불러오기
+        </button>
+      </div>
+    );
+  if (record)
+    return (
+      <div className="space-y-3">
+        <button
+          onClick={() => selected.reset()}
+          className="min-h-11 text-sm underline text-emerald-800"
+        >
+          기록 목록으로 돌아가기
+        </button>
+        <LogForm data={record} onDelete={() => selected.reset()} />
+      </div>
+    );
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-transparent py-2">
-      <AnimatePresence mode="wait">
-        {hasItems && selectedItem ? (
-          <motion.div
-            key={selectedItem.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="flex flex-col flex-1 min-h-0"
-          >
-            <LogForm
-              data={selectedItem}
-              onDelete={refreshData}
-            />
-          </motion.div>
-        ) : hasItems ? (
-          <motion.div
-            key="hint"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col items-center justify-center py-8 gap-3 select-none"
-          >
-            <motion.span
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              className="text-3xl"
+    <section>
+      <h2 className="text-base font-semibold text-slate-800">
+        나의 기록 · {records.length}개
+      </h2>
+      {records.length ? (
+        <div className="space-y-2 mt-3">
+          {[...records].reverse().map((item) => (
+            <button
+              key={item.id}
+              onClick={() => selected.select(item)}
+              className="w-full text-left rounded-xl border border-slate-200 bg-white p-4"
             >
-              🌳
-            </motion.span>
-            <p className="text-sm font-semibold text-slate-500 text-center">
-              나무를 눌러 기록을 확인해보세요
-            </p>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="empty"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
-            className="flex flex-col items-center justify-center py-8 gap-3 select-none"
-          >
-            <motion.span
-              animate={{ y: [0, -5, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              className="text-3xl"
-            >
-              🌱
-            </motion.span>
-            <p className="text-sm font-semibold text-slate-500 text-center">
-              아직 심은 고민이 없어요
-            </p>
-            <p className="text-xs text-slate-400 text-center">
-              아래 버튼을 눌러 첫 번째 나무를 심어보세요
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+              <p className="text-xs text-slate-600">
+                {formatDate(item.date).date} ·{" "}
+                {item.open ? "공유 중" : "비공개"}
+              </p>
+              <p className="text-sm font-semibold text-slate-800 mt-2 line-clamp-2 break-words">
+                {item.content}
+              </p>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-white border border-slate-200 p-5 mt-3 text-center">
+          <p className="text-sm font-semibold text-slate-800">
+            아직 기록이 없어요
+          </p>
+          <p className="text-sm text-slate-600 mt-2">
+            첫 마음을 기록하면 나무가 자라요.
+          </p>
+        </div>
+      )}
+    </section>
   );
 };
-
 export default ForestLog;

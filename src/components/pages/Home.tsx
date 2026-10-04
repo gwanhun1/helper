@@ -1,199 +1,196 @@
+import { Link, useNavigate } from "react-router-dom";
 import PageLayout from "../organisms/PageLayout";
-import AuthAlert from "../molecules/AuthAlert";
 import useUserContents from "../../hooks/useUserContents";
 import useUserStore from "../../store/userStore";
-import { FiCalendar, FiHeart, FiArrowRight } from "react-icons/fi";
-import { toast } from "react-hot-toast";
+import { FiCalendar, FiHeart, FiArrowRight, FiLock } from "react-icons/fi";
 import { wellnessTips } from "../../data/wellnessTips";
-import { useState, useEffect, useRef } from "react";
 import StatCard from "../atoms/StatCard";
 import EmotionChart from "../molecules/EmotionChart";
 import WellnessTipCard from "../molecules/WellnessTipCard";
 import RecentRecords from "../organisms/RecentRecords";
 import WorryPromptCarousel from "../molecules/WorryPromptCarousel";
-import { motion } from "framer-motion";
-import { KAKAO_AUTH_URL } from "../molecules/KakaoLogin";
-import { RiKakaoTalkFill } from "react-icons/ri";
-import { useNavigate } from "react-router-dom";
-
-const features = [
-  { emoji: "🌳", title: "마음의 숲", desc: "고민을 심으면 나무가 자라요" },
-  { emoji: "🤖", title: "AI 조언", desc: "다양한 페르소나의 맞춤 상담" },
-  { emoji: "💬", title: "고민 나누기", desc: "익명으로 서로의 이야기를 나눠요" },
-  { emoji: "📊", title: "마음 리포트", desc: "감정 패턴을 한눈에 파악해요" },
-];
-
+import useStepStore from "../../store/stepStore";
+import { moodLabel, koreaDate } from "../../utils/mood";
 const LandingPage = () => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col min-h-full bg-gradient-to-b from-emerald-50 via-white to-white pb-6">
-      {/* 히어로 */}
-      <div className="px-6 pt-10 pb-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 text-[11px] font-bold px-3 py-1 rounded-full mb-4"
-        >
-          🌱 마음 건강 AI 파트너
-        </motion.div>
-        <motion.h1
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-[28px] font-extrabold text-slate-800 leading-tight tracking-tight"
-        >
-          고민을 나무처럼<br />천천히 키워가요
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="mt-3 text-sm text-slate-500 leading-relaxed"
-        >
-          AI와 함께 마음속 이야기를 꺼내고<br />나만의 마음 숲을 만들어보세요
-        </motion.p>
-      </div>
-
-      {/* 기능 카드 그리드 */}
-      <div className="px-4 grid grid-cols-2 gap-3 mb-6">
-        {features.map((f, i) => (
-          <motion.div
-            key={f.title}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 + i * 0.07 }}
-            className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4"
-          >
-            <span className="text-2xl">{f.emoji}</span>
-            <p className="text-sm font-extrabold text-slate-800 mt-2">{f.title}</p>
-            <p className="text-xs text-slate-400 mt-0.5 leading-relaxed">{f.desc}</p>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* 고민 나누기 미리보기 버튼 */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.45 }}
-        className="px-4 mb-4"
-      >
-        <button
-          onClick={() => navigate("/advice")}
-          className="w-full flex items-center justify-between px-5 py-4 bg-white rounded-2xl border border-slate-100 shadow-sm"
-        >
-          <div className="flex items-center gap-3">
-            <span className="text-xl">💬</span>
-            <div className="text-left">
-              <p className="text-sm font-bold text-slate-800">고민 나누기 구경하기</p>
-              <p className="text-xs text-slate-400">로그인 없이도 볼 수 있어요</p>
-            </div>
-          </div>
-          <FiArrowRight className="text-slate-400" size={16} />
-        </button>
-      </motion.div>
-
-      {/* 카카오 로그인 CTA */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55 }}
-        className="px-4 space-y-2"
-      >
-        <a
-          href={KAKAO_AUTH_URL}
-          className="flex items-center justify-center gap-2 w-full py-4 bg-[#FEE500] rounded-2xl font-bold text-sm text-gray-900 shadow-sm"
-        >
-          <RiKakaoTalkFill size={20} />
-          카카오로 시작하기
-        </a>
-        <p className="text-center text-xs text-slate-400">
-          가입하면 마음의 숲, AI 조언, 리포트를 모두 사용할 수 있어요
+    <div className="min-h-full bg-gradient-to-b from-emerald-50 to-white px-5 pt-7 pb-8 md:px-10 md:pt-12">
+      <div className="max-w-2xl mx-auto">
+        <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+          🌱 AI와 함께 돌보는 마음
+        </span>
+        <h1 className="mt-5 text-[30px] md:text-4xl font-bold text-slate-800 leading-tight tracking-tight">
+          고민을 내려놓고
+          <br />
+          마음의 숲을 가꿔요
+        </h1>
+        <p className="mt-4 text-base text-slate-600 leading-relaxed">
+          오늘 마음을 적고, AI의 조언을 받아보세요.
+          <br />한 번의 기록이 나만의 숲에 나무로 남아요.
         </p>
-      </motion.div>
+        <button
+          onClick={() => {
+            useStepStore.setState({ step: 4 });
+            navigate("/worry");
+          }}
+          className="mt-6 w-full md:w-auto md:px-10 rounded-2xl bg-emerald-700 py-4 text-white font-semibold"
+        >
+          첫 마음 기록하기
+        </button>
+        <p className="flex items-center gap-2 mt-3 text-xs text-slate-600">
+          <FiLock aria-hidden="true" />
+          카카오 로그인 후 이용 · 기본 비공개 · 하루 10회 무료
+        </p>
+        <section
+          aria-label="AI 조언 예시"
+          className="mt-7 rounded-2xl bg-white border border-emerald-100 p-5"
+        >
+          <p className="text-xs font-semibold text-emerald-800">
+            이렇게 이야기를 나눠요 · 예시
+          </p>
+          <p className="mt-3 text-sm text-slate-800">
+            “오늘 할 일이 많아 마음이 지쳤어요.”
+          </p>
+          <p className="mt-3 text-sm text-slate-600 leading-relaxed border-l-2 border-emerald-200 pl-3">
+            지금 가장 중요한 한 가지부터 골라보면 어떨까요? 쉬는 시간도 오늘의
+            계획에 넣어주세요.
+          </p>
+          <p className="text-xs text-slate-500 mt-3">
+            AI가 생성하는 실제 조언은 입력과 선택한 스타일에 따라 달라져요.
+          </p>
+        </section>
+        <div className="grid grid-cols-2 gap-3 mt-5">
+          {[
+            { title: "마음의 숲", desc: "나만 보는 고민과 조언", emoji: "🌳" },
+            {
+              title: "기분 리포트",
+              desc: "직접 고른 기분의 변화",
+              emoji: "📊",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="rounded-2xl bg-white border border-slate-200 p-4"
+            >
+              <span aria-hidden="true" className="text-2xl">
+                {item.emoji}
+              </span>
+              <h2 className="text-sm font-bold text-slate-800 mt-2">
+                {item.title}
+              </h2>
+              <p className="text-xs text-slate-600 mt-1">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+        <Link
+          to="/advice"
+          className="mt-5 flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-4"
+        >
+          <div>
+            <p className="text-sm font-semibold text-slate-800">
+              다른 사람의 고민 둘러보기
+            </p>
+            <p className="mt-1 text-xs text-slate-600">
+              공유된 이야기만 볼 수 있어요 · 로그인 없이 열람
+            </p>
+          </div>
+          <FiArrowRight className="shrink-0 text-emerald-800" />
+        </Link>
+        <Link
+          to="/vent"
+          className="block mt-4 text-center text-sm text-emerald-800 underline"
+        >
+          로그인 없이 감정 풀기
+        </Link>
+        <p className="mt-6 text-xs text-slate-600 leading-relaxed">
+          AI 조언은 전문 상담이나 진단을 대신하지 않아요.{" "}
+          <Link to="/guide" className="underline">
+            이용 방법과 기록 안내
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
-
 const Home = () => {
-  const user = useUserStore((state) => state.user);
-  const { userContents: forestData, loading } = useUserContents();
-  const toastIdRef = useRef<string | null>(null);
-  const lastToastKeyRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    if (!user) return;
-    if (forestData && forestData.length > 0) {
-      const lastRecord = forestData[forestData.length - 1];
-      if (lastRecord && lastRecord.level !== undefined) {
-        const level = Number(lastRecord.level);
-        const toastKey = `${lastRecord.id ?? lastRecord.date ?? forestData.length}-${level}`;
-        if (lastToastKeyRef.current === toastKey) return;
-        if (toastIdRef.current) toast.dismiss(toastIdRef.current);
-
-        let id: string;
-        if (level >= 6) {
-          id = toast(<div className="flex flex-col gap-1"><span className="font-medium">기분 좋은 하루네요! 💫</span><span className="text-sm">오늘의 긍정적인 순간들을 기록해보세요</span></div>, { icon: "✨", duration: 5000 });
-        } else if (level >= 3) {
-          id = toast(<div className="flex flex-col gap-1"><span className="font-medium">평온한 하루를 보내고 계시네요 😊</span><span className="text-sm">잠시 명상을 하며 마음을 돌아보는 건 어떨까요?</span></div>, { icon: "🍃", duration: 5000 });
-        } else {
-          id = toast(<div className="flex flex-col gap-1"><span className="font-medium">힘든 시간을 보내고 계시네요 😔</span><span className="text-sm">고민을 글로 적어보면 마음이 한결 가벼워질 수 있어요</span></div>, { icon: "🌱", duration: 5000 });
-        }
-        toastIdRef.current = id;
-        lastToastKeyRef.current = toastKey;
-      }
-    }
-    return () => { if (toastIdRef.current) toast.dismiss(toastIdRef.current); };
-  }, [forestData, user]);
-
-  const getTodaysTip = () => {
-    const today = new Date();
-    const tipIndex = Number(`${today.getFullYear()}${today.getMonth()}${today.getDate()}`) % wellnessTips.length;
-    return wellnessTips[tipIndex];
-  };
-  const [currentTip] = useState(getTodaysTip);
-
-  const getAverageLevel = () => {
-    if (!forestData || forestData.length === 0) return 0;
-    const validItems = forestData.filter((item) => item.level !== undefined);
-    if (validItems.length === 0) return 0;
-    return (validItems.reduce((acc, item) => acc + Number(item.level), 0) / validItems.length).toFixed(2);
-  };
-
-  const getRecentMood = () => {
-    if (!forestData || forestData.length === 0) return "아직 기록이 없습니다";
-    const lastItem = forestData[forestData.length - 1];
-    if (!lastItem || lastItem.level === undefined) return "아직 기록이 없습니다";
-    const level = lastItem.level;
-    if (level >= 6) return "마음이 따뜻해요";
-    if (level >= 3) return "차분한 상태에요";
-    return "힘이 들어요";
-  };
-
-  // 비로그인 → 랜딩 페이지
-  if (!user) {
+  const { user, authReady } = useUserStore();
+  const {
+    userContents: records,
+    loading,
+    error,
+    refreshUserContents,
+  } = useUserContents();
+  if (!authReady)
     return (
-      <div className="h-full overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div role="status" className="m-auto text-slate-600">
+        마음의 숲을 준비하고 있어요
+      </div>
+    );
+  if (!user)
+    return (
+      <div className="h-full overflow-y-auto">
         <LandingPage />
       </div>
     );
-  }
-
+  const moodRecords = records.filter((record) => record.level !== undefined);
+  const recent = moodRecords.slice(-1)[0];
+  const average = moodRecords.length
+    ? moodRecords.reduce((total, record) => total + record.level!, 0) /
+      moodRecords.length
+    : 0;
+  const tip =
+    wellnessTips[Number(koreaDate().replace(/-/g, "")) % wellnessTips.length];
   return (
-    <PageLayout requireAuth>
-      <div className="flex flex-col pt-2 pb-4 space-y-4">
+    <PageLayout>
+      <div className="pt-5 pb-6 space-y-4 max-w-3xl mx-auto">
         <WorryPromptCarousel />
-        <EmotionChart averageLevel={getAverageLevel()} loading={loading} chartData={forestData?.slice(-7) || []} />
-        <div className="grid grid-cols-2 gap-4 px-4 mt-2">
-          <StatCard icon={<FiCalendar />} title="나의 기록" value={`${forestData?.length || 0}회`} iconColor="text-green-600" iconBgColor="bg-green-50" />
-          <StatCard icon={<FiHeart />} title="오늘의 기분" value={getRecentMood()} iconColor="text-rose-500" iconBgColor="bg-rose-50" />
+        {error ? (
+          <div
+            role="alert"
+            className="mx-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-700"
+          >
+            {error}
+            <button
+              onClick={() => void refreshUserContents()}
+              className="block mt-3 underline"
+            >
+              다시 불러오기
+            </button>
+          </div>
+        ) : (
+          <EmotionChart
+            averageLevel={average}
+            loading={loading}
+            chartData={moodRecords.slice(-7)}
+          />
+        )}
+        <div className="grid grid-cols-2 gap-3 px-4">
+          <StatCard
+            icon={<FiCalendar />}
+            title="나의 기록"
+            value={loading ? "불러오는 중" : `${records.length}회`}
+            iconColor="text-emerald-700"
+            iconBgColor="bg-emerald-50"
+          />
+          <StatCard
+            icon={<FiHeart />}
+            title="최근 기록한 기분"
+            value={loading ? "불러오는 중" : moodLabel(recent?.level)}
+            iconColor="text-rose-700"
+            iconBgColor="bg-rose-50"
+          />
         </div>
-        <WellnessTipCard tip={currentTip} />
-        <RecentRecords records={forestData?.slice(-3).reverse() || []} />
+        <Link
+          to="/insight"
+          className="mx-4 flex items-center justify-between p-4 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-emerald-800"
+        >
+          내 기분 리포트 보기
+          <FiArrowRight />
+        </Link>
+        <WellnessTipCard tip={tip} />
+        <RecentRecords records={records.slice(-3).reverse()} />
       </div>
-      <AuthAlert />
     </PageLayout>
   );
 };
-
 export default Home;

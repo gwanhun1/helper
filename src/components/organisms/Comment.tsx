@@ -47,7 +47,8 @@ const Comment = ({
           <button
             onClick={onDelete}
             disabled={disabled}
-            className="p-1 text-gray-400 transition-colors hover:text-red-500"
+            className="min-w-11 min-h-11 p-2 text-slate-600 transition-colors hover:text-red-500"
+            aria-label="내 댓글 삭제"
             title="댓글 삭제"
           >
             <FiTrash2 size={14} />

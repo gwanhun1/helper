@@ -6,7 +6,7 @@ import LikeButton from "../molecules/LikeButton";
 import { getPersonaIcon, getPersonaColor } from "../../utils/personaIcons";
 import { Comment as CommentType, MainContent } from "../../types/comment";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { KAKAO_AUTH_URL } from "../molecules/KakaoLogin";
+import { Link } from "react-router-dom";
 
 interface CommentListProps {
   mainContent: MainContent;
@@ -15,6 +15,7 @@ interface CommentListProps {
   isPostLiked: boolean;
   commentLikeStates: { [key: string]: boolean };
   currentUsername?: string;
+  currentUserId?: string;
   onTogglePostLike: () => void;
   onToggleCommentLike: (commentId: string) => void;
   onDeleteComment?: (commentId: string) => void;
@@ -32,6 +33,7 @@ const CommentList = ({
   isPostLiked,
   commentLikeStates,
   currentUsername,
+  currentUserId,
   onTogglePostLike,
   onToggleCommentLike,
   onDeleteComment,
@@ -51,7 +53,7 @@ const CommentList = ({
         <div className="flex items-center gap-2">
           <div
             className={`w-8 h-8 bg-gradient-to-br ${getPersonaColor(
-              mainContent.who
+              mainContent.who,
             )} rounded-full flex items-center justify-center`}
           >
             {getPersonaIcon(mainContent.who, "text-white text-sm")}
@@ -70,7 +72,7 @@ const CommentList = ({
       </div>
 
       <div className="ml-10">
-        <p className="text-[15px] text-[#333333] leading-relaxed mb-3">
+        <p className="text-[15px] text-[#333333] leading-relaxed mb-3 whitespace-pre-wrap break-words">
           {mainContent.response}
         </p>
         {isLoggedIn && (
@@ -93,16 +95,16 @@ const CommentList = ({
           <div className="space-y-3">
             {comments
               .filter((comment: CommentType): comment is CommentType =>
-                Boolean(comment && comment.id)
+                Boolean(comment && comment.id),
               )
               .filter(
                 (comment: CommentType, index: number, self: CommentType[]) =>
-                  index === self.findIndex((c) => c.id === comment.id)
+                  index === self.findIndex((c) => c.id === comment.id),
               )
               .map((comment: CommentType) => {
-                const isMyComment = currentUsername
-                  ? comment.username === currentUsername
-                  : false;
+                const isMyComment = Boolean(
+                  currentUserId && comment.userId === currentUserId,
+                );
                 return (
                   <Comment
                     key={comment.id}
@@ -138,13 +140,19 @@ const CommentList = ({
             disabled={isLoading}
           />
         ) : (
-          <a
-            href={KAKAO_AUTH_URL}
+          <Link
+            to="/auth"
+            onClick={() =>
+              sessionStorage.setItem(
+                "login-return",
+                window.location.pathname + window.location.search,
+              )
+            }
             className="flex items-center justify-center gap-2 w-full py-3 bg-[#FEE500] rounded-xl font-bold text-sm text-gray-900"
           >
             <RiKakaoTalkFill size={18} />
             로그인하고 댓글 달기
-          </a>
+          </Link>
         )}
       </div>
     </motion.div>

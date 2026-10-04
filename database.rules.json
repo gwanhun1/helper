@@ -1,0 +1,10 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "contents": { ".read": false, ".write": false },
+    "publicContents": { ".read": true, ".write": false, ".indexOn": ["date"] },
+    "privateRecords": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } },
+    "users": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }
+  }
+}

@@ -1,126 +1,38 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import useStepStore from "../../../store/stepStore";
 import useWorryStore from "../../../store/worryStore";
-import Button from "../../atoms/Button";
-import Title from "../../atoms/Title";
-import Text from "../../atoms/Text";
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { FiShare2, FiLock, FiUnlock } from "react-icons/fi";
-import { toast } from "react-hot-toast";
-
+import useSelectTreeStore from "../../../store/selectTreeStore";
+import useCounselingPrompt from "../../../hooks/useCounselingPrompt";
+import { apiRequest } from "../../../utils/api";
 const StepFive = () => {
-  const { reset, decrease } = useStepStore();
-  const { response, reset: resetWorry, isOpen, setIsOpen } = useWorryStore();
+  const state = useWorryStore();
   const navigate = useNavigate();
-
-  const handleReset = () => {
-    resetWorry();
-    reset();
+  const { fetchResponse, loading } = useCounselingPrompt();
+  const [updating, setUpdating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const visibility = async () => {
+    setUpdating(true); setError(null);
+    try { await apiRequest("/api/records", { id: state.recordId, open: !state.isOpen }, "PATCH"); state.setIsOpen(!state.isOpen); }
+    catch (cause) { setError(cause instanceof Error ? cause.message : "공개 설정을 바꾸지 못했어요."); }
+    finally { setUpdating(false); }
   };
-
-  const handleViewInCommunity = () => {
-    resetWorry();
-    reset();
-    toast.success("커뮤니티에서 다른 사람들의 이야기도 들어보세요!");
-    navigate("/advice");
+  const showRecord = () => {
+    useSelectTreeStore.setState({ content: state.worry, response: state.response, level: state.level });
+    useStepStore.setState({ step: 1 }); state.reset();
   };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col px-6 pt-6 pb-8 h-full bg-transparent"
-    >
-      <div className="pb-6">
-        <Title>당신을 위한 조언이 도착했어요</Title>
-        <Text variant="body" color="secondary" className="mt-2 font-medium">
-          이 메시지가 당신의 마음에 작은 위로가 되길 바라요.
-        </Text>
-      </div>
-
-      <div className="overflow-y-auto flex-1 px-1">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
-          className="overflow-hidden relative p-6 rounded-2xl border shadow-sm bg-emerald-50/60 border-emerald-100/60"
-        >
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-20 h-20 rounded-full blur-2xl bg-emerald-100/40" />
-
-          <div className="relative z-10 text-gray-700 leading-loose text-[15px] whitespace-pre-wrap font-medium">
-            {response}
-          </div>
-        </motion.div>
-
-        {/* 커뮤니티 공유 안내 및 설정 */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className={`mt-4 p-4 rounded-2xl border transition-all duration-300 ${
-            isOpen
-              ? "bg-green-50/50 border-green-100/50"
-              : "bg-gray-50 border-gray-200"
-          }`}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <div
-              className={`flex items-center gap-2 font-semibold text-sm ${
-                isOpen ? "text-green-700" : "text-gray-600"
-              }`}
-            >
-              {isOpen ? <FiUnlock size={16} /> : <FiLock size={16} />}
-              <span>
-                {isOpen ? "커뮤니티에 익명으로 공유됨" : "나만 보기 (비공개)"}
-              </span>
-            </div>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${
-                isOpen
-                  ? "text-green-700 bg-green-100 hover:bg-green-200"
-                  : "text-gray-600 bg-gray-200 hover:bg-gray-300"
-              }`}
-            >
-              설정 변경
-            </button>
-          </div>
-          <p
-            className={`text-xs leading-relaxed ${
-              isOpen ? "text-green-600/80" : "text-gray-500"
-            }`}
-          >
-            {isOpen
-              ? "당신의 고민이 익명으로 커뮤니티에 공유되었어요. 다른 분들의 따뜻한 응원을 받아보세요!"
-              : "이 고민은 커뮤니티에 공개되지 않고 오직 당신의 숲에만 남게 됩니다."}
-          </p>
-        </motion.div>
-      </div>
-
-      <div className="shrink-0 pt-4 pb-2 bg-transparent">
-        <div className="grid grid-cols-1 gap-4">
-          <Button
-            className="sparkle-effect h-14 !rounded-2xl !shadow-green/20"
-            text="다시 심기"
-            bgColor="bg-green"
-            onPress={handleReset}
-          />
-        </div>
-
-        {/* 커뮤니티에서 보기 버튼 */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          onClick={handleViewInCommunity}
-          className="flex gap-2 justify-center items-center py-3 mt-3 w-full text-sm font-medium text-green-600 rounded-xl transition-colors hover:bg-green-50"
-        >
-          <FiShare2 size={16} />
-          커뮤니티에서 보기
-        </motion.button>
-      </div>
-    </motion.div>
-  );
+  return <section className="h-full flex flex-col p-5">
+    <h1 className="text-xl font-bold text-slate-800">당신을 위한 조언이 도착했어요</h1>
+    <p className="mt-2 text-sm text-slate-600">{state.saved ? "마음의 숲에 기록을 저장했어요." : "조언은 도착했지만 기록 저장을 완료하지 못했어요."}</p>
+    <div className="flex-1 min-h-0 overflow-y-auto py-5 space-y-4">
+      <p className="rounded-2xl bg-emerald-50 border border-emerald-100 p-5 text-base text-slate-700 leading-loose whitespace-pre-wrap">{state.response}</p>
+      {state.saved ? <div className="rounded-xl bg-white border border-slate-200 p-4"><p className="text-sm font-semibold text-slate-800">{state.isOpen ? "커뮤니티에 익명으로 공유 중" : "나만 보는 비공개 기록"}</p><p className="text-xs text-slate-600 mt-2">{state.isOpen ? "고민과 조언을 누구나 볼 수 있어요." : "다른 사람은 이 기록을 볼 수 없어요."}</p><button className="mt-3 text-sm underline text-emerald-800 min-h-11" disabled={updating} onClick={visibility}>{updating ? "설정 저장 중…" : state.isOpen ? "비공개로 바꾸기" : "커뮤니티에 공유하기"}</button></div> : <div role="alert" className="bg-amber-50 text-amber-900 rounded-xl p-4 text-sm"><p>화면을 떠나기 전에 저장을 다시 시도해주세요. 같은 요청은 상담 횟수를 다시 차감하지 않아요.</p><button className="mt-3 rounded-xl bg-white px-4 py-3 font-semibold" disabled={loading} onClick={() => { setError(null); void fetchResponse().catch(cause => setError(cause.message)); }}>{loading ? "저장 중…" : "기록 저장 다시 시도"}</button></div>}
+      {error && <p role="alert" className="text-sm text-rose-700">{error}</p>}
+    </div>
+    <div className="space-y-2">{state.saved && <button onClick={showRecord} className="w-full py-3.5 rounded-xl bg-emerald-700 text-white font-semibold">내 기록 보기</button>}
+      {state.saved && state.isOpen && <button onClick={() => navigate(`/advice?post=${state.recordId}`)} className="w-full py-3 text-emerald-800 text-sm">공유한 고민 보기</button>}
+      <button onClick={() => { if (!state.saved && !window.confirm("저장을 완료하지 못했어요. 조언을 닫고 새 상담을 시작할까요?")) return; state.reset(); useStepStore.setState({ step: 4 }); }} className="w-full py-3 text-sm text-slate-600">새 마음 기록하기</button>
+    </div>
+  </section>;
 };
-
 export default StepFive;

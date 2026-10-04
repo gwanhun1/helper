@@ -7,7 +7,7 @@ import ForestLog from "../../organisms/ForestLog";
 import { motion } from "framer-motion";
 
 const StepOne = () => {
-  const { increase } = useStepStore();
+  
   const { showWeatherEffect, toggleWeatherEffect } = useUIStore();
 
   return (
@@ -56,7 +56,7 @@ const StepOne = () => {
       >
         <motion.button
           className="sparkle-effect w-full py-3.5 bg-green shadow-xl shadow-green/10 rounded-2xl relative overflow-hidden group transition-all active:scale-95"
-          onClick={() => increase()}
+          onClick={() => useStepStore.setState({ step: 4 })}
           whileHover={{ scale: 1.02 }}
         >
           <span className="text-white font-bold text-base relative z-10 transition-transform group-hover:scale-110 block">

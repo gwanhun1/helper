@@ -1,34 +1,25 @@
 import { create } from "zustand";
-
 interface SelectTreeStore {
-  content: string; 
-  date: string; 
+  id: string;
+  content: string;
+  date: string;
   response: string;
-  username: string; 
+  username: string;
   level?: number;
   select: (data: Partial<SelectTreeStore>) => void;
-  reset: () => void; 
+  reset: () => void;
 }
-
-const initialState = {
+const initial = {
+  id: "",
   content: "",
   date: "",
   response: "",
   username: "",
   level: 0,
 };
-
 const useSelectTreeStore = create<SelectTreeStore>((set) => ({
-  ...initialState,
-  select: ({ content, date, response, username }: Partial<SelectTreeStore>) =>
-    set((state) => ({
-      ...state,
-      content: content ?? state.content,
-      date: date ?? state.date,
-      response: response ?? state.response,
-      username: username ?? state.username,
-    })),
-  reset: () => set(() => initialState),
+  ...initial,
+  select: (data) => set(data),
+  reset: () => set(initial),
 }));
-
 export default useSelectTreeStore;

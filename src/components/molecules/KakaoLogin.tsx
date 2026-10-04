@@ -1,20 +1,9 @@
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { KAKAO_REDIRECT_URI } from "../../constants/auth";
-
-export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${
-  import.meta.env.VITE_KAKAO_REST_API_KEY
-}&redirect_uri=${encodeURIComponent(KAKAO_REDIRECT_URI)}&response_type=code`;
-
+import { useLocation } from "react-router-dom";
+import { rememberDestination } from "../../utils/auth";
+export const KAKAO_AUTH_URL = "/api/kakao";
 function KakaoLogin() {
-  return (
-    <a
-      href={KAKAO_AUTH_URL}
-      className="flex items-center justify-center w-5/6 p-3 bg-yellow-300 shadow-xl rounded-[15px]"
-    >
-      <span className="text-sm font-bold text-gray-900">카카오로 시작하기</span>
-      <RiKakaoTalkFill size={30} className="ml-2" />
-    </a>
-  );
+  const location = useLocation();
+  return <a href={KAKAO_AUTH_URL} onClick={() => { if (!location.pathname.startsWith("/auth")) rememberDestination(location.pathname + location.search); }} className="flex items-center justify-center gap-2 w-full py-4 bg-[#FEE500] rounded-2xl font-semibold text-slate-900"><RiKakaoTalkFill size={20} />카카오로 시작하기</a>;
 }
-
 export default KakaoLogin;

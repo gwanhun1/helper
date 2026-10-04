@@ -1,94 +1,42 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-
-// vi.mock 팩토리는 호이스팅되므로 vi.hoisted로 공유 모킹 객체를 먼저 만든다.
-const h = vi.hoisted(() => ({
-  setResponse: vi.fn(),
-  addWorry: vi.fn(),
-  increase: vi.fn(),
-  state: { who: "엄마", how: "다정하게", worry: "취업이 힘들어요" },
-  user: { value: { uid: "u1" } as { uid: string } | null },
-}));
-
-vi.mock("../store/worryStore", () => ({
-  default: () => ({ ...h.state, setResponse: h.setResponse }),
-}));
-vi.mock("../store/userStore", () => ({
-  default: (selector: (s: { user: unknown }) => unknown) =>
-    selector({ user: h.user.value }),
-}));
-vi.mock("./useWorryManager", () => ({
-  default: () => ({ addWorry: h.addWorry }),
-}));
-vi.mock("../store/stepStore", () => ({
-  default: () => ({ increase: h.increase }),
-}));
-
+import { describe, it, expect, vi, beforeEach } from "vitest";
+const h = vi.hoisted(() => ({ api: vi.fn(), user: { uid: "u1", count: 10 } as { uid: string; count: number } | null, setUser: vi.fn() }));
+vi.mock("../utils/api", () => ({ apiRequest: h.api }));
+vi.mock("../store/userStore", () => ({ default: { getState: () => ({ user: h.user }), setState: h.setUser } }));
 import useCounselingPrompt from "./useCounselingPrompt";
-
-const runFetch = async (result: { current: { fetchResponse: () => Promise<void> } }) => {
-  await act(async () => {
-    const p = result.current.fetchResponse();
-    await vi.runAllTimersAsync();
-    await p;
-  });
-};
-
+import useWorryStore from "../store/worryStore";
+import useStepStore from "../store/stepStore";
 beforeEach(() => {
-  vi.clearAllMocks();
-  vi.useFakeTimers();
-  h.user.value = { uid: "u1" };
-  h.state.who = "엄마";
-  h.state.how = "다정하게";
-  h.state.worry = "취업이 힘들어요";
-  h.addWorry.mockResolvedValue(undefined);
+  vi.clearAllMocks(); h.user = { uid: "u1", count: 10 };
+  useWorryStore.getState().reset(); useWorryStore.getState().setWorry("오늘은 지쳤어요"); useStepStore.setState({ step: 4 });
+  h.api.mockResolvedValue({ message: "쉬어도 괜찮아요", recordId: "r1", saved: true, open: false, count: 9 });
 });
-
-afterEach(() => {
-  vi.useRealTimers();
-});
-
-describe("useCounselingPrompt", () => {
-  it("로그인하지 않았으면 에러를 던지고 응답을 만들지 않는다", async () => {
-    h.user.value = null;
+describe("상담 흐름", () => {
+  it("비로그인 요청은 전송하지 않는다", async () => {
+    h.user = null; const { result } = renderHook(() => useCounselingPrompt());
+    await act(async () => { await expect(result.current.fetchResponse()).rejects.toThrow("로그인"); });
+    expect(h.api).not.toHaveBeenCalled();
+  });
+  it("비공개와 직접 선택한 기분을 서버에 전달하고 저장 결과를 보여준다", async () => {
+    const { result } = renderHook(() => useCounselingPrompt()); await act(async () => { await result.current.fetchResponse(); });
+    expect(h.api).toHaveBeenCalledWith("/api/chat", expect.objectContaining({ open: false, level: 3, requestId: expect.any(String) }));
+    expect(useWorryStore.getState()).toMatchObject({ saved: true, response: "쉬어도 괜찮아요" }); expect(useStepStore.getState().step).toBe(5);
+  });
+  it("저장 실패를 표시하며 같은 요청 ID로 재시도한다", async () => {
+    h.api.mockResolvedValueOnce({ message: "위로", recordId: "r1", saved: false, open: false, count: 9 });
+    const { result } = renderHook(() => useCounselingPrompt()); await act(async () => { await result.current.fetchResponse(); });
+    expect(useWorryStore.getState().saved).toBe(false);
+    await act(async () => { await result.current.fetchResponse(); });
+    expect(h.api.mock.calls[0][1].requestId).toBe(h.api.mock.calls[1][1].requestId);
+  });
+  it("동시 클릭은 한 번만 전송하고 실패 시 작성 내용을 유지한다", async () => {
+    let reject!: (error: Error) => void;
+    h.api.mockImplementation(() => new Promise((_resolve, rejectPromise) => { reject = rejectPromise; }));
     const { result } = renderHook(() => useCounselingPrompt());
-
     await act(async () => {
-      await expect(result.current.fetchResponse()).rejects.toThrow(
-        "로그인이 필요합니다"
-      );
+      const pending = result.current.fetchResponse().catch(error => error);
+      await result.current.fetchResponse(); reject(new Error("연결 실패")); await pending;
     });
-    expect(h.setResponse).not.toHaveBeenCalled();
-    expect(h.increase).not.toHaveBeenCalled();
-  });
-
-  it("정상 흐름: 응답 저장 → 기록 저장 → 단계 증가", async () => {
-    const { result } = renderHook(() => useCounselingPrompt());
-    await runFetch(result);
-
-    expect(h.setResponse).toHaveBeenCalledTimes(1);
-    const saved = h.setResponse.mock.calls[0][0] as string;
-    expect(saved).toContain("얘야,"); // 엄마 페르소나
-    expect(h.addWorry).toHaveBeenCalledTimes(1);
-    expect(h.increase).toHaveBeenCalledTimes(1);
-    expect(result.current.error).toBeNull();
-  });
-
-  it("위기 입력이면 안전 안내(109)를 응답으로 저장한다", async () => {
-    h.state.worry = "죽고 싶어요";
-    const { result } = renderHook(() => useCounselingPrompt());
-    await runFetch(result);
-
-    const saved = h.setResponse.mock.calls[0][0] as string;
-    expect(saved).toContain("109");
-  });
-
-  it("기록 저장(addWorry)이 실패해도 전체 흐름은 완료된다", async () => {
-    h.addWorry.mockRejectedValueOnce(new Error("db down"));
-    const { result } = renderHook(() => useCounselingPrompt());
-    await runFetch(result);
-
-    expect(h.setResponse).toHaveBeenCalledTimes(1);
-    expect(h.increase).toHaveBeenCalledTimes(1); // 저장 실패와 무관하게 진행
+    expect(h.api).toHaveBeenCalledTimes(1); expect(useStepStore.getState().step).toBe(4); expect(useWorryStore.getState().worry).toBe("오늘은 지쳤어요");
   });
 });

@@ -1,8 +1,15 @@
-import { useEffect, useState } from "react";
-import { get, getDatabase, ref, onValue } from "firebase/database";
+import { useEffect, useState, useCallback } from "react";
+import {
+  get,
+  getDatabase,
+  ref,
+  onValue,
+  query,
+  orderByChild,
+  limitToLast,
+} from "firebase/database";
 import { app } from "../firebaseConfig";
 import { processContentsData } from "../utils/contentUtils";
-
 export interface Comment {
   id?: string;
   content?: string;
@@ -10,12 +17,10 @@ export interface Comment {
   date?: string;
   likes?: number;
   likedBy?: string[];
-  timestamp?: number;
   userId?: string;
-  itemId?: string;
 }
-
 export interface Item {
+  category?: string;
   content: string;
   date: string;
   id: string;
@@ -25,96 +30,61 @@ export interface Item {
   userId: string;
   open?: boolean;
   level?: number;
+  moodSource?: string;
   comments?: Comment[];
   like?: number;
   likedBy?: string[];
   who?: string;
   how?: string;
 }
-
-interface UseContentsData {
-  data: Item[];
-  loading: boolean;
-  error: string | null;
-  refreshData: () => Promise<void>;
-}
-
-const useContentsData = (): UseContentsData => {
+const useContentsData = () => {
   const [data, setData] = useState<Item[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const fetchData = async () => {
+  const load = useCallback(
+    () =>
+      query(
+        ref(getDatabase(app), "publicContents"),
+        orderByChild("date"),
+        limitToLast(100),
+      ),
+    [],
+  );
+  const refreshData = useCallback(async () => {
     setLoading(true);
     setError(null);
-
     try {
-      const db = getDatabase(app);
-      const contentsRef = ref(db, "contents");
-      const snapshot = await get(contentsRef);
-
-      if (snapshot.exists()) {
-        const contentsData = snapshot.val();
-        const processedData = processContentsData(contentsData);
-        setData(processedData.reverse());
-      } else {
-        setData([]);
-      }
-    } catch (e) {
-      console.error("Error fetching data:", e);
-      setError(
-        `데이터를 가져오는 중 오류가 발생했습니다: ${
-          e instanceof Error ? e.message : "알 수 없는 오류"
-        }`
+      setData(
+        processContentsData((await get(load())).val())
+          .filter((item) => item.open === true)
+          .reverse(),
       );
+    } catch {
+      setError("고민을 불러오지 못했어요. 연결을 확인하고 다시 시도해주세요.");
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    
-    const db = getDatabase(app);
-    const contentsRef = ref(db, "contents");
-
-    const unsubscribe = onValue(
-      contentsRef,
-      (snapshot) => {
-        if (!mounted) return;
-
-        if (snapshot.exists()) {
-          const rawData = snapshot.val();
-          const processedData = processContentsData(rawData);
-          if (mounted) {
-            setData(processedData.reverse());
-          }
-        } else {
-          if (mounted) {
-            setData([]);
-          }
-        }
-        if (mounted) {
+  }, [load]);
+  useEffect(
+    () =>
+      onValue(
+        load(),
+        (snapshot) => {
+          setData(
+            processContentsData(snapshot.val())
+              .filter((item) => item.open === true)
+              .reverse(),
+          );
           setLoading(false);
-        }
-      },
-      (error) => {
-        console.error("Real-time data error:", error);
-        if (mounted) {
-          setError(`데이터를 가져오는 중 오류가 발생했습니다: ${error.message}`);
+          setError(null);
+        },
+        () => {
+          setError("고민을 불러오지 못했어요. 다시 시도해주세요.");
           setLoading(false);
-        }
-      }
-    );
-
-    return () => {
-      mounted = false;
-      unsubscribe();
-    };
-  }, []);
-
-  return { data, loading, error, refreshData: fetchData };
+        },
+      ),
+    [load],
+  );
+  return { data, loading, error, refreshData };
 };
-
 export default useContentsData;

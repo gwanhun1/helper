@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Righteous&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -23,7 +23,7 @@ body {
 }
 
 .helper-text {
-  font-family: 'Righteous', cursive;
+  font-family: "Righteous", cursive;
   letter-spacing: 0.05em;
 }
 
@@ -55,7 +55,12 @@ body {
   left: -100%;
   width: 200%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.5),
+    transparent
+  );
   transform: skewX(-30deg);
   animation: sparkle 3s infinite;
 }
@@ -74,19 +79,91 @@ body {
 
 /* Seasonal Animations */
 @keyframes snow-fall {
-  0% { transform: translateY(-10px) translateX(0); opacity: 0; }
-  20% { opacity: 1; }
-  100% { transform: translateY(300px) translateX(20px); opacity: 0; }
+  0% {
+    transform: translateY(-10px) translateX(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(300px) translateX(20px);
+    opacity: 0;
+  }
 }
 
 @keyframes petal-fall {
-  0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; }
-  20% { opacity: 0.8; }
-  100% { transform: translateY(300px) translateX(-40px) rotate(360deg); opacity: 0; }
+  0% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(300px) translateX(-40px) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 @keyframes leaf-fall {
-  0% { transform: translateY(-10px) translateX(0) rotate(0deg); opacity: 0; }
-  20% { opacity: 0.8; }
-  100% { transform: translateY(300px) translateX(30px) rotate(180deg); opacity: 0; }
+  0% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(300px) translateX(30px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+/* Readable defaults and keyboard access across every page. */
+body {
+  font-family: "Pretendard Variable", "Noto Sans KR", system-ui, sans-serif;
+  color: #334155;
+}
+button,
+a,
+input,
+textarea,
+select,
+summary {
+  touch-action: manipulation;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 3px solid #047857;
+  outline-offset: 3px;
+}
+label:has(input[type="radio"]:focus-visible) {
+  outline: 3px solid #047857;
+  outline-offset: 3px;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 200;
+  padding: 12px 16px;
+  background: white;
+  border: 2px solid #047857;
+  border-radius: 12px;
+}
+.skip-link:focus {
+  top: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

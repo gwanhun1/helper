@@ -2,9 +2,10 @@ import {
   StepFive,
   StepFour,
   StepOne,
-  StepThree,
-  StepTwo,
 } from "../templates/step";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import useWorryStore from "../../store/worryStore";
 import useStepStore from "../../store/stepStore";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,7 +22,9 @@ const StepIndicator = ({
         <motion.div
           className="h-full bg-green"
           initial={{ width: "0%" }}
-          animate={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
+          animate={{
+            width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%`,
+          }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         />
       </div>
@@ -29,11 +32,16 @@ const StepIndicator = ({
         <div key={s} className="relative z-10">
           <motion.div
             className={`w-3 h-3 rounded-full border-2 transition-colors duration-300 ${
-              s <= currentStep ? "bg-green border-green" : "bg-white border-gray-300"
+              s <= currentStep
+                ? "bg-green border-green"
+                : "bg-white border-gray-300"
             }`}
             animate={{
               scale: s === currentStep ? 1.4 : 1,
-              boxShadow: s === currentStep ? "0 0 12px rgba(122, 196, 167, 0.4)" : "none"
+              boxShadow:
+                s === currentStep
+                  ? "0 0 12px rgba(122, 196, 167, 0.4)"
+                  : "none",
             }}
           />
         </div>
@@ -44,11 +52,17 @@ const StepIndicator = ({
 
 const Worry = () => {
   const { step } = useStepStore();
+  const [params, setParams] = useSearchParams();
+  useEffect(() => {
+    if (params.get("compose") !== "1") return;
+    const draft = useWorryStore.getState();
+    if (draft.saved) draft.reset();
+    useStepStore.setState({ step: draft.response && !draft.saved ? 5 : 4 });
+    setParams({}, { replace: true });
+  }, [params, setParams]);
 
   const stepFrom: { [key: number]: JSX.Element } = {
     1: <StepOne />,
-    2: <StepTwo />,
-    3: <StepThree />,
     4: <StepFour />,
     5: <StepFive />,
   };
@@ -60,7 +74,9 @@ const Worry = () => {
       <div className="absolute bottom-[-10%] left-[-10%] w-80 h-80 bg-blue-100 rounded-full blur-[100px] opacity-30 pointer-events-none" />
 
       {/* 단계 표시기 - 글쓰기 흐름(2~5단계)에서만 노출. 숲 화면(1단계)은 독립 화면 */}
-      {step >= 2 && <StepIndicator currentStep={step - 1} totalSteps={4} />}
+      {step >= 2 && (
+        <StepIndicator currentStep={step === 5 ? 2 : 1} totalSteps={2} />
+      )}
 
       <div className="flex-1 min-h-0 relative overflow-hidden flex flex-col">
         <AnimatePresence mode="wait">

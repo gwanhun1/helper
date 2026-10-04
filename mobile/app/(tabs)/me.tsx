@@ -101,13 +101,13 @@ export default function MeScreen() {
               <View style={styles.kakaoBadge}>
                 <Text style={styles.kakaoEmoji}>💬</Text>
                 <Text variant="caption" tone="secondary" weight="semibold">
-                  카카오 연결됨
+                  데모 체험 중
                 </Text>
               </View>
             </View>
           </View>
 
-          {/* 누적 요약 한 줄 */}
+          {/* 데모 예시 요약 */}
           <View style={styles.summaryRow}>
             <SummaryStat icon="edit-3" value={TOTALS.worries} label="띄운" />
             <View style={styles.summaryDivider} />

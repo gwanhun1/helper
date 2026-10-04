@@ -7,21 +7,21 @@ interface VentBackgroundProps {
 }
 
 const leftDecorativeTexts = [
-  "아니 김과장이 나한테...",
-  "너무 화나 아 진짜,,,,",
-  "🤬",
-  "🖕🖕🖕🖕🖕🖕",
+  "오늘은 좀 지쳤어",
+  "잠깐 쉬어가자",
+  "🌿",
+  "말하고 나니 후련해",
 ];
 const rightDecorativeTexts = [
-  "에라이 더러워서,,",
-  "ㅡㅡ",
-  "욕 나오네",
-  "🤬🤬🤬🤬🤬🤬🤬",
+  "속상한 마음을 내려놓자",
+  "후—",
+  "내 마음부터 돌보자",
+  "🍃",
 ];
 
 const VentBackground = ({ isVenting }: VentBackgroundProps) => {
   return (
-    <>
+    <div aria-hidden="true">
       <div className="flex overflow-hidden absolute inset-0 z-0 justify-center items-end pointer-events-none">
         <div
           className="absolute inset-0 z-[-1] opacity-60"
@@ -172,7 +172,7 @@ const VentBackground = ({ isVenting }: VentBackgroundProps) => {
               }}
               className="flex absolute justify-center items-center pointer-events-none"
               style={{
-                right: `${8 + (i * i)}%`,
+                right: `${8 + i * i}%`,
               }}
             >
               <BubbleCard
@@ -183,7 +183,7 @@ const VentBackground = ({ isVenting }: VentBackgroundProps) => {
           );
         })}
       </motion.div>
-    </>
+    </div>
   );
 };
 

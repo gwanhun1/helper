@@ -14,7 +14,7 @@ const Vent = () => {
   const ventingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const checkIntensity = (text: string): "normal" | "high" => {
-    const highIntensityPatterns = /씨발|존나|개|병신|미친|[!]{2,}|[?]{2,}/i;
+    const highIntensityPatterns = /씨발|존나|병신|미친|[!]{2,}|[?]{2,}/i;
     return highIntensityPatterns.test(text) ? "high" : "normal";
   };
 

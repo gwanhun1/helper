@@ -14,6 +14,7 @@ const CreditPage = lazy(() => import("../components/pages/Credit"));
 const AuthPage = lazy(() => import("../components/pages/Auth"));
 const AdvicePage = lazy(() => import("../components/pages/Advice"));
 const InsightPage = lazy(() => import("../components/pages/Insight"));
+const GuidePage = lazy(() => import("../components/pages/Guide"));
 const VentPage = lazy(() => import("../components/pages/Vent"));
 
 const LoadingSection = () => {
@@ -29,6 +30,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <App />,
     children: [
+      {
+        path: "/guide",
+        element: (
+          <Suspense fallback={<LoadingSection />}>
+            <GuidePage />
+          </Suspense>
+        ),
+      },
       {
         path: "/",
         element: (

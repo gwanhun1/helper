@@ -5,11 +5,20 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": true,
-    "lib": ["ES2022", "DOM"],
-    "types": ["@types/node"],
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "types": [
+      "@types/node"
+    ],
     "skipLibCheck": true,
-    "composite": true,
-    "declaration": true
+    "composite": false,
+    "declaration": true,
+    "noEmit": true
   },
-  "include": ["api/**/*"]
+  "include": [
+    "api/**/*",
+    "server/**/*"
+  ]
 }

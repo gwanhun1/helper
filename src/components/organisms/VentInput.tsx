@@ -25,7 +25,7 @@ const VentInput = ({
           <span className="rounded-full bg-white/80 px-3 py-1 text-[10px] font-black tracking-[0.3em] text-green-700">
             비밀
           </span>
-          화를 풀어주세요 🤬
+          마음속 이야기를 놓아주세요
         </div>
         <div className="flex gap-3 items-center">
           <input
@@ -39,12 +39,15 @@ const VentInput = ({
             onCompositionEnd={() => {
               isComposingRef.current = false;
             }}
-            placeholder="여기다 그대로 써요"
-            className="flex-1 rounded-full border border-green-200/70 bg-white/70 px-4 py-2 text-[14px] font-bold text-slate-700 placeholder:text-slate-400 focus:border-green-300 focus:bg-white focus:outline-none"
+            aria-label="풀고 싶은 마음"
+            placeholder="지금 마음을 편하게 적어요"
+            maxLength={500}
+            className="min-w-0 flex-1 rounded-full border border-green-200/70 bg-white/70 px-4 py-2 text-base font-medium text-slate-700 placeholder:text-slate-400 focus:border-green-300 focus:bg-white focus:outline-none"
           />
           <button
             type="submit"
-            className="rounded-full bg-green px-5 py-2 text-[14px] font-black text-white shadow-[0_10px_24px_rgba(76,175,80,0.35)] transition hover:bg-green-600 active:scale-[0.98]"
+            disabled={!inputValue.trim()}
+            className="rounded-full bg-emerald-700 disabled:opacity-50 min-h-11 shrink-0 px-4 py-2 text-[14px] font-black text-white shadow-[0_10px_24px_rgba(76,175,80,0.35)] transition hover:bg-green-600 active:scale-[0.98]"
           >
             외치기
           </button>
@@ -57,7 +60,7 @@ const VentInput = ({
             저장·기록 안 함
           </span>
           <span className="px-3 py-1 rounded-full border border-slate-200 bg-slate-50">
-            분석 안 함
+            AI 분석 없음
           </span>
         </div>
       </form>

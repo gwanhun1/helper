@@ -1,211 +1,97 @@
-import { Line } from "react-chartjs-2";
 import { formatDate } from "../../utils/date";
-import { motion } from "framer-motion";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Chart as ChartJS } from "chart.js";
-import "chart.js/auto";
-import Loading from "../atoms/Loading";
-
-ChartJS.register(ChartDataLabels);
-
-interface EmotionChartProps {
-  averageLevel: number | string;
+import { moodLabel, moodEmoji } from "../../utils/mood";
+interface Props {
+  averageLevel?: number | string;
   chartData: Array<{ date: string; level?: number }>;
   loading: boolean;
 }
-
-const EmotionChart = ({
-  averageLevel,
-  loading,
-  chartData,
-}: EmotionChartProps) => {
-  const getEmotionStyle = (level: number | string) => {
-    const numLevel = typeof level === "string" ? parseFloat(level) : level;
-
-    if (numLevel >= 6) {
-      return {
-        gradient: "from-blue-300 to-blue-200",
-        borderColor: "border-blue-100",
-        textColor: "text-blue-500",
-        message: "마음이 차분하고 안정적입니다",
-        subMessage: "계속 잘 유지하세요!",
-        messageColor: "text-blue-600",
-        subMessageColor: "text-blue-400",
-        chartColor: "rgb(59, 130, 246)",
-        chartBgColor: "rgba(59, 130, 246, 0.2)",
-      };
-    } else if (numLevel >= 3) {
-      return {
-        gradient: "from-amber-300 to-amber-200",
-        borderColor: "border-amber-100",
-        textColor: "text-amber-500",
-        message: "평온한 상태입니다",
-        subMessage: "마음을 돌아보는 시간을 가져보세요",
-        messageColor: "text-amber-600",
-        subMessageColor: "text-amber-400",
-        chartColor: "rgb(245, 158, 11)",
-        chartBgColor: "rgba(245, 158, 11, 0.2)",
-      };
-    } else {
-      return {
-        gradient: "from-rose-300 to-rose-200",
-        borderColor: "border-rose-100",
-        textColor: "text-rose-500",
-        message: "마음이 많이 힘드시군요",
-        subMessage: "잠시 휴식을 가지는 건 어떨까요?",
-        messageColor: "text-rose-600",
-        subMessageColor: "text-rose-400",
-        chartColor: "rgb(244, 63, 94)",
-        chartBgColor: "rgba(244, 63, 94, 0.2)",
-      };
-    }
-  };
-
-  const style = getEmotionStyle(averageLevel);
-
-  const getEmotionEmoji = (level: number) => {
-    if (level >= 4) return "😊";
-    if (level >= 2) return "😐";
-    return "😔";
-  };
-
-  if (loading) {
+const EmotionChart = ({ chartData, loading }: Props) => {
+  const records = chartData.filter((record) => record.level !== undefined);
+  if (loading)
     return (
-      <div className="bg-gradient-to-br from-[#F0F7EA] to-white flex flex-col items-center justify-center px-4 py-2 space-y-4 h-52">
-        <Loading />
-      </div>
-    );
-  }
-
-  if (!chartData || chartData.length === 0) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-[#F0F7EA] to-white pt-6 pb-4 text-center shadow-md  border border-[#8BC34A]/30"
+      <div
+        role="status"
+        className="mx-4 p-6 rounded-2xl bg-white border border-slate-200 text-sm text-slate-600"
       >
-        <div className="flex flex-col items-center justify-center px-4 py-2 space-y-4">
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-md border border-[#8BC34A]/20">
-            <span className="text-3xl">📝</span>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-lg font-bold text-[#2E7D32] font-ibm">
-              아직 기록이 없어요
-            </h3>
-            <p className="font-ibm text-[12px] text-[#666666] leading-relaxed">
-              첫 번째 이야기를 들려주시면
-              <br />
-              멋진 그래프를 그려드릴게요 ✨
-            </p>
-          </div>
-        </div>
-      </motion.div>
+        기분 기록을 불러오고 있어요
+      </div>
     );
-  }
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className={`bg-gradient-to-br ${style.gradient} pt-6 pb-2 text-center shadow-md hover:shadow-lg transition-shadow  ${style.borderColor}`}
-    >
-      <div className="flex justify-center items-center">
-        <div className={`font-ibm font-medium ${style.messageColor}`}>
-          {style.message} |
-        </div>
-        <p className={`font-ibm font-bold ${style.messageColor} ml-2`}>
-          {averageLevel}
+  if (!records.length)
+    return (
+      <section className="mx-4 p-6 rounded-2xl bg-white border border-slate-200">
+        <h2 className="text-base font-semibold text-slate-800">
+          기분 변화를 기록해보세요
+        </h2>
+        <p className="mt-2 text-sm text-slate-600">
+          직접 고른 기분이 쌓이면 최근 기록의 변화를 보여드려요. 과거 자동 생성
+          점수는 포함하지 않아요.
         </p>
+      </section>
+    );
+  const average =
+    records.reduce((sum, record) => sum + record.level!, 0) / records.length;
+  const coordinates = records
+    .map(
+      (record, i) =>
+        `${records.length === 1 ? 150 : 20 + (i * 260) / (records.length - 1)},${130 - (record.level! - 1) * 27.5}`,
+    )
+    .join(" ");
+  return (
+    <section className="mx-4 p-5 rounded-2xl bg-white border border-slate-200">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-base font-semibold text-slate-800">
+          최근 기분 기록
+        </h2>
+        <span className="text-sm font-semibold text-emerald-800">
+          평균 {average.toFixed(1)} / 5
+        </span>
       </div>
-      <div className={` text-sm font-medium ${style.subMessageColor}`}>
-        {style.subMessage}
+      <p className="text-xs text-slate-600 mt-2">
+        직접 선택한 최근 {records.length}회 기분 · {moodLabel(average)}
+      </p>
+      <svg
+        viewBox="0 0 300 160"
+        role="img"
+        aria-label={`최근 ${records.length}회 기분 추이. ${records.map((record) => `${formatDate(record.date).date}: ${moodLabel(record.level)}`).join(", ")}`}
+        className="mt-3 w-full h-36"
+      >
+        {[20, 75, 130].map((y) => (
+          <line key={y} x1="10" x2="290" y1={y} y2={y} stroke="#e2e8f0" />
+        ))}
+        <polyline
+          points={coordinates}
+          fill="none"
+          stroke="#047857"
+          strokeWidth="3"
+          strokeLinejoin="round"
+        />
+        {records.map((record, i) => (
+          <circle
+            key={`${record.date}-${i}`}
+            cx={
+              records.length === 1 ? 150 : 20 + (i * 260) / (records.length - 1)
+            }
+            cy={130 - (record.level! - 1) * 27.5}
+            r="5"
+            fill="#047857"
+          >
+            <title>
+              {formatDate(record.date).date}: {moodLabel(record.level)}
+            </title>
+          </circle>
+        ))}
+      </svg>
+      <div className="flex gap-2 justify-between text-xs text-slate-600">
+        {records.map((record, i) => (
+          <div key={`${record.date}-${i}`} className="text-center min-w-0">
+            <span aria-hidden="true" className="block text-lg">
+              {moodEmoji(record.level)}
+            </span>
+            <span>{formatDate(record.date).date}</span>
+          </div>
+        ))}
       </div>
-      <div className="flex items-center justify-center mt-2">
-        <div className="h-32 w-60">
-          <Line
-            data={{
-              labels: chartData.map((item) => formatDate(item.date)),
-              datasets: [
-                {
-                  label: "감정 레벨",
-                  data: chartData.map((item) => item.level),
-                  borderColor: style.chartColor,
-                  backgroundColor: "white",
-                  tension: 0.4,
-                  fill: false,
-                },
-              ],
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  top: 32,
-                  left: 20,
-                  right: 20,
-                },
-              },
-              scales: {
-                x: {
-                  display: false,
-                  grid: {
-                    display: false,
-                  },
-                },
-                y: {
-                  display: false,
-                  beginAtZero: true,
-                  grid: {
-                    display: false,
-                  },
-                },
-              },
-              plugins: {
-                legend: {
-                  display: false,
-                },
-                tooltip: {
-                  enabled: false,
-                },
-                datalabels: {
-                  backgroundColor: "white",
-                  borderRadius: 4,
-                  borderWidth: 1.5,
-                  padding: {
-                    top: 3,
-                    bottom: 2,
-                    left: 3.5,
-                    right: 0,
-                  },
-                  anchor: "end",
-                  align: "top",
-                  offset: 3,
-                  font: {
-                    size: 16,
-                    weight: "bold",
-                  },
-                  formatter: (value) => getEmotionEmoji(value as number),
-                },
-              },
-              elements: {
-                line: {
-                  borderWidth: 1.5,
-                },
-                point: {
-                  radius: 2.5,
-                  backgroundColor: style.chartColor,
-                  borderColor: "white",
-                  borderWidth: 1,
-                  hoverRadius: 4,
-                },
-              },
-            }}
-          />
-        </div>
-      </div>
-    </motion.div>
+    </section>
   );
 };
-
 export default EmotionChart;

@@ -1,74 +1,58 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import {
-  getAuth,
-  onAuthStateChanged,
-  User as FirebaseUser,
-} from "firebase/auth";
-import { app } from "../firebaseConfig";
-import { getDatabase, ref, get, update } from "firebase/database";
+import { onAuthStateChanged, type User } from "firebase/auth";
+import { auth } from "../firebaseConfig";
+import { apiRequest } from "../utils/api";
 
-interface ExtendedUser extends FirebaseUser {
-  grade?: string;
+export interface ExtendedUser extends User {
   count?: number;
   lastResetDate?: string;
-  contentIds?: string[];
+  nextResetAt?: number;
 }
-
 interface UserStore {
   user: ExtendedUser | null;
+  authReady: boolean;
+  accountError: string | null;
   setUser: (user: ExtendedUser | null) => void;
+  refreshAccount: () => Promise<void>;
 }
-
-const useUserStore = create<UserStore>()(
-  persist(
-    (set) => ({
-      user: null,
-      setUser: (user) => set(() => ({ user })),
-    }),
-    {
-      name: "user-storage",
-    },
-  ),
-);
-
-const auth = getAuth(app);
-onAuthStateChanged(auth, async (user) => {
-  const userStore = useUserStore.getState();
-  if (user) {
-    const db = getDatabase(app);
-    const userRef = ref(db, `users/${user.uid}`);
-    const snapshot = await get(userRef);
-    const userData = snapshot.val();
-    const today = new Date().toISOString().slice(0, 10);
-
-    // 필수 데이터가 없거나 날짜가 바뀌었을 경우 초기화
-    const needsReset = !userData || userData.lastResetDate !== today;
-    const refreshedCount = needsReset ? 10 : (userData?.count ?? 10);
-    const currentGrade = userData?.grade || "A";
-    const currentContentIds = userData?.contentIds || [];
-
-    if (needsReset || !userData?.count) {
-      await update(userRef, {
-        count: refreshedCount,
-        lastResetDate: today,
-        grade: currentGrade,
-        uid: user.uid,
-        email: user.email || "",
-        displayName: user.displayName || "",
-      });
+const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  authReady: false,
+  accountError: null,
+  setUser: (user) => set({ user }),
+  refreshAccount: async () => {
+    const current = auth.currentUser;
+    if (!current) return;
+    try {
+      const quota = await apiRequest<{
+        count: number;
+        lastResetDate: string;
+        nextResetAt: number;
+      }>("/api/account", undefined, "GET");
+      if (auth.currentUser?.uid === current.uid)
+        set({
+          user: Object.assign(
+            Object.create(Object.getPrototypeOf(current)),
+            current,
+            quota,
+          ),
+          accountError: null,
+        });
+    } catch (error) {
+      if (auth.currentUser?.uid === current.uid)
+        set({
+          accountError:
+            error instanceof Error
+              ? error.message
+              : "사용자 정보를 불러오지 못했어요.",
+        });
     }
-
-    userStore.setUser({
-      ...user,
-      grade: currentGrade,
-      count: refreshedCount,
-      lastResetDate: today,
-      contentIds: currentContentIds,
-    });
-  } else {
-    userStore.setUser(null);
-  }
+  },
+}));
+onAuthStateChanged(auth, (user) => {
+  useUserStore.setState({ user, authReady: true, accountError: null });
+  if (user) void useUserStore.getState().refreshAccount();
 });
-
+// Old persisted Firebase users must never be treated as an authenticated session.
+localStorage.removeItem("user-storage");
 export default useUserStore;

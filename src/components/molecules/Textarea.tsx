@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo } from "react";
+import React, { ChangeEvent } from "react";
 
 interface TextareaProps {
   id: string;
@@ -19,12 +19,7 @@ const Textarea = ({
   minHeight = "120px",
   className = "",
 }: TextareaProps) => {
-  const calculateRows = (text: string) => {
-    const lineCount = text.split("\n").length;
-    return Math.min(lineCount, maxRows);
-  };
-
-  const rows = useMemo(() => calculateRows(value), [value]);
+  const rows = Math.min(value.split("\n").length, maxRows);
 
   return (
     <textarea

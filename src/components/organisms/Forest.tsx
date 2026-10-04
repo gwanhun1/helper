@@ -9,10 +9,10 @@ const Forest = () => {
   const { userContents: forestData } = useUserContents();
   const { showWeatherEffect } = useUIStore();
   const [selectedTreeIndex, setSelectedTreeIndex] = useState<number | null>(
-    null
+    null,
   );
   const [removingTreeIndex, setRemovingTreeIndex] = useState<number | null>(
-    null
+    null,
   );
   const prevTreesRef = useRef<Item[]>([]);
   const treePositionsMap = useRef(new Map()).current;
@@ -155,7 +155,7 @@ const Forest = () => {
     x1: number,
     y1: number,
     x2: number,
-    y2: number
+    y2: number,
   ) => {
     return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
   };
@@ -165,7 +165,7 @@ const Forest = () => {
     x: number,
     y: number,
     scale: number,
-    existingPositions: Array<{ x: number; y: number; scale: number }>
+    existingPositions: Array<{ x: number; y: number; scale: number }>,
   ) => {
     const minDistance = 25; // 최소 거리 설정
     return existingPositions.every((pos) => {
@@ -188,7 +188,7 @@ const Forest = () => {
           x: pos.xPos,
           y: pos.yPos,
           scale: pos.scale,
-        })
+        }),
       );
 
       // 최대 시도 횟수 설정
@@ -229,7 +229,7 @@ const Forest = () => {
     const prevTrees = prevTreesRef.current;
     if (prevTrees.length > forestData.length) {
       const removedIndex = prevTrees.findIndex(
-        (prevTree) => !forestData.some((newTree) => newTree.id === prevTree.id)
+        (prevTree) => !forestData.some((newTree) => newTree.id === prevTree.id),
       );
 
       if (removedIndex !== -1) {
@@ -436,7 +436,10 @@ const Forest = () => {
                 } as CSSProperties
               }
             >
-              <div
+              <button
+                type="button"
+                aria-label={`${index + 1}번째 마음 기록 보기`}
+                aria-pressed={selectedTreeIndex === index}
                 className={`w-full h-full transition-all duration-300 cursor-pointer drop-shadow-md
                 ${
                   selectedTreeIndex === index
@@ -455,7 +458,7 @@ const Forest = () => {
                   variety={variety}
                   className="w-full h-full"
                 />
-              </div>
+              </button>
               {/* 선택된 나무 강조 효과 */}
               {selectedTreeIndex === index && (
                 <div className="absolute -inset-2 rounded-full blur-md animate-pulse bg-white/20 -z-10" />

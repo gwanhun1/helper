@@ -4,6 +4,7 @@ vi.mock("./firebase", () => ({ services: () => ({ db: h.db }) }));
 import { counsel } from "./counseling";
 import { koreaDay, nextReset } from "./quota";
 import { changeVisibility, deleteRecord } from "./records";
+import { withRecordLock } from "./record-lock";
 let data: any;
 let failSave: boolean;
 const snapshot = (value: any) => ({
@@ -137,6 +138,39 @@ describe("서버 상담", () => {
     expect(data.privateRecords.u1.r1).toBeUndefined();
     expect(data.users.u1.requests.r1.record).toBeUndefined();
     await expect(counsel("u1", input)).rejects.toThrow("삭제한 기록");
+  });
+  it("이전 기록에 분류가 없어도 공개 데이터를 안전하게 생성한다", async () => {
+    await counsel("u1", input);
+    delete data.privateRecords.u1.r1.category;
+    await changeVisibility("u1", "r1", true);
+    expect(data.publicContents.r1.category).toBe("마음");
+    expect(Object.values(data.publicContents.r1)).not.toContain(undefined);
+  });
+  it("다른 기기에서 같은 기록을 변경 중이면 삭제와 공유를 대기시킨다", async () => {
+    await counsel("u1", input);
+    let release!: () => void;
+    const held = withRecordLock("u1", "r1", () => new Promise<void>(done => { release = done; }));
+    await vi.waitFor(() => expect(release).toBeDefined());
+    await expect(deleteRecord("u1", "r1")).rejects.toThrow("변경 중");
+    release(); await held;
+    await deleteRecord("u1", "r1"); expect(data.privateRecords.u1.r1).toBeUndefined();
+  });
+  it("서버리스의 빈 로컬 캐시에서도 기록 잠금을 해제한다", async () => {
+    h.db.ref = (path: string) => {
+      const ref = location(path);
+      if (path.includes("recordLocks")) {
+        const transaction = ref.transaction;
+        ref.transaction = async (fn: (value: any) => any) => {
+          if (fn(null) === undefined) return { committed: false, snapshot: snapshot(null) };
+          return transaction(fn);
+        };
+      }
+      return ref;
+    };
+    await withRecordLock("u1", "r1", async () => {});
+    expect(data.users.u1.recordLocks.r1).toBeUndefined();
+    await withRecordLock("u1", "r1", async () => {});
+    expect(data.users.u1.recordLocks.r1).toBeUndefined();
   });
   it("한국 자정에 일일 한도가 갱신된다", () => {
     expect(koreaDay(new Date("2026-10-04T14:59:59Z"))).toBe("2026-10-04");

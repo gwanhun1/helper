@@ -1,10 +1,10 @@
-import { worryCategories } from "../src/constants/records";
+import { worryCategories } from "../src/constants/records.js";
 import { createHash } from "node:crypto";
-import { services } from "./firebase";
-import { HttpError, recordId, stringInput } from "./http";
-import { DAILY_LIMIT, normalizeQuota, koreaDay } from "./quota";
-import { saveRecord, type RecordData } from "./records";
-import { isCrisis, crisisResponse } from "../src/utils/counsel";
+import { services } from "./firebase.js";
+import { HttpError, recordId, stringInput } from "./http.js";
+import { DAILY_LIMIT, normalizeQuota, koreaDay } from "./quota.js";
+import { saveRecord, type RecordData } from "./records.js";
+import { isCrisis, crisisResponse } from "../src/utils/counsel.js";
 
 interface RequestEntry {
   fingerprint: string;
@@ -107,6 +107,7 @@ export async function counsel(uid: string, body: Record<string, unknown>) {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${key}`,
+              "User-Agent": "Mozilla/5.0 WorryHelper/1.0",
             },
             body: JSON.stringify({
               inputs: { who, how, worry },
@@ -114,7 +115,7 @@ export async function counsel(uid: string, body: Record<string, unknown>) {
               response_mode: "blocking",
               user: uid,
             }),
-            signal: AbortSignal.timeout(60000),
+            signal: AbortSignal.timeout(45000),
           },
         );
         if (!response.ok) throw new Error(`AI response ${response.status}`);

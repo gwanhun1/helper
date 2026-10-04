@@ -1,6 +1,7 @@
+import { withRecordLock } from "../server/record-lock.js";
 import { randomUUID } from "node:crypto";
-import { endpoint, recordId, stringInput, HttpError } from "../server/http";
-import { services } from "../server/firebase";
+import { endpoint, recordId, stringInput, HttpError } from "../server/http.js";
+import { services } from "../server/firebase.js";
 export default endpoint(["POST"], async (req, uid) => {
   const id = recordId(req.body?.id);
   const action = req.body?.action;
@@ -8,7 +9,10 @@ export default endpoint(["POST"], async (req, uid) => {
   const content = action === "comment" ? stringInput(req.body?.content, "댓글", 500) : "";
   const commentId = ["deleteComment", "likeComment"].includes(action) ? recordId(req.body?.commentId) : randomUUID();
   let failure = "기록을 찾을 수 없습니다.";
-  const result = await services().db.ref(`publicContents/${id}`).transaction(post => {
+  const postRef = services().db.ref(`publicContents/${id}`);
+  const existing = (await postRef.get()).val();
+  if (!existing?.userId) throw new HttpError(404, "고민을 찾을 수 없습니다.");
+  const result = await withRecordLock(existing.userId, id, async () => services().db.ref(`publicContents/${id}`).transaction(post => {
     if (!post) return null;
     if (post.open !== true) return;
     if (action === "like") {
@@ -33,7 +37,7 @@ export default endpoint(["POST"], async (req, uid) => {
       }
     }
     return post;
-  });
+  }));
   if (!result.committed || !result.snapshot.exists()) throw new HttpError(403, failure);
   return { success: true };
 });

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -43,7 +44,7 @@ export default function ComposeModal() {
   const [step, setStep] = useState(1);
   const [category, setCategory] = useState<WorryCategory | null>(null);
   const [body, setBody] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [isPublic, setIsPublic] = useState(false);
   const [useAi, setUseAi] = useState(false);
 
   // 작성 모달이 마운트될 때 한 번 닉네임 생성
@@ -62,8 +63,7 @@ export default function ComposeModal() {
   };
 
   const handleSubmit = () => {
-    // TODO: 실제 저장 — 지금은 보상 화면으로 이동
-    navigation.replace("Reward", { type: "post" });
+    Alert.alert("데모 작성 화면", "아직 저장 기능이 연결되지 않았어요. 작성한 내용은 저장하거나 공개하지 않습니다.");
   };
 
   const canProceed =
@@ -264,8 +264,8 @@ const StepThree = ({
           </Text>
           <Text variant="caption" tone="secondary">
             {isPublic
-              ? "반경 약 3km 안 사람들에게 보여요"
-              : "나만 보는 일기로 저장돼요"}
+              ? "공개 범위 예시 · 실제로 공개하지 않아요"
+              : "비공개 예시 · 실제로 저장하지 않아요"}
           </Text>
         </View>
         <Toggle value={isPublic} onChange={onChangePublic} />
@@ -280,7 +280,7 @@ const StepThree = ({
             AI 도우미에게도 답 받기
           </Text>
           <Text variant="caption" tone="secondary">
-            {useAi ? "사람 + AI 두 가지 답장을 받아요" : "사람 답장만 받아요"}
+            {useAi ? "AI 답장 옵션 예시 · 실제 호출 없음" : "사람 답장 옵션 예시 · 실제 전송 없음"}
           </Text>
         </View>
         <Toggle value={useAi} onChange={onChangeAi} />
@@ -295,7 +295,7 @@ const StepThree = ({
         tone="secondary"
         style={{ flex: 1, lineHeight: 18 }}
       >
-        정확한 위치는 가려져요. 안심하고 띄워보세요
+        데모에서는 위치와 작성 내용을 전송하지 않아요
       </Text>
     </View>
   </View>

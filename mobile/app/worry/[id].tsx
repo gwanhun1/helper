@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -59,9 +60,7 @@ export default function WorryDetailModal() {
 
   const handleSendReply = () => {
     if (!reply.trim()) return;
-    // TODO: 실제 답장 저장
-    setReply("");
-    navigation.replace("Reward", { type: "reply", count: "1" });
+    Alert.alert("데모 답장 화면", "실제 전송 기능이 연결되지 않았어요. 작성한 답장은 보내지 않습니다.");
   };
 
   return (

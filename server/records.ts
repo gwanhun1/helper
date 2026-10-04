@@ -1,5 +1,6 @@
-import { services } from "./firebase";
-import { HttpError } from "./http";
+import { withRecordLock } from "./record-lock.js";
+import { services } from "./firebase.js";
+import { HttpError } from "./http.js";
 
 export interface RecordData {
   category?: string;
@@ -32,7 +33,7 @@ export function publicRecord(record: RecordData) {
     like,
   } = record;
   return {
-    category,
+    category: category || "마음",
     id,
     userId,
     content,
@@ -46,7 +47,7 @@ export function publicRecord(record: RecordData) {
     like: like || 0,
   };
 }
-export async function saveRecord(uid: string, record: RecordData) {
+async function saveRecordUnlocked(uid: string, record: RecordData) {
   const { db } = services();
   const existing = (
     await db.ref(`privateRecords/${uid}/${record.id}`).get()
@@ -68,7 +69,7 @@ export async function saveRecord(uid: string, record: RecordData) {
   });
   return record;
 }
-export async function changeVisibility(uid: string, id: string, open: boolean) {
+async function changeVisibilityUnlocked(uid: string, id: string, open: boolean) {
   const { db } = services();
   const snapshot = await db.ref(`privateRecords/${uid}/${id}`).get();
   if (!snapshot.exists()) throw new HttpError(404, "기록을 찾을 수 없습니다.");
@@ -81,7 +82,7 @@ export async function changeVisibility(uid: string, id: string, open: boolean) {
       : null,
   });
 }
-export async function deleteRecord(uid: string, id: string) {
+async function deleteRecordUnlocked(uid: string, id: string) {
   const { db } = services();
   if (!(await db.ref(`privateRecords/${uid}/${id}`).get()).exists())
     throw new HttpError(404, "기록을 찾을 수 없습니다.");
@@ -93,3 +94,7 @@ export async function deleteRecord(uid: string, id: string) {
     [`users/${uid}/requests/${id}/status`]: "deleted",
   });
 }
+
+export const saveRecord = (uid: string, record: RecordData) => withRecordLock(uid, record.id, () => saveRecordUnlocked(uid, record));
+export const changeVisibility = (uid: string, id: string, open: boolean) => withRecordLock(uid, id, () => changeVisibilityUnlocked(uid, id, open));
+export const deleteRecord = (uid: string, id: string) => withRecordLock(uid, id, () => deleteRecordUnlocked(uid, id));

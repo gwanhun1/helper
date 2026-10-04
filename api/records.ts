@@ -1,5 +1,5 @@
-import { endpoint, recordId, HttpError } from "../server/http";
-import { changeVisibility, deleteRecord } from "../server/records";
+import { endpoint, recordId, HttpError } from "../server/http.js";
+import { changeVisibility, deleteRecord } from "../server/records.js";
 export default endpoint(["PATCH", "DELETE"], async (req, uid) => {
   const id = recordId(req.body?.id);
   if (req.method === "DELETE") await deleteRecord(uid, id);

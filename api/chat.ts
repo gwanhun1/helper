@@ -1,4 +1,3 @@
-import { endpoint } from "../server/http";
-import { counsel } from "../server/counseling";
+import { endpoint } from "../server/http.js";
+import { counsel } from "../server/counseling.js";
 export default endpoint(["POST"], (req, uid) => counsel(uid, req.body || {}));
-export const config = { maxDuration: 90 };

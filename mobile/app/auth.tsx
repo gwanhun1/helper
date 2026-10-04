@@ -18,7 +18,7 @@ export default function AuthScreen() {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const handleKakao = () => {
+  const handleDemo = () => {
     ReactNativeHapticFeedback.trigger("notificationSuccess", {
       enableVibrateFallback: false,
       ignoreAndroidSystemSettings: false,
@@ -35,14 +35,14 @@ export default function AuthScreen() {
           <Feather name="mail" size={44} color={colors.white} />
         </View>
         <Text variant="display" tone="navy" style={styles.title}>
-          마음 지도
+          WorryHelper
         </Text>
         <Text
           variant="body"
           tone="secondary"
           style={{ textAlign: "center", marginTop: spacing.md, lineHeight: 24 }}
         >
-          익명으로 마음을 띄우고{"\n"}따뜻한 답장을 받아보세요
+          마음 지도 데모를 둘러보세요{"\n"}실제 로그인과 저장은 연결 전이에요
         </Text>
       </View>
 
@@ -51,19 +51,19 @@ export default function AuthScreen() {
         <View style={styles.privacyRow}>
           <Feather name="moon" size={14} color={colors.mintDeep} />
           <Text variant="caption" tone="secondary">
-            글과 답장에 이름은 절대 노출되지 않아요
+            화면의 고민과 답장은 예시 데이터예요
           </Text>
         </View>
         <View style={styles.privacyRow}>
           <Feather name="lock" size={14} color={colors.mintDeep} />
           <Text variant="caption" tone="secondary">
-            답장은 글쓴이에게만 닿아요
+            데모에서는 작성 내용이 저장되지 않아요
           </Text>
         </View>
         <View style={styles.privacyRow}>
           <Feather name="shield" size={14} color={colors.mintDeep} />
           <Text variant="caption" tone="secondary">
-            위치는 흐려서 표시돼요
+            운영 서비스는 worryhelper.shop에서 이용해요
           </Text>
         </View>
       </View>
@@ -71,7 +71,7 @@ export default function AuthScreen() {
       {/* CTA */}
       <View style={styles.actions}>
         <PressableScale
-          onPress={handleKakao}
+          onPress={handleDemo}
           haptic="medium"
           style={styles.kakaoBtn}
         >

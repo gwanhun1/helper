@@ -4,6 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  envPrefix: ["VITE_API_KEY"],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -28,7 +29,7 @@ export default defineConfig({
         }
       }
     },
-    sourcemap: true,
+    sourcemap: false,
     commonjsOptions: {
       include: [/node_modules/],
       transformMixedEsModules: true

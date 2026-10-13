@@ -144,7 +144,7 @@ const Advice = () => {
               onCommentSubmit={(event) => {
                 event.preventDefault();
                 void run(async () => {
-                  await addComment(current.id, newComment);
+                  if (!await addComment(current.id, newComment)) return;
                   setNewComment("");
                   toast.success("응원을 남겼어요");
                 });

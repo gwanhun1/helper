@@ -1,14 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { getDatabase, get, ref } from "firebase/database";
 import { app } from "../firebaseConfig";
 import { apiRequest } from "../utils/api";
 import useUserStore from "../store/userStore";
 const useLikeManager = () => {
   const uid = useUserStore(state => state.user?.uid);
+  const inFlight = useRef(false);
   const [loading, setLoading] = useState(false);
   const run = useCallback(async (body: unknown) => {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setLoading(true);
-    try { await apiRequest("/api/community", body); } finally { setLoading(false); }
+    try { await apiRequest("/api/community", body); } finally { inFlight.current = false; setLoading(false); }
   }, []);
   const togglePostLike = useCallback((id: string) => run({ id, action: "like" }), [run]);
   const toggleCommentLike = useCallback((id: string, commentId: string) => run({ id, commentId, action: "likeComment" }), [run]);
